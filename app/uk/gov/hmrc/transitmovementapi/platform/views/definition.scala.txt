@@ -1,0 +1,28 @@
+@import play.api.libs.json.Json
+@(whitelistedApplicationIds: Seq[String])
+
+{
+  "scopes":[
+    {
+      "key":"read:transit-movement-api",
+      "name":"Execute transit-movement-api call",
+      "description":"Transit Movement API"
+    }
+  ],
+  "api":{
+    "name":"Transit Movement",
+    "description":"Submit and retrieve details of transit movements",
+    "context":"transit-movement-api",
+    "versions":[
+      {
+        "version":"1.0",
+        "status":"STABLE",
+        "endpointsEnabled": true,
+        "access": {
+          "type": "PRIVATE",
+          "whitelistedApplicationIds": @Json.toJson(whitelistedApplicationIds)
+        }
+      }
+    ]
+  }
+}

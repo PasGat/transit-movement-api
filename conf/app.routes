@@ -1,0 +1,3 @@
+#Routes exposed via the API platform
+POST        /crossings                                                       @uk.gov.hmrc.transitmovementapi.controllers.CrossingController.submit
+POST        /crossings/transits                                              @uk.gov.hmrc.transitmovementapi.controllers.TransitController.submit

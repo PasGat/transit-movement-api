@@ -1,0 +1,15 @@
+{
+  "description": "Success response for the creation of a crossing",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "crossingId"
+  ],
+  "properties": {
+    "crossingId": {
+      "type": "string",
+      "description": "The unique ID for a successfully created crossing",
+      "example": "5c34bbada50000f900bf09bd"
+    }
+  }
+}

@@ -1,0 +1,42 @@
+/*
+ * Copyright 2019 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package uk.gov.hmrc.transitmovementapi.errorhandler
+
+import play.api.libs.json.{JsValue, Json, Writes}
+import play.api.mvc.Result
+import play.api.mvc.Results._
+import play.api.libs.json.Json.toJson
+
+sealed abstract class ErrorResponse(val httpStatusCode: Int,
+                             val errorCode: String,
+                             val message: String) {
+  def toResult: Result = Status(httpStatusCode)(toJson(this)(ErrorResponse.writes))
+}
+
+object ErrorResponse {
+  case class BadRequest(override val message: String = "Bad request") extends ErrorResponse(400, "BAD_REQUEST", message)
+  case object NotFound                                                extends ErrorResponse(404, "NOT_FOUND", "Resource was not found")
+  case object InvalidAcceptHeader extends ErrorResponse(406, "ACCEPT_HEADER_INVALID", "The accept header is missing or invalid")
+  case object InternalServerError extends ErrorResponse(500, "INTERNAL_SERVER_ERROR", "Internal server error")
+  case object CrossingNotFound extends ErrorResponse(404, "CROSSING_NOT_FOUND", "A crossing with the supplied crossingId was not found")
+  case object DuplicateTransit extends ErrorResponse(409, "TRANSIT_ALREADY_EXISTS", "A transit with the same details already exists")
+  case object Whatever         extends ErrorResponse(501, "BAD_REQUEST", "SDFADFA")
+
+  implicit val writes: Writes[ErrorResponse] = new Writes[ErrorResponse] {
+    override def writes(o: ErrorResponse): JsValue = Json.obj("code" -> o.errorCode, "message" -> o.message)
+  }
+}

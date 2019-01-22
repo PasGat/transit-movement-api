@@ -1,0 +1,92 @@
+#%RAML 1.0
+---
+
+title: Transit Movement
+version: 1.0
+protocols: [ HTTPS ]
+baseUri: https://api.service.hmrc.gov.uk/
+
+documentation:
+ - title: Overview
+   content: !include docs/overview.md
+ - title: Versioning
+   content: !include https://developer.service.hmrc.gov.uk/api-documentation/assets/common/docs/versioning.md
+ - title: Errors
+   content: !include https://developer.service.hmrc.gov.uk/api-documentation/assets/common/docs/errors.md
+
+mediaType: [ application/json, application/hal+json ]
+
+uses:
+  sec: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/securitySchemes.raml
+  headers: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/headers.raml
+  annotations: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/annotations.raml
+  types: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/types.raml
+
+/transit-movement:
+  /crossings:
+    post:
+      displayName: Submit details of a crossing
+      description: This endpoint takes a JSON body containing the details of a crossing
+      is: [headers.acceptHeader]
+      securedBy: [sec.x-application]
+      body:
+        application/json:
+          type: !include schemas/submit-crossing-request.json
+          example: !include examples/submit-crossing-request-example.json
+      responses:
+        200:
+         body:
+          application/json:
+            type: !include schemas/submit-crossing-response.json
+            examples:
+              example-1:
+                value: !include examples/submit-crossing-response-example.json
+        400:
+         body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              example-1:
+                description: The request body does not match the schema.
+                value:
+                  code: SCHEMA_VALIDATION_ERROR
+
+    /transits:
+      post:
+        displayName: Submit details of a transit that is part of a crossing
+        description: This endpoint takes a JSON body containing the details of a transit that is part of a crossing
+        is: [headers.acceptHeader]
+        securedBy: [sec.x-application]
+        body:
+          application/json:
+            type: !include schemas/submit-transit-request.json
+            example: !include examples/submit-transit-request-example.json
+        responses:
+          200:
+          400:
+           body:
+            application/json:
+              type: types.errorResponse
+              examples:
+                example-1:
+                  description: The request body does not match the schema.
+                  value:
+                    code: SCHEMA_VALIDATION_ERROR
+          404:
+           body:
+            application/json:
+              type: types.errorResponse
+              examples:
+                example-1:
+                  description: A crossing with the supplied crossing ID was not found
+                  value:
+                    code: CROSSING_NOT_FOUND
+          409:
+           body:
+            application/json:
+              type: types.errorResponse
+              examples:
+                example-1:
+                  description: A transit with the same details already exists
+                  value:
+                    code: TRANSIT_ALREADY_EXISTS

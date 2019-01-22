@@ -1,0 +1,24 @@
+{
+  "description": "Create the details of a transit",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "movementReferenceNumber",
+    "crossingId"
+  ],
+  "properties": {
+    "movementReferenceNumber": {
+      "type": "string",
+      "description": "The reference number of the transit movement as recorded in NCTS"
+    },
+    "vehicleReferenceNumber": {
+      "type": "string",
+      "description": "The reference number of the vehicle that the transit movement was on",
+      "pattern": "[a-zA-Z0-9]"
+    },
+    "crossingId": {
+      "type": "string",
+      "description": "The unique ID of a crossing that has already been created"
+    }
+  }
+}

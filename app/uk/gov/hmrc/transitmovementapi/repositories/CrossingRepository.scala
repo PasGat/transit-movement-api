@@ -44,14 +44,12 @@ class CrossingRepository @Inject()(mongo: ReactiveMongoComponent)(implicit execu
     findById(id = crossingId).map(_.getOrElse(throw CrossingNotFoundException(s"Crossing with ID $crossingId was not found")))
   }
 
-  def getAll(): Future[List[Crossing]] = findAll()
-
   def getCrossing(crossingSubmission: CrossingSubmission): Future[Option[Crossing]] = {
     find("departureDateTime" -> crossingSubmission.departureDateTime,
-      "departurePort"                -> crossingSubmission.departurePort,
-      "destinationPort"              -> crossingSubmission.destinationPort,
-      "duration"                     -> crossingSubmission.duration,
-      "carrier"                      -> crossingSubmission.carrier).map(_.headOption)
+      "departurePort" -> crossingSubmission.departurePort,
+      "destinationPort" -> crossingSubmission.destinationPort,
+      "duration" -> crossingSubmission.duration,
+      "carrier" -> crossingSubmission.carrier).map(_.headOption)
   }
 
   def clear(): Future[Boolean] = removeAll().map(_.ok)

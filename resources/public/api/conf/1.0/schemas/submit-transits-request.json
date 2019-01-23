@@ -1,0 +1,25 @@
+{
+  "description": "Submit the details of transit movements associated with a crossing",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "description": "Details of a transit movement",
+    "required": [
+      "movementReferenceNumber"
+    ],
+    "properties": {
+      "movementReferenceNumber": {
+        "type": "string",
+        "description": "The reference number of the transit movement as recorded in NCTS",
+        "pattern": "\\d{2}[a-zA-Z]{2}[a-zA-Z0-9]{14}"
+      },
+      "vehicleReferenceNumber": {
+        "type": "string",
+        "description": "The reference number of the vehicle that the transit movement was on",
+        "pattern": "[A-Z0-9]"
+      }
+    }
+  },
+  "minItems": 1,
+  "uniqueItems": true
+}

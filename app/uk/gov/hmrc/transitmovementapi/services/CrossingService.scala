@@ -29,13 +29,17 @@ class CrossingService @Inject()(crossingRepository: CrossingRepository)(implicit
 
   def submitCrossing(crossingSubmission: CrossingSubmission)(implicit hc: HeaderCarrier): Future[CrossingId] = {
     crossingRepository.getCrossing(crossingSubmission).flatMap {
-      case Some(crossing) => Future.successful(CrossingId.fromCrossing(crossing))
-      case _              => crossingRepository.create(Crossing.fromCrossingSubmission(crossingSubmission))
+      case Some(crossing) => Future.successful(CrossingId(crossing.crossingId))
+      case _ => crossingRepository.create(
+        Crossing(
+          departureDateTime = crossingSubmission.departureDateTime,
+          departurePort = crossingSubmission.departurePort,
+          destinationPort = crossingSubmission.destinationPort,
+          duration = crossingSubmission.duration,
+          carrier = crossingSubmission.carrier
+        )
+      )
     }
   }
-
-  def getAllCrossings()(implicit hc: HeaderCarrier): Future[List[Crossing]] = crossingRepository.getAll()
-
-  def getCrossing(crossingId: String)(implicit hc: HeaderCarrier): Future[Crossing] = crossingRepository.get(crossingId)
 
 }

@@ -21,8 +21,7 @@ import uk.gov.hmrc.transitmovementapi.models.types.ModelTypes._
 import uk.gov.hmrc.transitmovementapi.models.types._
 
 case class TransitSubmission(movementReferenceNumber: MovementReferenceNumber,
-                             vehicleReferenceNumber: Option[VehicleReferenceNumber],
-                             crossingId: ID)
+                             vehicleReferenceNumber: Option[VehicleReferenceNumber])
 
 object TransitSubmission {
   implicit val format: OFormat[TransitSubmission] = Json.format[TransitSubmission]

@@ -21,27 +21,16 @@ import java.time.Instant
 import play.api.libs.functional.syntax.{unlift, _}
 import play.api.libs.json._
 import reactivemongo.bson.BSONObjectID
-import uk.gov.hmrc.transitmovementapi.models.api.TransitSubmission
 import uk.gov.hmrc.transitmovementapi.models.types.ModelTypes._
 import uk.gov.hmrc.transitmovementapi.models.types._
 
-case class Transit(transitId: ID,
+case class Transit(transitId: CrossingId = BSONObjectID.generate().stringify,
                    movementReferenceNumber: MovementReferenceNumber,
                    vehicleReferenceNumber: Option[VehicleReferenceNumber],
-                   crossingId: ID,
-                   createdDateTime: Instant)
+                   crossingId: CrossingId,
+                   createdDateTime: Instant = Instant.now)
 
 object Transit {
-
-  def fromTransitSubmission(transitSubmission: TransitSubmission): Transit = {
-    Transit(
-      transitId = BSONObjectID.generate().stringify,
-      movementReferenceNumber = transitSubmission.movementReferenceNumber,
-      vehicleReferenceNumber = transitSubmission.vehicleReferenceNumber,
-      crossingId = transitSubmission.crossingId,
-      createdDateTime = Instant.now()
-    )
-  }
 
   implicit val reads: Reads[Transit] = (
     (__ \ "_id").read[String] and

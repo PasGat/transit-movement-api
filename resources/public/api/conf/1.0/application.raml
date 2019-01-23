@@ -41,52 +41,32 @@ uses:
             examples:
               example-1:
                 value: !include examples/submit-crossing-response-example.json
-        400:
-         body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              example-1:
-                description: The request body does not match the schema.
-                value:
-                  code: SCHEMA_VALIDATION_ERROR
 
-    /transits:
-      post:
-        displayName: Submit details of a transit that is part of a crossing
-        description: This endpoint takes a JSON body containing the details of a transit that is part of a crossing
-        is: [headers.acceptHeader]
-        securedBy: [sec.x-application]
-        body:
-          application/json:
-            type: !include schemas/submit-transit-request.json
-            example: !include examples/submit-transit-request-example.json
-        responses:
-          200:
-          400:
-           body:
+    /{crossingId}:
+      /transits:
+        uriParameters:
+          crossingId:
+            description: The unique ID for a crossing that has been created
+            type: string
+            example: 5c34bbada50000f900bf09bd
+            required: true
+        post:
+          displayName: Submit details of transit movements that are part of a crossing
+          description: This endpoint takes a JSON body containing the details of transit movements that are part of a crossing
+          is: [headers.acceptHeader]
+          securedBy: [sec.x-application]
+          body:
             application/json:
-              type: types.errorResponse
-              examples:
-                example-1:
-                  description: The request body does not match the schema.
-                  value:
-                    code: SCHEMA_VALIDATION_ERROR
-          404:
-           body:
-            application/json:
-              type: types.errorResponse
-              examples:
-                example-1:
-                  description: A crossing with the supplied crossing ID was not found
-                  value:
-                    code: CROSSING_NOT_FOUND
-          409:
-           body:
-            application/json:
-              type: types.errorResponse
-              examples:
-                example-1:
-                  description: A transit with the same details already exists
-                  value:
-                    code: TRANSIT_ALREADY_EXISTS
+              type: !include schemas/submit-transits-request.json
+              example: !include examples/submit-transits-request-example.json
+          responses:
+            204:
+            404:
+             body:
+              application/json:
+                type: types.errorResponse
+                examples:
+                  example-1:
+                    description: A crossing with the supplied crossing ID was not found
+                    value:
+                      code: CROSSING_NOT_FOUND

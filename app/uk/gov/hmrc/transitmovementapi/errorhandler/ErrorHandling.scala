@@ -18,8 +18,8 @@ package uk.gov.hmrc.transitmovementapi.errorhandler
 
 import play.api.Logger
 import play.api.mvc.Result
-import uk.gov.hmrc.transitmovementapi.errorhandler.ErrorResponse._
 import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier, NotFoundException}
+import uk.gov.hmrc.transitmovementapi.errorhandler.ErrorResponse._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -28,27 +28,23 @@ trait ErrorHandling {
   def handleErrors(f: => Future[Result])(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Result] = {
     f.recover {
       case _: NotFoundException =>
-        Logger.info("Resource not found")
+        Logger.error("Resource not found")
         NotFound.toResult
 
       case _: BadRequestException =>
-        Logger.info("Bad request")
-        BadRequest().toResult
+        Logger.error("Bad request")
+        BadRequest.toResult
 
       case _: CrossingNotFoundException =>
-        Logger.info("Crossing not found")
+        Logger.error("Crossing not found")
         CrossingNotFound.toResult
 
-      case e: DuplicateTransitException =>
-        Logger.info(e.message)
-        DuplicateTransit.toResult
-
       case r: MalformedBodyException =>
-        Logger.info(r.getMessage)
-        BadRequest("Badly formatted body data").toResult
+        Logger.error(r.getMessage)
+        BadRequest.toResult
 
       case e: Exception =>
-        Logger.warn(s"Internal server error: ${e.getMessage}", e)
+        Logger.error(s"Internal server error: ${e.getMessage}", e)
         InternalServerError.toResult
     }
   }

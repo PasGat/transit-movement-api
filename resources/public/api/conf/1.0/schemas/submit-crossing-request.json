@@ -1,5 +1,5 @@
 {
-  "description": "Create the details of a crossing",
+  "description": "Submit the details of a crossing",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -13,15 +13,27 @@
     "departureDateTime": {
       "type": "string",
       "description": "The date and time of the crossing departure",
+      "format": "date-time",
       "example": "2019-09-15T15:53:00Z"
     },
     "departurePort": {
       "type": "string",
-      "description": "The departure port of the transit"
+      "description": "The departure port of the crossing",
+      "enum": [
+        "Calais",
+        "Coquelles",
+        "Dublin",
+        "Dunkirk"
+      ]
     },
     "destinationPort": {
       "type": "string",
-      "description": "The destination port of the transit"
+      "description": "The destination port of the crossing",
+      "enum": [
+        "Dover",
+        "Folkestone",
+        "Holyhead"
+      ]
     },
     "duration": {
       "type": "number",
@@ -29,7 +41,14 @@
     },
     "carrier": {
       "type": "string",
-      "description": "The carrier of the transit"
+      "description": "The carrier of the transit",
+      "enum": [
+        "Brittany Ferries",
+        "DFDS",
+        "Eurotunnel",
+        "P&O",
+        "Stena Line"
+      ]
     }
   }
 }

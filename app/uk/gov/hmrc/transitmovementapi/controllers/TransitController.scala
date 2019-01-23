@@ -17,8 +17,8 @@
 package uk.gov.hmrc.transitmovementapi.controllers
 
 import com.google.inject._
-import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.{Action, AnyContent}
+import play.api.libs.json.JsValue
+import play.api.mvc.Action
 import uk.gov.hmrc.transitmovementapi.errorhandler.ErrorHandling
 import uk.gov.hmrc.transitmovementapi.models.api.TransitSubmission
 import uk.gov.hmrc.transitmovementapi.services.TransitService
@@ -29,11 +29,11 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class TransitController @Inject()(transitService: TransitService)(implicit ec: ExecutionContext) extends BaseApiController with HeaderValidator with ErrorHandling {
 
-  def submit: Action[JsValue] = validateAccept(acceptHeaderValidationRules).async(parse.json) { implicit request =>
+  def submit(crossingId: String): Action[JsValue] = validateAccept(acceptHeaderValidationRules).async(parse.json) { implicit request =>
     handleErrors {
-      withValidJson[TransitSubmission] {
-        transitSubmission =>
-          transitService.submitTransit(transitSubmission).map(transitId => Ok(Json.toJson(transitId)))
+      withValidJson[List[TransitSubmission]] {
+        transits =>
+          transitService.submitTransits(crossingId, transits).map(_ => NoContent)
       }
     }
   }

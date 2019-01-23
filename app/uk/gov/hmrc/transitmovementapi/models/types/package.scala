@@ -22,7 +22,7 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsError, JsSuccess, Reads, Writes}
 
 package object types {
-  // use it for the special Refined types as an import
+
   implicit def refinedReads[T, P](
                                    implicit reads: Reads[T], validate: Validate[T, P]
                                  ): Reads[T Refined P] =

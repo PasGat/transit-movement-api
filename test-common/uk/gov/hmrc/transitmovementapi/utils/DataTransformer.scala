@@ -21,22 +21,26 @@ import uk.gov.hmrc.transitmovementapi.models.data.{Crossing, Transit}
 
 trait DataTransformer {
   /**
-    From an API perspective, transforming from an entity to a submission is not required - at least for now.
-    However, extracting the id from an entity to a Crossing/TransitId object is needed at times.
-    Same for transforming from a request to an entity which will be persisted.
-   */
+    * From an API perspective, transforming from an entity to a submission is not required - at least for now.
+    * However, extracting the id from an entity to a CrossingId object is needed at times.
+    * Same for transforming from a request to an entity which will be persisted.
+    */
 
   def toTransitSubmission(transit: Transit): TransitSubmission = {
-    TransitSubmission(movementReferenceNumber = transit.movementReferenceNumber,
-      vehicleReferenceNumber = transit.vehicleReferenceNumber,
-      crossingId =  transit.crossingId)
+    TransitSubmission(
+      movementReferenceNumber = transit.movementReferenceNumber,
+      vehicleReferenceNumber = transit.vehicleReferenceNumber
+    )
   }
 
-  def toCrossingSubmission(crossing: Crossing): CrossingSubmission = CrossingSubmission(
-    departureDateTime = crossing.departureDateTime,
-    departurePort     = crossing.departurePort,
-    destinationPort   = crossing.destinationPort,
-    duration          = crossing.duration,
-    carrier           = crossing.carrier
-  )
+  def toCrossingSubmission(crossing: Crossing): CrossingSubmission = {
+    CrossingSubmission(
+      departureDateTime = crossing.departureDateTime,
+      departurePort = crossing.departurePort,
+      destinationPort = crossing.destinationPort,
+      duration = crossing.duration,
+      carrier = crossing.carrier
+    )
+  }
+
 }

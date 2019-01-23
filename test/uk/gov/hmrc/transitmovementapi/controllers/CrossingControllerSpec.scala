@@ -18,15 +18,13 @@ package uk.gov.hmrc.transitmovementapi.controllers
 
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
-import play.api.libs.json.Json
 import play.api.libs.json.Json._
 import play.api.test.Helpers._
-import reactivemongo.core.errors.ConnectionException
+import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.transitmovementapi.errorhandler.ErrorResponse.InternalServerError
-import uk.gov.hmrc.transitmovementapi.models.api.{CrossingId, CrossingSubmission}
+import uk.gov.hmrc.transitmovementapi.models.api.CrossingId
 import uk.gov.hmrc.transitmovementapi.services.CrossingService
 import uk.gov.hmrc.transitmovementapi.utils.{DataGenerator, DataSetupSpec, DataTransformer}
-import uk.gov.hmrc.http.InternalServerException
 
 import scala.concurrent.Future
 
@@ -39,12 +37,12 @@ class CrossingControllerSpec extends DataSetupSpec with DataGenerator with DataT
     "return 200 OK with the crossingId if the crossing submission is successful" in {
       withCrossing {
         crossing =>
-          when(mockCrossingService.submitCrossing(any())(any())).thenReturn(Future.successful(CrossingId.fromCrossing(crossing)))
+          when(mockCrossingService.submitCrossing(any())(any())).thenReturn(Future.successful(CrossingId(crossing.crossingId)))
 
           val result = controller.submit(fakeRequest.withBody(toJson(toCrossingSubmission(crossing))))
 
           status(result) shouldBe OK
-          contentAsJson(result) shouldBe toJson(CrossingId.fromCrossing(crossing))
+          contentAsJson(result) shouldBe toJson(CrossingId(crossing.crossingId))
       }
     }
 

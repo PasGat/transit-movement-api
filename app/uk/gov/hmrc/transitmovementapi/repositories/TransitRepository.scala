@@ -19,10 +19,8 @@ package uk.gov.hmrc.transitmovementapi.repositories
 import javax.inject.{Inject, Singleton}
 import play.modules.reactivemongo.ReactiveMongoComponent
 import reactivemongo.bson.BSONObjectID
-import uk.gov.hmrc.transitmovementapi.errorhandler.DuplicateTransitException
-import uk.gov.hmrc.transitmovementapi.models.api.TransitSubmission
-import uk.gov.hmrc.transitmovementapi.models.data.Transit
 import uk.gov.hmrc.mongo.ReactiveRepository
+import uk.gov.hmrc.transitmovementapi.models.data.Transit
 import uk.gov.hmrc.transitmovementapi.models.types._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -35,28 +33,17 @@ class TransitRepository @Inject()(mongo: ReactiveMongoComponent)(implicit execut
     domainFormat = Transit.format
   ) {
 
-  def create(transit: TransitSubmission): Future[Transit] = {
-    def isNewTransit: Future[Unit] = {
-      this.getTransit(transit) flatMap {
-        case None    => Future.successful(())
-        case Some(_) => Future.failed(DuplicateTransitException("Transit already exists!"))
-      }
+  def create(transit: Transit): Future[Unit] = {
+    getTransit(transit) flatMap {
+      case Some(_) => Future.successful(())
+      case None => insert(transit).map(_ => ())
     }
-
-    lazy val record = Transit.fromTransitSubmission(transit)
-
-    for {
-      _ <- isNewTransit
-      _ <- insert(record)
-    } yield record
   }
 
-  def getByCrossingId(crossingId: String): Future[List[Transit]] = find("crossingId" -> crossingId)
-
-  def getTransit(submission: TransitSubmission): Future[Option[Transit]] = find(
-    "crossingId" -> submission.crossingId,
-    "movementReferenceNumber" -> submission.movementReferenceNumber,
-    "vehicleReferenceNumber" -> submission.vehicleReferenceNumber
+  def getTransit(transit: Transit): Future[Option[Transit]] = find(
+    "crossingId" -> transit.crossingId,
+    "movementReferenceNumber" -> transit.movementReferenceNumber,
+    "vehicleReferenceNumber" -> transit.vehicleReferenceNumber
   ).map(_.headOption)
 
   def clear(): Future[Boolean] = removeAll().map(_.ok)

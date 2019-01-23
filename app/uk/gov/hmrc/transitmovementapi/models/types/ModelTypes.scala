@@ -24,20 +24,23 @@ import eu.timepit.refined.collection.{Empty, Forall}
 import eu.timepit.refined.string.MatchesRegex
 
 object ModelTypes {
-  // since there are no hard-defined implicit values for Refined's special types,
-  // a custom one had to be created
-  // in order to be able to serialize/deserialize these types, use the import in the `types` package object
+  /**
+    * Since there are no hard-defined implicit values for Refined's special types, a custom one had to be created.
+    *
+    * In order to be able to serialize/deserialize these types, import the refinedReads and refinedWrites from the 'types'
+    * package object.
+    */
 
-  type ID                      = String
+  type CrossingId = String
   type MovementReferenceNumber = String Refined ValidMovementReferenceNumber
-  type VehicleReferenceNumber  = String Refined ValidVehicleReferenceNumber
-  type DeparturePort           = String Refined ValidDeparturePort
-  type DestinationPort         = String Refined ValidDestinationPort
-  type Carrier                 = String Refined ValidCarrier
+  type VehicleReferenceNumber = String Refined ValidVehicleReferenceNumber
+  type DeparturePort = String Refined ValidDeparturePort
+  type DestinationPort = String Refined ValidDestinationPort
+  type Carrier = String Refined ValidCarrier
 
   private type ValidMovementReferenceNumber = MatchesRegex[W.`"""\\d{2}[a-zA-Z]{2}[a-zA-Z0-9]{14}"""`.T]
-  private type ValidVehicleReferenceNumber  = And[Not[Empty],Forall[Or[Whitespace, Or[UpperCase, Digit]]]]
-  private type ValidDeparturePort           = MatchesRegex[W.`"""(Calais)|(Coquelles)|(Dublin)|(Dunkirk)"""`.T]
-  private type ValidDestinationPort         = MatchesRegex[W.`"(Dover)|(Folkestone)|(Holyhead)"`.T]
-  private type ValidCarrier                 = MatchesRegex[W.`"""(Brittany Ferries)|(DFDS)|(Eurotunnel)|(P&O)|(Stena Line)"""`.T]
+  private type ValidVehicleReferenceNumber = And[Not[Empty], Forall[Or[Whitespace, Or[UpperCase, Digit]]]]
+  private type ValidDeparturePort = MatchesRegex[W.`"""(Calais)|(Coquelles)|(Dublin)|(Dunkirk)"""`.T]
+  private type ValidDestinationPort = MatchesRegex[W.`"(Dover)|(Folkestone)|(Holyhead)"`.T]
+  private type ValidCarrier = MatchesRegex[W.`"""(Brittany Ferries)|(DFDS)|(Eurotunnel)|(P&O)|(Stena Line)"""`.T]
 }

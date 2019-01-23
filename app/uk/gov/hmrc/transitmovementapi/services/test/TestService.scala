@@ -31,4 +31,5 @@ class TestService @Inject()(crossingRepository: CrossingRepository, transitRepos
       _ <- transitRepository.clear()
     } yield ()
   }
+
 }

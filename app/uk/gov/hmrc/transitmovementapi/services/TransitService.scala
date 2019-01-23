@@ -17,10 +17,10 @@
 package uk.gov.hmrc.transitmovementapi.services
 
 import com.google.inject.{Inject, Singleton}
-import uk.gov.hmrc.transitmovementapi.models.api.{TransitId, TransitSubmission}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.transitmovementapi.models.api.TransitSubmission
 import uk.gov.hmrc.transitmovementapi.models.data.Transit
 import uk.gov.hmrc.transitmovementapi.repositories.{CrossingRepository, TransitRepository}
-import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -29,13 +29,17 @@ class TransitService @Inject()(transitRepository: TransitRepository,
                                crossingRepository: CrossingRepository)
                               (implicit ec: ExecutionContext) {
 
-  def getByCrossingId(crossingId: String)(implicit hc: HeaderCarrier): Future[List[Transit]] = transitRepository.getByCrossingId(crossingId)
-
-  def submitTransit(transitSubmission: TransitSubmission)(implicit hc: HeaderCarrier): Future[TransitId] = {
+  def submitTransits(crossingId: String, transits: List[TransitSubmission])(implicit hc: HeaderCarrier): Future[Unit] = {
     for {
-      _       <- crossingRepository.get(transitSubmission.crossingId) // preliminary check for the existence of the crossing
-      transit <- transitRepository.create(transitSubmission)
-    } yield TransitId.fromTransit(transit)
+      _ <- crossingRepository.get(crossingId)
+      _ <- Future.traverse(transits)(transit => transitRepository.create(
+        Transit(
+          crossingId = crossingId,
+          movementReferenceNumber = transit.movementReferenceNumber,
+          vehicleReferenceNumber = transit.vehicleReferenceNumber
+        )
+      ))
+    } yield ()
   }
 
 }

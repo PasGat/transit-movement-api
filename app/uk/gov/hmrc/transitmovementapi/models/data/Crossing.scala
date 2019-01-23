@@ -21,30 +21,18 @@ import java.time.Instant
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import reactivemongo.bson.BSONObjectID
-import uk.gov.hmrc.transitmovementapi.models.api.CrossingSubmission
 import uk.gov.hmrc.transitmovementapi.models.types.ModelTypes._
 import uk.gov.hmrc.transitmovementapi.models.types._
 
-case class Crossing(crossingId: ID,
+case class Crossing(crossingId: CrossingId = BSONObjectID.generate().stringify,
                     departureDateTime: Instant,
                     departurePort: DeparturePort,
                     destinationPort: DestinationPort,
                     duration: Int,
                     carrier: Carrier,
-                    createdDateTime: Instant)
+                    createdDateTime: Instant = Instant.now)
 
 object Crossing {
-  def fromCrossingSubmission(crossingSubmission: CrossingSubmission): Crossing = {
-    Crossing(
-      crossingId = BSONObjectID.generate().stringify,
-      departureDateTime = crossingSubmission.departureDateTime,
-      departurePort = crossingSubmission.departurePort,
-      destinationPort = crossingSubmission.destinationPort,
-      duration = crossingSubmission.duration,
-      carrier = crossingSubmission.carrier,
-      createdDateTime = Instant.now
-    )
-  }
 
   implicit val reads: Reads[Crossing] = (
     (__ \ "_id").read[String] and

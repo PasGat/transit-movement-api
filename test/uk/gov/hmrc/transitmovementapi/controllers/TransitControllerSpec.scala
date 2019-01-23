@@ -38,46 +38,54 @@ class TransitControllerSpec extends DataSetupSpec with DataGenerator with DataTr
     "return 204 NO_CONTENT if the transit submission is successful" in {
       withTransit {
         transit =>
-          when(mockTransitService.submitTransits(any(), any())(any())).thenReturn(Future.successful(()))
+          withTransitMetadata {
+            metadata =>
+              when(mockTransitService.submitTransits(any(), any())(any())).thenReturn(Future.successful(()))
 
-          val result = controller.submit("test-crossing-id")(fakeRequest.withBody(Json.toJson(List(toTransitSubmission(transit)))))
+              val result = controller.submit("test-crossing-id")(fakeRequest.withBody(Json.toJson(List(toTransitSubmission(transit, metadata)))))
 
-          status(result) shouldBe NO_CONTENT
+              status(result) shouldBe NO_CONTENT
+          }
       }
     }
 
     "return 400 BAD_REQUEST if the json body is invalid" in {
-      withTransit {
-        transit =>
-          when(mockTransitService.submitTransits(any(), any())(any())).thenReturn(Future.successful(()))
+      withNoSetup {
+        when(mockTransitService.submitTransits(any(), any())(any())).thenReturn(Future.successful(()))
 
-          val result = controller.submit("test-crossing-id")(fakeRequest.withBody(Json.obj("invalid" -> "json")))
+        val result = controller.submit("test-crossing-id")(fakeRequest.withBody(Json.obj("invalid" -> "json")))
 
-          status(result) shouldBe BAD_REQUEST
+        status(result) shouldBe BAD_REQUEST
       }
     }
 
     "return 404 CROSSING_NOT_FOUND if the crossing does not exist for the supplied crossingId" in {
       withTransit {
         transit =>
-          when(mockTransitService.submitTransits(any(), any())(any())).thenReturn(Future.failed(CrossingNotFoundException("Crossing does not exist")))
+          withTransitMetadata {
+            metadata =>
+              when(mockTransitService.submitTransits(any(), any())(any())).thenReturn(Future.failed(CrossingNotFoundException("Crossing does not exist")))
 
-          val result = controller.submit("test-crossing-id")(fakeRequest.withBody(Json.toJson(List(toTransitSubmission(transit)))))
+              val result = controller.submit("test-crossing-id")(fakeRequest.withBody(Json.toJson(List(toTransitSubmission(transit, metadata)))))
 
-          status(result) shouldBe NOT_FOUND
-          contentAsJson(result) shouldBe Json.toJson(CrossingNotFound)
+              status(result) shouldBe NOT_FOUND
+              contentAsJson(result) shouldBe Json.toJson(CrossingNotFound)
+          }
       }
     }
 
     "return 500 INTERNAL_SERVER_ERROR if any errors occur server side when handling the submitted transit data" in {
       withTransit {
         transit =>
-          when(mockTransitService.submitTransits(any(), any())(any())).thenReturn(Future.failed(new InternalServerException("Failed to create transit")))
+          withTransitMetadata {
+            metadata =>
+              when(mockTransitService.submitTransits(any(), any())(any())).thenReturn(Future.failed(new InternalServerException("Failed to create transit")))
 
-          val result = controller.submit("test-crossing-id")(fakeRequest.withBody(Json.toJson(List(toTransitSubmission(transit)))))
+              val result = controller.submit("test-crossing-id")(fakeRequest.withBody(Json.toJson(List(toTransitSubmission(transit, metadata)))))
 
-          status(result) shouldBe INTERNAL_SERVER_ERROR
-          contentAsJson(result) shouldBe Json.toJson(InternalServerError)
+              status(result) shouldBe INTERNAL_SERVER_ERROR
+              contentAsJson(result) shouldBe Json.toJson(InternalServerError)
+          }
       }
     }
 

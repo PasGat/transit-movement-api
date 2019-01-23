@@ -36,22 +36,28 @@ class TransitServiceSpec extends DataSetupSpec with DataGenerator with DataTrans
     "return () if there were no errors when attempting to store the submitted transit data" in {
       withTransitAndCrossing {
         (transit, crossing) =>
-          when(mockCrossingRepository.get(any())).thenReturn(Future.successful(crossing))
-          when(mockTransitRepository.create(any())).thenReturn(Future.successful(()))
+          withTransitMetadata {
+            transitMetadata =>
+              when(mockCrossingRepository.get(any())).thenReturn(Future.successful(crossing))
+              when(mockTransitRepository.create(any())).thenReturn(Future.successful(()))
 
-          val result = await(service.submitTransits("test-crossing-id", List(toTransitSubmission(transit))))
+              val result: Unit = await(service.submitTransits("test-crossing-id", List(toTransitSubmission(transit, transitMetadata))))
 
-          result shouldBe (())
+              result shouldBe ()
+          }
       }
     }
 
     "throw a CrossingNotFoundException if the crossing does not exist for the supplied crossing ID" in {
       withTransit {
         transit =>
-          when(mockCrossingRepository.get(any())).thenReturn(Future.failed(CrossingNotFoundException("Crossing does not exist")))
+          withTransitMetadata {
+            transitMetadata =>
+              when(mockCrossingRepository.get(any())).thenReturn(Future.failed(CrossingNotFoundException("Crossing does not exist")))
 
-          intercept[CrossingNotFoundException] {
-            await(service.submitTransits("test-crossing-id", List(toTransitSubmission(transit))))
+              intercept[CrossingNotFoundException] {
+                await(service.submitTransits("test-crossing-id", List(toTransitSubmission(transit, transitMetadata))))
+              }
           }
       }
     }
@@ -59,11 +65,14 @@ class TransitServiceSpec extends DataSetupSpec with DataGenerator with DataTrans
     "throw an InternalServerException if any errors occurred when attempting to store the submitted transit data" in {
       withTransitAndCrossing {
         (transit, crossing) =>
-          when(mockCrossingRepository.get(any())).thenReturn(Future.successful(crossing))
-          when(mockTransitRepository.create(any())).thenReturn(Future.failed(new InternalServerException("Failed to create transit")))
+          withTransitMetadata {
+            transitMetadata =>
+              when(mockCrossingRepository.get(any())).thenReturn(Future.successful(crossing))
+              when(mockTransitRepository.create(any())).thenReturn(Future.failed(new InternalServerException("Failed to create transit")))
 
-          intercept[InternalServerException] {
-            await(service.submitTransits("test-crossing-id", List(toTransitSubmission(transit))))
+              intercept[InternalServerException] {
+                await(service.submitTransits("test-crossing-id", List(toTransitSubmission(transit, transitMetadata))))
+              }
           }
       }
     }

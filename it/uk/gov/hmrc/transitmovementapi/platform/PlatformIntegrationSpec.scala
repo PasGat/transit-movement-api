@@ -1,5 +1,6 @@
-package api
+package uk.gov.hmrc.transitmovementapi.platform
 
+import akka.actor.ActorSystem
 import akka.stream.Materializer
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
@@ -11,12 +12,15 @@ import org.scalatest.{BeforeAndAfterEach, TestData}
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
 import play.api.http.LazyHttpErrorHandler
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.{Application, Mode}
+import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.transitmovementapi.platform.controllers.DocumentationController
 import uk.gov.hmrc.transitmovementapi.platform.models.ServiceDetails
-import uk.gov.hmrc.play.test.UnitSpec
+
+import scala.concurrent.Future
 
 /**
   * Testcase to verify the capability of integration with the API platform.
@@ -32,9 +36,9 @@ import uk.gov.hmrc.play.test.UnitSpec
 class PlatformIntegrationSpec
   extends UnitSpec with GuiceOneAppPerTest with MockitoSugar with ScalaFutures with BeforeAndAfterEach {
 
-  val stubHost = "localhost"
-  val stubPort = sys.env.getOrElse("WIREMOCK_SERVICE_LOCATOR_PORT", "11112").toInt
-  val wireMockServer = new WireMockServer(wireMockConfig().port(stubPort))
+  val stubHost: String = "localhost"
+  val stubPort: Int = sys.env.getOrElse("WIREMOCK_SERVICE_LOCATOR_PORT", "11112").toInt
+  val wireMockServer: WireMockServer = new WireMockServer(wireMockConfig().port(stubPort))
 
   override def newAppForTest(testData: TestData): Application =
     GuiceApplicationBuilder()
@@ -60,11 +64,11 @@ class PlatformIntegrationSpec
   }
 
   trait Setup {
-    implicit lazy val actorSystem = app.actorSystem
+    implicit lazy val actorSystem: ActorSystem = app.actorSystem
     implicit lazy val materializer: Materializer = app.materializer
 
-    val documentationController = new DocumentationController(LazyHttpErrorHandler, Seq("1234567890")) {}
-    val request = FakeRequest()
+    val documentationController: DocumentationController = new DocumentationController(LazyHttpErrorHandler, Seq("1234567890")) {}
+    val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
   }
 
   "microservice" should {
@@ -90,10 +94,10 @@ class PlatformIntegrationSpec
         }
       }
 
-      val result = documentationController.definition()(request)
+      val result: Future[Result] = documentationController.definition()(request)
       status(result) shouldBe 200
 
-      val jsonResponse = jsonBodyOf(result).futureValue
+      val jsonResponse: JsValue = jsonBodyOf(result).futureValue
 
       val versions: Seq[String] = (jsonResponse \\ "version") map (_.as[String])
       val endpointNames: Seq[Seq[String]] =
@@ -102,18 +106,17 @@ class PlatformIntegrationSpec
       versions
         .zip(endpointNames)
         .flatMap {
-          case (version, endpoint) => {
+          case (version, endpoint) =>
             endpoint.map(endpointName => (version, endpointName))
-          }
         }
         .foreach { case (version, endpointName) => verifyDocumentationPresent(version, endpointName) }
     }
 
     "provide definition including the whitelisted app ids" in new Setup {
-      val result = documentationController.definition()(request)
+      val result: Future[Result] = documentationController.definition()(request)
       status(result) shouldBe 200
 
-      val jsonResponse = jsonBodyOf(result).futureValue
+      val jsonResponse: JsValue = jsonBodyOf(result).futureValue
 
       val whitelistedIds: Seq[String] =
         (jsonResponse \ "api" \ "versions" \ 0 \ "access" \ "whitelistedApplicationIds").as[Seq[String]]
@@ -122,14 +125,14 @@ class PlatformIntegrationSpec
     }
 
     "provide raml documentation" in new Setup {
-      val result = documentationController.raml("1.0", "application.raml")(request)
+      val result: Future[Result] = documentationController.raml("1.0", "application.raml")(request)
 
       status(result) shouldBe 200
       bodyOf(result).futureValue should startWith("#%RAML 1.0")
     }
   }
 
-  override protected def afterEach() = {
+  override protected def afterEach(): Unit = {
     wireMockServer.stop()
     wireMockServer.resetMappings()
   }

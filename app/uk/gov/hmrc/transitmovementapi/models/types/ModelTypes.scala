@@ -21,6 +21,7 @@ import eu.timepit.refined.api.Refined
 import eu.timepit.refined.boolean.{And, Not, Or}
 import eu.timepit.refined.char.{Digit, UpperCase, Whitespace}
 import eu.timepit.refined.collection.{Empty, Forall}
+import eu.timepit.refined.generic.Equal
 import eu.timepit.refined.string.MatchesRegex
 
 object ModelTypes {
@@ -32,15 +33,17 @@ object ModelTypes {
     */
 
   type CrossingId = String
-  type MovementReferenceNumber = String Refined ValidMovementReferenceNumber
-  type VehicleReferenceNumber = String Refined ValidVehicleReferenceNumber
-  type DeparturePort = String Refined ValidDeparturePort
-  type DestinationPort = String Refined ValidDestinationPort
-  type Carrier = String Refined ValidCarrier
+  type MovementReferenceNumber = Refined[String, ValidMovementReferenceNumber]
+  type VehicleReferenceNumber  = Refined[String, ValidVehicleReferenceNumber]
+  type DeparturePort           = Refined[String, ValidDeparturePort]
+  type DestinationPort         = Refined[String, ValidDestinationPort]
+  type Carrier                 = Refined[String, ValidCarrier]
+  type MRNCaptureMethod        = String Refined ValidMRNCaptureMethod
 
+  private type ValidMRNCaptureMethod        = Or[Equal[W.`"Scanned"`.T], Equal[W.`"Entered"`.T]]
   private type ValidMovementReferenceNumber = MatchesRegex[W.`"""\\d{2}[a-zA-Z]{2}[a-zA-Z0-9]{14}"""`.T]
-  private type ValidVehicleReferenceNumber = And[Not[Empty], Forall[Or[Whitespace, Or[UpperCase, Digit]]]]
-  private type ValidDeparturePort = MatchesRegex[W.`"""(Calais)|(Coquelles)|(Dublin)|(Dunkirk)"""`.T]
-  private type ValidDestinationPort = MatchesRegex[W.`"(Dover)|(Folkestone)|(Holyhead)"`.T]
-  private type ValidCarrier = MatchesRegex[W.`"""(Brittany Ferries)|(DFDS)|(Eurotunnel)|(P&O)|(Stena Line)"""`.T]
+  private type ValidVehicleReferenceNumber  = And[Not[Empty], Forall[Or[Whitespace, Or[UpperCase, Digit]]]]
+  private type ValidDeparturePort           = MatchesRegex[W.`"""(Calais)|(Coquelles)|(Dublin)|(Dunkirk)"""`.T]
+  private type ValidDestinationPort         = MatchesRegex[W.`"(Dover)|(Folkestone)|(Holyhead)"`.T]
+  private type ValidCarrier                 = MatchesRegex[W.`"""(Brittany Ferries)|(DFDS)|(Eurotunnel)|(P&O)|(Stena Line)"""`.T]
 }

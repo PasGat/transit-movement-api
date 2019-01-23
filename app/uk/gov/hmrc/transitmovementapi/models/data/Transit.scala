@@ -28,7 +28,9 @@ case class Transit(transitId: CrossingId = BSONObjectID.generate().stringify,
                    movementReferenceNumber: MovementReferenceNumber,
                    vehicleReferenceNumber: Option[VehicleReferenceNumber],
                    crossingId: CrossingId,
-                   createdDateTime: Instant = Instant.now)
+                   createdDateTime: Instant = Instant.now,
+                   mrnCaptureMethod: MRNCaptureMethod,
+                   mrnCaptureDateTime: Instant)
 
 object Transit {
 
@@ -37,7 +39,9 @@ object Transit {
       (__ \ "movementReferenceNumber").read[MovementReferenceNumber] and
       (__ \ "vehicleReferenceNumber").readNullable[VehicleReferenceNumber] and
       (__ \ "crossingId").read[String] and
-      (__ \ "createdDateTime").read[Instant]
+      (__ \ "createdDateTime").read[Instant] and
+      (__ \ "mrnCaptureMethod").read[MRNCaptureMethod] and
+      (__ \ "mrnCaptureDateTime").read[Instant]
     ) (Transit.apply _)
 
   implicit val writes: OWrites[Transit] = (
@@ -45,7 +49,9 @@ object Transit {
       (__ \ "movementReferenceNumber").write[MovementReferenceNumber] and
       (__ \ "vehicleReferenceNumber").writeNullable[VehicleReferenceNumber] and
       (__ \ "crossingId").write[String] and
-      (__ \ "createdDateTime").write[Instant]
+      (__ \ "createdDateTime").write[Instant]and
+      (__ \ "mrnCaptureMethod").write[MRNCaptureMethod] and
+      (__ \ "mrnCaptureDateTime").write[Instant]
     ) (unlift(Transit.unapply))
 
   implicit val format: OFormat[Transit] =

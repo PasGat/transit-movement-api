@@ -12,19 +12,25 @@ class TransitControllerISpec extends DataSetupISpec with DataGenerator {
         crossingDetails =>
           withTransit(Some(crossingDetails.id.crossingId)) {
             transit =>
-              val result = callRoute(fakeRequest(routes.TransitController.submit(crossingDetails.id.crossingId)).withBody(Json.toJson(List(toTransitSubmission(transit)))))
+              withTransitMetadata{
+                transitMetadata =>
+                  val result = callRoute(fakeRequest(routes.TransitController.submit(crossingDetails.id.crossingId)).withBody(Json.toJson(List(toTransitSubmission(transit, transitMetadata)))))
 
-              status(result) shouldBe NO_CONTENT
+                  status(result) shouldBe NO_CONTENT
+              }
           }
       }
     }
 
     "return 404 NOT_FOUND if the crossing does not exist for the supplied crossingId" in {
       withTransit() { transit =>
-        val result = callRoute(fakeRequest(routes.TransitController.submit("test-crossing-id")).withBody(Json.toJson(List(toTransitSubmission(transit)))))
+        withTransitMetadata {
+          transitMetadata =>
+            val result = callRoute(fakeRequest(routes.TransitController.submit("test-crossing-id")).withBody(Json.toJson(List(toTransitSubmission(transit, transitMetadata)))))
 
-        status(result) shouldBe NOT_FOUND
-        contentAsJson(result) shouldBe Json.toJson(CrossingNotFound)
+            status(result) shouldBe NOT_FOUND
+            contentAsJson(result) shouldBe Json.toJson(CrossingNotFound)
+        }
       }
     }
   }

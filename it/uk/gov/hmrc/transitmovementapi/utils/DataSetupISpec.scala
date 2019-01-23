@@ -2,7 +2,7 @@ package uk.gov.hmrc.transitmovementapi.utils
 
 import play.api.libs.json.Json
 import uk.gov.hmrc.transitmovementapi.controllers.routes
-import uk.gov.hmrc.transitmovementapi.models.api.{CrossingId, CrossingSubmission, TransitSubmission}
+import uk.gov.hmrc.transitmovementapi.models.api.{CrossingId, CrossingSubmission, TransitMetadata, TransitSubmission}
 import uk.gov.hmrc.transitmovementapi.models.data.{Crossing, Transit}
 
 trait DataSetupISpec extends BaseISpec with DataTransformer {
@@ -39,6 +39,8 @@ trait DataSetupISpec extends BaseISpec with DataTransformer {
   def withTransit(withDefaultCrossingId: Option[String] = None)(test: Transit => Unit): Unit = test(getRandomTransit(withDefaultCrossingId))
 
   def withCrossing(test: Crossing => Unit): Unit = test(getRandomCrossing)
+
+  def withTransitMetadata(test: TransitMetadata => Unit): Unit = test(getRandomMetadata)
 
   private def submitTransit(crossingId: String, transit: TransitSubmission): Unit = {
     val transitSubmissionCall = callRoute(fakeRequest(routes.TransitController.submit(crossingId)).withBody(Json.toJson(List(transit))))

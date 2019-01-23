@@ -21,7 +21,7 @@ import java.time.Instant
 import org.scalacheck.Gen
 import play.api.libs.json.Json
 import reactivemongo.bson.BSONObjectID
-import uk.gov.hmrc.transitmovementapi.models.api.TransitSubmission
+import uk.gov.hmrc.transitmovementapi.models.api.{TransitMetadata, TransitSubmission}
 import uk.gov.hmrc.transitmovementapi.models.data.Transit
 import wolfendale.scalacheck.regexp.RegexpGen
 import uk.gov.hmrc.transitmovementapi.models.types.ModelTypes._
@@ -32,19 +32,36 @@ trait TransitGenerator {
 
   private[utils] def getRandomTransit(withDefaultCrossingId: Option[String] = None): Transit = transitGenerator(withDefaultCrossingId).sample.get
 
+  private[utils] def getRandomMetadata: TransitMetadata = transitMetadataGenerator().sample.get
+
   private[utils] def getRandomTransitSubmission(withDefaultCrossingId: Option[String] = None): TransitSubmission =
-    transitGenerator(withDefaultCrossingId).map(t => toTransitSubmission(t)).sample.get
+    transitSubmissionGenerator(withDefaultCrossingId).sample.get
+
 
   private[utils] def getRandomCrossingId: String = crossingIdGenerator(None).sample.get
 
   private def transitGenerator(withDefaultCrossingId: Option[String]): Gen[Transit] = {
     for {
-      id           <- transitIdGenerator
-      mrn          <- movementReferenceNumberGenerator
-      vrn          <- vehicleReferenceNumberGenerator
-      crossingId   <- crossingIdGenerator(withDefaultCrossingId)
-      creationDate <- Gen.const(Instant.now)
-    } yield Transit(id, mrn, vrn, crossingId, creationDate)
+      id                 <- transitIdGenerator
+      mrn                <- movementReferenceNumberGenerator
+      vrn                <- vehicleReferenceNumberGenerator
+      crossingId         <- crossingIdGenerator(withDefaultCrossingId)
+      creationDate       <- Gen.const(Instant.now)
+      mrnCaptureMethod   <- captureMethodGenerator
+      mrnCaptureDateTime <- Gen.const(Instant.now)
+    } yield Transit(id, mrn, vrn, crossingId, creationDate, mrnCaptureMethod, mrnCaptureDateTime)
+  }
+
+  private def transitSubmissionGenerator(withDefaultCrossingId: Option[String] = None): Gen[TransitSubmission] = for {
+    transit  <- transitGenerator(withDefaultCrossingId)
+    metadata <- transitMetadataGenerator()
+  } yield toTransitSubmission(transit, metadata)
+
+  private def transitMetadataGenerator(): Gen[TransitMetadata] = {
+    for {
+      userId   <- Gen.const(BSONObjectID.generate().stringify)
+      deviceId <- Gen.const(BSONObjectID.generate().stringify)
+    } yield TransitMetadata(userId, deviceId)
   }
 
   private def transitIdGenerator: Gen[String] = Gen.const(BSONObjectID.generate().stringify)
@@ -59,5 +76,9 @@ trait TransitGenerator {
 
   private def crossingIdGenerator(withDefaultCrossingId: Option[String]): Gen[String] = {
     Gen.const(withDefaultCrossingId.fold(BSONObjectID.generate().stringify)(id => id))
+  }
+
+  private def captureMethodGenerator: Gen[MRNCaptureMethod] = {
+    Gen.oneOf("Scanned", "Entered").map(c => Json.toJson(c).as[MRNCaptureMethod])
   }
 }

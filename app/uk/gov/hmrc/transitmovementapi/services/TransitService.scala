@@ -36,7 +36,9 @@ class TransitService @Inject()(transitRepository: TransitRepository,
         Transit(
           crossingId = crossingId,
           movementReferenceNumber = transit.movementReferenceNumber,
-          vehicleReferenceNumber = transit.vehicleReferenceNumber
+          vehicleReferenceNumber = transit.vehicleReferenceNumber,
+          mrnCaptureMethod = transit.mrnCaptureMethod,
+          mrnCaptureDateTime = transit.mrnCaptureDateTime
         )
       ))
     } yield ()

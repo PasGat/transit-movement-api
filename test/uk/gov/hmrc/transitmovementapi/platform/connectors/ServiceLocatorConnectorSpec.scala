@@ -23,14 +23,14 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import play.api.libs.json.Writes
 import uk.gov.hmrc.transitmovementapi.platform.models.ServiceDetails
-import uk.gov.hmrc.transitmovementapi.utils.BaseSpec
+import uk.gov.hmrc.transitmovementapi.helpers.ApplicationSetupSpec
 import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class ServiceLocatorConnectorSpec extends BaseSpec {
+class ServiceLocatorConnectorSpec extends ApplicationSetupSpec {
 
   trait Setup {
     implicit val hc: HeaderCarrier = HeaderCarrier()

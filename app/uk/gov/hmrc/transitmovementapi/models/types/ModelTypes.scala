@@ -38,9 +38,9 @@ object ModelTypes {
   type DeparturePort           = Refined[String, ValidDeparturePort]
   type DestinationPort         = Refined[String, ValidDestinationPort]
   type Carrier                 = Refined[String, ValidCarrier]
-  type MRNCaptureMethod        = String Refined ValidMRNCaptureMethod
+  type MrnCaptureMethod        = Refined[String, ValidMRNCaptureMethod]
 
-  private type ValidMRNCaptureMethod        = Or[Equal[W.`"Scanned"`.T], Equal[W.`"Entered"`.T]]
+  private type ValidMRNCaptureMethod        = Or[Equal[W.`"SCAN"`.T], Equal[W.`"MANUAL"`.T]]
   private type ValidMovementReferenceNumber = MatchesRegex[W.`"""\\d{2}[a-zA-Z]{2}[a-zA-Z0-9]{14}"""`.T]
   private type ValidVehicleReferenceNumber  = And[Not[Empty], Forall[Or[Whitespace, Or[UpperCase, Digit]]]]
   private type ValidDeparturePort           = MatchesRegex[W.`"""(Calais)|(Coquelles)|(Dublin)|(Dunkirk)"""`.T]

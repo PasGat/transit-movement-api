@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.transitmovementapi.utils
+package uk.gov.hmrc.transitmovementapi.helpers
 
 import uk.gov.hmrc.transitmovementapi.models.api.TransitMetadata
 import uk.gov.hmrc.transitmovementapi.models.data.{Crossing, Transit}
 
-trait DataSetupSpec extends BaseSpec {
+trait BaseSpec extends ApplicationSetupSpec {
   self: DataGenerator =>
 
   def withTransit(test: Transit => Unit): Unit   = test(getRandomTransit())

@@ -7,7 +7,8 @@
     "departurePort",
     "destinationPort",
     "duration",
-    "carrier"
+    "carrier",
+    "captureDateTime"
   ],
   "properties": {
     "departureDateTime": {
@@ -43,12 +44,17 @@
       "type": "string",
       "description": "The carrier of the transit",
       "enum": [
-        "Brittany Ferries",
+        "Irish Ferries",
         "DFDS",
         "Eurotunnel",
         "P&O",
         "Stena Line"
       ]
+    },
+    "captureDateTime": {
+      "type": "string",
+      "description": "The time that the crossing has been registered",
+      "example": "2019-09-15T15:53:00Z"
     }
   }
 }

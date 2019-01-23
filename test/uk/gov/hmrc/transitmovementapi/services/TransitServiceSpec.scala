@@ -19,18 +19,20 @@ package uk.gov.hmrc.transitmovementapi.services
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import uk.gov.hmrc.http.InternalServerException
+import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
 import uk.gov.hmrc.transitmovementapi.errorhandler.CrossingNotFoundException
 import uk.gov.hmrc.transitmovementapi.repositories.{CrossingRepository, TransitRepository}
-import uk.gov.hmrc.transitmovementapi.utils.{DataGenerator, DataSetupSpec, DataTransformer}
+import uk.gov.hmrc.transitmovementapi.helpers.{DataGenerator, BaseSpec, DataTransformer}
 
 import scala.concurrent.Future
 
-
-class TransitServiceSpec extends DataSetupSpec with DataGenerator with DataTransformer {
+class TransitServiceSpec extends BaseSpec with DataGenerator with DataTransformer {
 
   val mockTransitRepository: TransitRepository = mock[TransitRepository]
   val mockCrossingRepository: CrossingRepository = mock[CrossingRepository]
-  val service: TransitService = new TransitService(mockTransitRepository, mockCrossingRepository)
+  val mockAuditConnector: AuditConnector = mock[AuditConnector]
+
+  val service: TransitService = new TransitService(mockTransitRepository, mockCrossingRepository, mockAuditConnector)
 
   "create" should {
     "return () if there were no errors when attempting to store the submitted transit data" in {
@@ -40,7 +42,7 @@ class TransitServiceSpec extends DataSetupSpec with DataGenerator with DataTrans
             transitMetadata =>
               when(mockCrossingRepository.get(any())).thenReturn(Future.successful(crossing))
               when(mockTransitRepository.create(any())).thenReturn(Future.successful(()))
-
+              when(mockAuditConnector.sendExtendedEvent(any())(any(), any())).thenReturn(Future.successful(AuditResult.Success))
               val result: Unit = await(service.submitTransits("test-crossing-id", List(toTransitSubmission(transit, transitMetadata))))
 
               result shouldBe ()
@@ -68,6 +70,7 @@ class TransitServiceSpec extends DataSetupSpec with DataGenerator with DataTrans
           withTransitMetadata {
             transitMetadata =>
               when(mockCrossingRepository.get(any())).thenReturn(Future.successful(crossing))
+              when(mockAuditConnector.sendExtendedEvent(any())(any(), any())).thenReturn(Future.successful(AuditResult.Success))
               when(mockTransitRepository.create(any())).thenReturn(Future.failed(new InternalServerException("Failed to create transit")))
 
               intercept[InternalServerException] {

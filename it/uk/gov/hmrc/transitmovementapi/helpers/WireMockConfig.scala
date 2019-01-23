@@ -1,4 +1,4 @@
-package uk.gov.hmrc.transitmovementapi.utils
+package uk.gov.hmrc.transitmovementapi.helpers
 
 trait WireMockConfig {
   me: AdditionalAppConfig with WireMockSupport =>

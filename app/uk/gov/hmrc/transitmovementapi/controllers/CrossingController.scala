@@ -22,7 +22,7 @@ import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.transitmovementapi.errorhandler.ErrorHandling
 import uk.gov.hmrc.transitmovementapi.models.api.CrossingSubmission
 import uk.gov.hmrc.transitmovementapi.services.CrossingService
-import uk.gov.hmrc.transitmovementapi.utils.HeaderValidator
+import uk.gov.hmrc.transitmovementapi.helpers.HeaderValidator
 
 import scala.concurrent.ExecutionContext
 

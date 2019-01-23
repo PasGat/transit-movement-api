@@ -21,6 +21,7 @@ import java.time.Instant
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import reactivemongo.bson.BSONObjectID
+import uk.gov.hmrc.transitmovementapi.models.api.CrossingSubmission
 import uk.gov.hmrc.transitmovementapi.models.types.ModelTypes._
 import uk.gov.hmrc.transitmovementapi.models.types._
 
@@ -30,9 +31,19 @@ case class Crossing(crossingId: CrossingId = BSONObjectID.generate().stringify,
                     destinationPort: DestinationPort,
                     duration: Int,
                     carrier: Carrier,
-                    createdDateTime: Instant = Instant.now)
+                    createdDateTime: Instant = Instant.now,
+                    captureDateTime: Instant
+                   )
 
 object Crossing {
+  def fromSubmission(crossingSubmission: CrossingSubmission): Crossing = Crossing(
+    departureDateTime = crossingSubmission.departureDateTime,
+    departurePort = crossingSubmission.departurePort,
+    destinationPort = crossingSubmission.destinationPort,
+    duration = crossingSubmission.duration,
+    carrier = crossingSubmission.carrier,
+    captureDateTime = crossingSubmission.captureDateTime
+  )
 
   implicit val reads: Reads[Crossing] = (
     (__ \ "_id").read[String] and
@@ -41,7 +52,8 @@ object Crossing {
       (__ \ "destinationPort").read[DestinationPort] and
       (__ \ "duration").read[Int] and
       (__ \ "carrier").read[Carrier] and
-      (__ \ "createdDateTime").read[Instant]
+      (__ \ "createdDateTime").read[Instant] and
+      (__ \ "captureDateTime").read[Instant]
     ) (Crossing.apply _)
 
   implicit val writes: OWrites[Crossing] = (
@@ -51,7 +63,8 @@ object Crossing {
       (__ \ "destinationPort").write[DestinationPort] and
       (__ \ "duration").write[Int] and
       (__ \ "carrier").write[Carrier] and
-      (__ \ "createdDateTime").write[Instant]
+      (__ \ "createdDateTime").write[Instant] and
+      (__ \ "captureDateTime").write[Instant]
     ) (unlift(Crossing.unapply))
 
   implicit val format: OFormat[Crossing] =

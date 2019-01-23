@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.transitmovementapi.utils
+package uk.gov.hmrc.transitmovementapi.helpers
 
 import uk.gov.hmrc.transitmovementapi.models.api.{CrossingSubmission, TransitMetadata, TransitSubmission}
 import uk.gov.hmrc.transitmovementapi.models.data.{Crossing, Transit}
@@ -30,9 +30,9 @@ trait DataTransformer {
     TransitSubmission(
       movementReferenceNumber = transit.movementReferenceNumber,
       vehicleReferenceNumber = transit.vehicleReferenceNumber,
-      mrnCaptureMethod = transit.mrnCaptureMethod,
-      mrnCaptureDateTime = transit.mrnCaptureDateTime,
-      metadata = transitMetadata
+      captureMethod = transit.captureMethod,
+      captureDateTime = transit.captureDateTime,
+      auditData = transitMetadata
     )
   }
 
@@ -42,7 +42,8 @@ trait DataTransformer {
       departurePort = crossing.departurePort,
       destinationPort = crossing.destinationPort,
       duration = crossing.duration,
-      carrier = crossing.carrier
+      carrier = crossing.carrier,
+      captureDateTime = crossing.captureDateTime
     )
   }
 

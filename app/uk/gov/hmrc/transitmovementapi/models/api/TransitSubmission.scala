@@ -24,9 +24,9 @@ import uk.gov.hmrc.transitmovementapi.models.types._
 
 case class TransitSubmission(movementReferenceNumber: MovementReferenceNumber,
                              vehicleReferenceNumber: Option[VehicleReferenceNumber],
-                             mrnCaptureMethod: MRNCaptureMethod,
-                             mrnCaptureDateTime: Instant,
-                             metadata: TransitMetadata)
+                             captureMethod: MrnCaptureMethod,
+                             captureDateTime: Instant,
+                             auditData: TransitMetadata)
 
 object TransitSubmission {
   implicit val format: OFormat[TransitSubmission] = Json.format[TransitSubmission]

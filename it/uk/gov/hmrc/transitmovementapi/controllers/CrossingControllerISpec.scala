@@ -2,10 +2,10 @@ package uk.gov.hmrc.transitmovementapi.controllers
 
 import play.api.libs.json.Json
 import uk.gov.hmrc.transitmovementapi.models.api.CrossingId
-import uk.gov.hmrc.transitmovementapi.utils.DataSetupISpec
-import uk.gov.hmrc.transitmovementapi.utils.DataGenerator
+import uk.gov.hmrc.transitmovementapi.helpers.BaseISpec
+import uk.gov.hmrc.transitmovementapi.helpers.DataGenerator
 
-class CrossingControllerISpec extends DataSetupISpec with DataGenerator {
+class CrossingControllerISpec extends BaseISpec with DataGenerator {
   "POST /crossings" should {
     "return 200 OK with a crossing ID for a successful crossing submission" in {
       withCrossing {

@@ -26,7 +26,8 @@ case class CrossingSubmission(departureDateTime: Instant,
                               departurePort: DeparturePort,
                               destinationPort: DestinationPort,
                               duration: Int,
-                              carrier: Carrier)
+                              carrier: Carrier,
+                              captureDateTime: Instant)
 
 object CrossingSubmission {
   implicit val format: OFormat[CrossingSubmission] = Json.format[CrossingSubmission]

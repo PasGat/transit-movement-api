@@ -19,9 +19,9 @@ package uk.gov.hmrc.transitmovementapi.platform
 import org.mockito.Mockito._
 import uk.gov.hmrc.transitmovementapi.platform.connectors.ServiceLocatorConnector
 import uk.gov.hmrc.transitmovementapi.platform.tasks.ServiceLocatorRegistration
-import uk.gov.hmrc.transitmovementapi.utils.BaseSpec
+import uk.gov.hmrc.transitmovementapi.helpers.ApplicationSetupSpec
 
-class ServiceRegistrationSpec extends BaseSpec {
+class ServiceRegistrationSpec extends ApplicationSetupSpec {
 
   trait Setup {
     val mockConnector: ServiceLocatorConnector = mock[ServiceLocatorConnector]

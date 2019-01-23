@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.transitmovementapi.utils
+package uk.gov.hmrc.transitmovementapi.helpers
 
 import java.time.Instant
 
@@ -30,15 +30,15 @@ import uk.gov.hmrc.transitmovementapi.models.types._
 trait TransitGenerator {
   dataTransformer: DataTransformer =>
 
-  private[utils] def getRandomTransit(withDefaultCrossingId: Option[String] = None): Transit = transitGenerator(withDefaultCrossingId).sample.get
+  private[helpers] def getRandomTransit(withDefaultCrossingId: Option[String] = None): Transit = transitGenerator(withDefaultCrossingId).sample.get
 
-  private[utils] def getRandomMetadata: TransitMetadata = transitMetadataGenerator().sample.get
+  private[helpers] def getRandomMetadata: TransitMetadata = transitMetadataGenerator().sample.get
 
-  private[utils] def getRandomTransitSubmission(withDefaultCrossingId: Option[String] = None): TransitSubmission =
+  private[helpers] def getRandomTransitSubmission(withDefaultCrossingId: Option[String] = None): TransitSubmission =
     transitSubmissionGenerator(withDefaultCrossingId).sample.get
 
 
-  private[utils] def getRandomCrossingId: String = crossingIdGenerator(None).sample.get
+  private[helpers] def getRandomCrossingId: String = crossingIdGenerator(None).sample.get
 
   private def transitGenerator(withDefaultCrossingId: Option[String]): Gen[Transit] = {
     for {
@@ -78,7 +78,7 @@ trait TransitGenerator {
     Gen.const(withDefaultCrossingId.fold(BSONObjectID.generate().stringify)(id => id))
   }
 
-  private def captureMethodGenerator: Gen[MRNCaptureMethod] = {
-    Gen.oneOf("Scanned", "Entered").map(c => Json.toJson(c).as[MRNCaptureMethod])
+  private def captureMethodGenerator: Gen[MrnCaptureMethod] = {
+    Gen.oneOf("SCAN", "MANUAL").map(c => Json.toJson(c).as[MrnCaptureMethod])
   }
 }

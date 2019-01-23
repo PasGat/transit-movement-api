@@ -21,6 +21,7 @@ import java.time.Instant
 import play.api.libs.functional.syntax.{unlift, _}
 import play.api.libs.json._
 import reactivemongo.bson.BSONObjectID
+import uk.gov.hmrc.transitmovementapi.models.api.TransitSubmission
 import uk.gov.hmrc.transitmovementapi.models.types.ModelTypes._
 import uk.gov.hmrc.transitmovementapi.models.types._
 
@@ -29,10 +30,17 @@ case class Transit(transitId: CrossingId = BSONObjectID.generate().stringify,
                    vehicleReferenceNumber: Option[VehicleReferenceNumber],
                    crossingId: CrossingId,
                    createdDateTime: Instant = Instant.now,
-                   mrnCaptureMethod: MRNCaptureMethod,
-                   mrnCaptureDateTime: Instant)
+                   captureMethod: MrnCaptureMethod,
+                   captureDateTime: Instant)
 
 object Transit {
+  def fromSubmission(crossingId: CrossingId, transit: TransitSubmission): Transit = Transit(
+    crossingId = crossingId,
+    movementReferenceNumber = transit.movementReferenceNumber,
+    vehicleReferenceNumber = transit.vehicleReferenceNumber,
+    captureMethod = transit.captureMethod,
+    captureDateTime = transit.captureDateTime
+  )
 
   implicit val reads: Reads[Transit] = (
     (__ \ "_id").read[String] and
@@ -40,8 +48,8 @@ object Transit {
       (__ \ "vehicleReferenceNumber").readNullable[VehicleReferenceNumber] and
       (__ \ "crossingId").read[String] and
       (__ \ "createdDateTime").read[Instant] and
-      (__ \ "mrnCaptureMethod").read[MRNCaptureMethod] and
-      (__ \ "mrnCaptureDateTime").read[Instant]
+      (__ \ "captureMethod").read[MrnCaptureMethod] and
+      (__ \ "captureDateTime").read[Instant]
     ) (Transit.apply _)
 
   implicit val writes: OWrites[Transit] = (
@@ -50,8 +58,8 @@ object Transit {
       (__ \ "vehicleReferenceNumber").writeNullable[VehicleReferenceNumber] and
       (__ \ "crossingId").write[String] and
       (__ \ "createdDateTime").write[Instant]and
-      (__ \ "mrnCaptureMethod").write[MRNCaptureMethod] and
-      (__ \ "mrnCaptureDateTime").write[Instant]
+      (__ \ "captureMethod").write[MrnCaptureMethod] and
+      (__ \ "captureDateTime").write[Instant]
     ) (unlift(Transit.unapply))
 
   implicit val format: OFormat[Transit] =

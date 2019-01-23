@@ -22,12 +22,13 @@ import play.api.mvc.Action
 import uk.gov.hmrc.transitmovementapi.errorhandler.ErrorHandling
 import uk.gov.hmrc.transitmovementapi.models.api.TransitSubmission
 import uk.gov.hmrc.transitmovementapi.services.TransitService
-import uk.gov.hmrc.transitmovementapi.utils.HeaderValidator
+import uk.gov.hmrc.transitmovementapi.helpers.HeaderValidator
 
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class TransitController @Inject()(transitService: TransitService)(implicit ec: ExecutionContext) extends BaseApiController with HeaderValidator with ErrorHandling {
+class TransitController @Inject()(transitService: TransitService)(implicit ec: ExecutionContext)
+  extends BaseApiController with HeaderValidator with ErrorHandling {
 
   def submit(crossingId: String): Action[JsValue] = validateAccept(acceptHeaderValidationRules).async(parse.json) { implicit request =>
     handleErrors {
@@ -37,5 +38,4 @@ class TransitController @Inject()(transitService: TransitService)(implicit ec: E
       }
     }
   }
-
 }

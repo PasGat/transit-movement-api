@@ -1,4 +1,4 @@
-package uk.gov.hmrc.transitmovementapi.utils
+package uk.gov.hmrc.transitmovementapi.helpers
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.transitmovementapi.utils
+package uk.gov.hmrc.transitmovementapi.helpers
 
 trait TestDataSetup extends DataTransformer {
   dataGenerator: DataGenerator =>

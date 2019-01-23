@@ -21,17 +21,19 @@ import org.mockito.Mockito.when
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.transitmovementapi.errorhandler.ErrorResponse.{CrossingNotFound, InternalServerError}
 import uk.gov.hmrc.transitmovementapi.errorhandler._
 import uk.gov.hmrc.transitmovementapi.services.TransitService
-import uk.gov.hmrc.transitmovementapi.utils.{DataGenerator, DataSetupSpec, DataTransformer}
+import uk.gov.hmrc.transitmovementapi.helpers.{DataGenerator, BaseSpec, DataTransformer}
 
 import scala.concurrent.Future
 
 
-class TransitControllerSpec extends DataSetupSpec with DataGenerator with DataTransformer {
+class TransitControllerSpec extends BaseSpec with DataGenerator with DataTransformer {
 
   val mockTransitService: TransitService = mock[TransitService]
+  val mockAuditConnector: AuditConnector = mock[AuditConnector]
   val controller: TransitController = new TransitController(mockTransitService)
 
   "submit" should {

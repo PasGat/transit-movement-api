@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.transitmovementapi.utils
+package uk.gov.hmrc.transitmovementapi.helpers
 
 trait DataGenerator extends TransitGenerator with CrossingGenerator {
   self: DataTransformer =>

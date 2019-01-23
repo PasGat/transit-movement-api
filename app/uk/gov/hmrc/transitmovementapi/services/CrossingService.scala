@@ -30,15 +30,7 @@ class CrossingService @Inject()(crossingRepository: CrossingRepository)(implicit
   def submitCrossing(crossingSubmission: CrossingSubmission)(implicit hc: HeaderCarrier): Future[CrossingId] = {
     crossingRepository.getCrossing(crossingSubmission).flatMap {
       case Some(crossing) => Future.successful(CrossingId(crossing.crossingId))
-      case _ => crossingRepository.create(
-        Crossing(
-          departureDateTime = crossingSubmission.departureDateTime,
-          departurePort = crossingSubmission.departurePort,
-          destinationPort = crossingSubmission.destinationPort,
-          duration = crossingSubmission.duration,
-          carrier = crossingSubmission.carrier
-        )
-      )
+      case None           => crossingRepository.create(Crossing.fromSubmission(crossingSubmission))
     }
   }
 

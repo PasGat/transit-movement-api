@@ -21,12 +21,11 @@ import org.mockito.Mockito.when
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.transitmovementapi.models.api.CrossingId
 import uk.gov.hmrc.transitmovementapi.repositories.CrossingRepository
-import uk.gov.hmrc.transitmovementapi.utils.{DataGenerator, DataSetupSpec, DataTransformer}
+import uk.gov.hmrc.transitmovementapi.helpers.{DataGenerator, BaseSpec, DataTransformer}
 
 import scala.concurrent.Future
 
-
-class CrossingServiceSpec extends DataSetupSpec with DataGenerator with DataTransformer {
+class CrossingServiceSpec extends BaseSpec with DataGenerator with DataTransformer {
 
   val mockCrossingRepository: CrossingRepository = mock[CrossingRepository]
   val service: CrossingService = new CrossingService(mockCrossingRepository)

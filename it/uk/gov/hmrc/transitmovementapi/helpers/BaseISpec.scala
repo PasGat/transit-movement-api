@@ -1,11 +1,11 @@
-package uk.gov.hmrc.transitmovementapi.utils
+package uk.gov.hmrc.transitmovementapi.helpers
 
 import play.api.libs.json.Json
 import uk.gov.hmrc.transitmovementapi.controllers.routes
 import uk.gov.hmrc.transitmovementapi.models.api.{CrossingId, CrossingSubmission, TransitMetadata, TransitSubmission}
 import uk.gov.hmrc.transitmovementapi.models.data.{Crossing, Transit}
 
-trait DataSetupISpec extends BaseISpec with DataTransformer {
+trait BaseISpec extends ApplicationSetupISpec with DataTransformer {
   self: DataGenerator =>
 
   sealed case class TransitDetails(submission: TransitSubmission)

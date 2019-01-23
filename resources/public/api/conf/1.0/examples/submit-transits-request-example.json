@@ -1,18 +1,42 @@
 [
   {
     "movementReferenceNumber": "18GB0000601001EB15",
-    "vehicleReferenceNumber": "AB12 CDE"
+    "vehicleReferenceNumber": "AB12 CDE",
+    "captureMethod": "MANUAL",
+    "captureDateTime": "2008-09-15T15:53:00Z",
+    "auditData": {
+      "userId": "ABC",
+      "deviceId": "ABC"
+    }
   },
   {
     "movementReferenceNumber": "18GB0000601001EB16",
-    "vehicleReferenceNumber": "AB12 CDE"
+    "vehicleReferenceNumber": "AB12 CDE",
+    "captureMethod": "SCAN",
+    "captureDateTime": "2008-09-15T15:53:00Z",
+    "auditData": {
+      "userId": "ABC",
+      "deviceId": "ABC"
+    }
   },
   {
     "movementReferenceNumber": "18GB0000601001EB17",
-    "vehicleReferenceNumber": "FG13 HIJ"
+    "vehicleReferenceNumber": "FG13 HIJ",
+    "captureMethod": "SCAN",
+    "captureDateTime": "2008-09-15T15:53:00Z",
+    "auditData": {
+      "userId": "ABC",
+      "deviceId": "ABC"
+    }
   },
   {
     "movementReferenceNumber": "18GB0000601001EB18",
-    "vehicleReferenceNumber": "FG13 HIJ"
+    "vehicleReferenceNumber": "FG13 HIJ",
+    "captureMethod": "SCAN",
+    "captureDateTime": "2008-09-15T15:53:00Z",
+    "auditData": {
+      "userId": "ABC",
+      "deviceId": "ABC"
+    }
   }
 ]

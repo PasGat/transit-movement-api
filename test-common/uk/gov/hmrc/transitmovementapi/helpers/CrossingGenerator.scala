@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.transitmovementapi.utils
+package uk.gov.hmrc.transitmovementapi.helpers
 
 import java.time.Instant
 
@@ -29,8 +29,8 @@ import uk.gov.hmrc.transitmovementapi.models.types._
 trait CrossingGenerator {
   dataTransformer: DataTransformer =>
 
-  private[utils] def getRandomCrossing: Crossing                     = crossingGenerator.sample.get
-  private[utils] def getRandomCrossingSubmission: CrossingSubmission = crossingGenerator.map(c => toCrossingSubmission(c)).sample.get
+  private[helpers] def getRandomCrossing: Crossing                     = crossingGenerator.sample.get
+  private[helpers] def getRandomCrossingSubmission: CrossingSubmission = crossingGenerator.map(c => toCrossingSubmission(c)).sample.get
 
   private def crossingGenerator: Gen[Crossing] = for {
     id              <- crossingIdGenerator
@@ -40,7 +40,8 @@ trait CrossingGenerator {
     duration        <- Gen.choose(0, Int.MaxValue)
     carrier         <- carrierGenerator
     createdTime     <- Gen.const(Instant.now)
-  } yield Crossing(id, departureTime, departurePort, destinationPort, duration, carrier, createdTime)
+    captureDateTime <- Gen.const(Instant.now)
+  } yield Crossing(id, departureTime, departurePort, destinationPort, duration, carrier, createdTime, captureDateTime)
 
   private def crossingIdGenerator: Gen[String] = Gen.const(BSONObjectID.generate().stringify)
 

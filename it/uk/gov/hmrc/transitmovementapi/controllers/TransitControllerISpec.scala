@@ -2,9 +2,9 @@ package uk.gov.hmrc.transitmovementapi.controllers
 
 import play.api.libs.json.Json
 import uk.gov.hmrc.transitmovementapi.errorhandler.ErrorResponse.CrossingNotFound
-import uk.gov.hmrc.transitmovementapi.utils.{DataGenerator, DataSetupISpec}
+import uk.gov.hmrc.transitmovementapi.helpers.{DataGenerator, BaseISpec}
 
-class TransitControllerISpec extends DataSetupISpec with DataGenerator {
+class TransitControllerISpec extends BaseISpec with DataGenerator {
 
   "POST /crossings/{crossingId}/transits" should {
     "return 204 NO_CONTENT for a successful transits submission" in {

@@ -1,4 +1,4 @@
-package uk.gov.hmrc.transitmovementapi.utils
+package uk.gov.hmrc.transitmovementapi.helpers
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
@@ -16,7 +16,7 @@ import uk.gov.hmrc.transitmovementapi.controllers.test.routes
 import scala.concurrent.ExecutionContext.global
 import scala.concurrent.{ExecutionContext, Future}
 
-abstract class BaseISpec
+abstract class ApplicationSetupISpec
   extends WordSpec with GuiceOneAppPerSuite with BeforeAndAfterEach with BeforeAndAfterAll with Matchers
     with Inspectors with ScalaFutures with DefaultAwaitTimeout with Writeables with EssentialActionCaller
     with RouteInvokers with LoneElement with Inside with OptionValues with Results with Status with HeaderNames
@@ -42,8 +42,8 @@ abstract class BaseISpec
   )
 
   override protected def beforeEach(): Unit = {
-/*    val result = callRoute(fakeRequest(routes.TestController.clearAll()))
-    status(result) shouldBe NO_CONTENT*/
+    val result = callRoute(fakeRequest(routes.TestController.clearAll()))
+    status(result) shouldBe NO_CONTENT
   }
 
   override def fakeApplication(): Application =

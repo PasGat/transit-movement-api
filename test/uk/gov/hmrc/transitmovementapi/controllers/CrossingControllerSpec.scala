@@ -24,12 +24,12 @@ import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.transitmovementapi.errorhandler.ErrorResponse.InternalServerError
 import uk.gov.hmrc.transitmovementapi.models.api.CrossingId
 import uk.gov.hmrc.transitmovementapi.services.CrossingService
-import uk.gov.hmrc.transitmovementapi.utils.{DataGenerator, DataSetupSpec, DataTransformer}
+import uk.gov.hmrc.transitmovementapi.helpers.{DataGenerator, BaseSpec, DataTransformer}
 
 import scala.concurrent.Future
 
 
-class CrossingControllerSpec extends DataSetupSpec with DataGenerator with DataTransformer {
+class CrossingControllerSpec extends BaseSpec with DataGenerator with DataTransformer {
   val mockCrossingService: CrossingService = mock[CrossingService]
   val controller: CrossingController = new CrossingController(mockCrossingService)
 

@@ -5,7 +5,10 @@
     "type": "object",
     "description": "Details of a transit movement",
     "required": [
-      "movementReferenceNumber"
+      "movementReferenceNumber",
+      "captureMethod",
+      "captureDateTime",
+      "auditData"
     ],
     "properties": {
       "movementReferenceNumber": {
@@ -17,6 +20,36 @@
         "type": "string",
         "description": "The reference number of the vehicle that the transit movement was on",
         "pattern": "[A-Z0-9]"
+      },
+      "captureMethod": {
+        "type": "string",
+        "description": "The method that was used to capture the MRN",
+        "enum": ["SCAN", "MANUAL"]
+      },
+      "captureDateTime": {
+        "type": "string",
+        "description": "The datetime when the MRN has been captured",
+        "example": "2019-09-15T15:53:00Z"
+      },
+      "auditData": {
+        "type": "object",
+        "description": "Extra data about the transit record",
+        "required": [
+          "userId",
+          "deviceId"
+        ],
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "The ID of the user logged on the phone who captured the transit",
+            "example": "5c34bbada50000f900bf09bd"
+          },
+          "deviceId": {
+            "type": "string",
+            "description": "The ID of the device that has been used to capture the transit",
+            "example": "5c34bbada50000f900bf09bd"
+          }
+        }
       }
     }
   },

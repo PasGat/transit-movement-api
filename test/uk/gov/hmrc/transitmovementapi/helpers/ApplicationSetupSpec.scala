@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.transitmovementapi.utils
+package uk.gov.hmrc.transitmovementapi.helpers
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
@@ -29,7 +29,7 @@ import uk.gov.hmrc.play.test.UnitSpec
 import scala.concurrent.ExecutionContext
 
 
-trait BaseSpec extends UnitSpec with BeforeAndAfterAll with Inspectors with Inside
+trait ApplicationSetupSpec extends UnitSpec with BeforeAndAfterAll with Inspectors with Inside
   with EitherValues with LoneElement with MockitoSugar with ScalaFutures with OptionValues {
 
   implicit lazy val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global

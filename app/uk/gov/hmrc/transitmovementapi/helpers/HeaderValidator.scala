@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.transitmovementapi.utils
+package uk.gov.hmrc.transitmovementapi.helpers
 
 import play.api.libs.json.Json
 import play.api.mvc.{ActionBuilder, Request, Result, Results}

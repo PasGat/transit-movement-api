@@ -16,10 +16,9 @@
 
 package uk.gov.hmrc.transitmovementapi.helpers
 
-import uk.gov.hmrc.transitmovementapi.models.api.TransitMetadata
 import uk.gov.hmrc.transitmovementapi.models.data.{Crossing, Transit}
 
-trait BaseSpec extends ApplicationSetupSpec {
+trait BaseSpec extends ApplicationSetupSpec with DataTransformer {
   self: DataGenerator =>
 
   def withTransit(test: Transit => Unit): Unit   = test(getRandomTransit())

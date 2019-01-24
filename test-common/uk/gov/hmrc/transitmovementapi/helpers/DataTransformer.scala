@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.transitmovementapi.helpers
 
-import uk.gov.hmrc.transitmovementapi.models.api.{CrossingSubmission, TransitMetadata, TransitSubmission}
+import uk.gov.hmrc.transitmovementapi.models.api.{CrossingSubmission, TransitSubmission}
 import uk.gov.hmrc.transitmovementapi.models.data.{Crossing, Transit}
 
 trait DataTransformer {
@@ -26,13 +26,16 @@ trait DataTransformer {
     * Same for transforming from a request to an entity which will be persisted.
     */
 
+  case class TransitMetadata(userId: String, deviceId: String)
+
   def toTransitSubmission(transit: Transit, transitMetadata: TransitMetadata): TransitSubmission = {
     TransitSubmission(
       movementReferenceNumber = transit.movementReferenceNumber,
       vehicleReferenceNumber = transit.vehicleReferenceNumber,
       captureMethod = transit.captureMethod,
       captureDateTime = transit.captureDateTime,
-      auditData = transitMetadata
+      userId = transitMetadata.userId,
+      deviceId = transitMetadata.deviceId
     )
   }
 

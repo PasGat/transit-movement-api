@@ -26,7 +26,8 @@ case class TransitSubmission(movementReferenceNumber: MovementReferenceNumber,
                              vehicleReferenceNumber: Option[VehicleReferenceNumber],
                              captureMethod: MrnCaptureMethod,
                              captureDateTime: Instant,
-                             auditData: TransitMetadata)
+                             userId: String,
+                             deviceId: String)
 
 object TransitSubmission {
   implicit val format: OFormat[TransitSubmission] = Json.format[TransitSubmission]

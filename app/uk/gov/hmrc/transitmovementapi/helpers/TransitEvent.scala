@@ -16,30 +16,23 @@
 
 package uk.gov.hmrc.transitmovementapi.helpers
 
-import play.api.libs.json.{JsObject, JsValue, Json}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
-import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
+import play.api.libs.json.{Format, Json}
 import uk.gov.hmrc.transitmovementapi.models.api.TransitSubmission
 import uk.gov.hmrc.transitmovementapi.models.types.ModelTypes.{CrossingId, MovementReferenceNumber}
 import uk.gov.hmrc.transitmovementapi.models.types._
 
-import scala.concurrent.{ExecutionContext, Future}
+case class TransitEvent(userId: String,
+                        deviceId: String,
+                        mrn: MovementReferenceNumber,
+                        crossingId: CrossingId)
 
-trait AuditEvents {
-  val auditConnector: AuditConnector
-  implicit val ec: ExecutionContext
+object TransitEvent {
+  def fromSubmission(transit: TransitSubmission, crossingId: CrossingId): TransitEvent = TransitEvent(
+    userId = transit.userId,
+    deviceId = transit.deviceId,
+    mrn = transit.movementReferenceNumber,
+    crossingId = crossingId
+  )
 
-  def audit(event: => Future[ExtendedDataEvent], failureMessage: String => String)(implicit hc: HeaderCarrier): Future[AuditResult] =
-    event.flatMap(auditConnector.sendExtendedEvent)
-
-  def sendTransitEvent(transitSubmission: TransitEvent)(implicit hc: HeaderCarrier): Future[ExtendedDataEvent] = {
-    Future {
-      ExtendedDataEvent(
-        "transit-movement-api",
-        "transit-recorded",
-        detail = Json.toJson(transitSubmission)
-      )
-    }
-  }
+  implicit val format: Format[TransitEvent] = Json.format[TransitEvent]
 }

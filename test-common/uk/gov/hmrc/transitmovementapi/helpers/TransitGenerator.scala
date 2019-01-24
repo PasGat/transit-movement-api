@@ -21,7 +21,7 @@ import java.time.Instant
 import org.scalacheck.Gen
 import play.api.libs.json.Json
 import reactivemongo.bson.BSONObjectID
-import uk.gov.hmrc.transitmovementapi.models.api.{TransitMetadata, TransitSubmission}
+import uk.gov.hmrc.transitmovementapi.models.api.TransitSubmission
 import uk.gov.hmrc.transitmovementapi.models.data.Transit
 import wolfendale.scalacheck.regexp.RegexpGen
 import uk.gov.hmrc.transitmovementapi.models.types.ModelTypes._
@@ -32,7 +32,7 @@ trait TransitGenerator {
 
   private[helpers] def getRandomTransit(withDefaultCrossingId: Option[String] = None): Transit = transitGenerator(withDefaultCrossingId).sample.get
 
-  private[helpers] def getRandomMetadata: TransitMetadata = transitMetadataGenerator().sample.get
+  private[helpers] def getRandomMetadata: TransitMetadata = transitMetadataGenerator.sample.get
 
   private[helpers] def getRandomTransitSubmission(withDefaultCrossingId: Option[String] = None): TransitSubmission =
     transitSubmissionGenerator(withDefaultCrossingId).sample.get
@@ -54,15 +54,13 @@ trait TransitGenerator {
 
   private def transitSubmissionGenerator(withDefaultCrossingId: Option[String] = None): Gen[TransitSubmission] = for {
     transit  <- transitGenerator(withDefaultCrossingId)
-    metadata <- transitMetadataGenerator()
+    metadata <- transitMetadataGenerator
   } yield toTransitSubmission(transit, metadata)
 
-  private def transitMetadataGenerator(): Gen[TransitMetadata] = {
-    for {
-      userId   <- Gen.const(BSONObjectID.generate().stringify)
-      deviceId <- Gen.const(BSONObjectID.generate().stringify)
-    } yield TransitMetadata(userId, deviceId)
-  }
+  private def transitMetadataGenerator: Gen[TransitMetadata] = for {
+    userId   <- Gen.const(BSONObjectID.generate().stringify)
+    deviceId <- Gen.const(BSONObjectID.generate().stringify)
+  } yield TransitMetadata(userId, deviceId)
 
   private def transitIdGenerator: Gen[String] = Gen.const(BSONObjectID.generate().stringify)
 

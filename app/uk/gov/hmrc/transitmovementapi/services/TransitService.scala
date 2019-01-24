@@ -19,7 +19,7 @@ package uk.gov.hmrc.transitmovementapi.services
 import com.google.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.transitmovementapi.helpers.AuditEvents
+import uk.gov.hmrc.transitmovementapi.helpers.{AuditEvents, TransitEvent}
 import uk.gov.hmrc.transitmovementapi.models.api.TransitSubmission
 import uk.gov.hmrc.transitmovementapi.models.data.Transit
 import uk.gov.hmrc.transitmovementapi.repositories.{CrossingRepository, TransitRepository}
@@ -36,7 +36,7 @@ class TransitService @Inject()(transitRepository: TransitRepository,
     for {
       _ <- crossingRepository.get(crossingId)
       _ <- Future.traverse(transits){ transit =>
-        audit(sendTransitEvent(transit.auditData, transit.movementReferenceNumber, crossingId), s => s"Transit metadata audit event failed with $s")
+        audit(sendTransitEvent(TransitEvent.fromSubmission(transit, crossingId)), s => s"Transit metadata audit event failed with $s")
         transitRepository.create(Transit.fromSubmission(crossingId, transit))
       }
     } yield ()

@@ -17,21 +17,16 @@
 package uk.gov.hmrc.transitmovementapi.services
 
 import com.google.inject.{Inject, Singleton}
-import uk.gov.hmrc.transitmovementapi.models.api.{CrossingId, CrossingSubmission}
-import uk.gov.hmrc.transitmovementapi.models.data.Crossing
-import uk.gov.hmrc.transitmovementapi.repositories.CrossingRepository
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.transitmovementapi.connectors.CtcConnector
+import uk.gov.hmrc.transitmovementapi.models.api.{CrossingId, CrossingSubmission}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CrossingService @Inject()(crossingRepository: CrossingRepository)(implicit ec: ExecutionContext) {
+class CrossingService @Inject()(ctcConnector: CtcConnector)(implicit ec: ExecutionContext) {
 
   def submitCrossing(crossingSubmission: CrossingSubmission)(implicit hc: HeaderCarrier): Future[CrossingId] = {
-    crossingRepository.getCrossing(crossingSubmission).flatMap {
-      case Some(crossing) => Future.successful(CrossingId(crossing.crossingId))
-      case None           => crossingRepository.create(Crossing.fromSubmission(crossingSubmission))
-    }
+    ctcConnector.postCrossing(crossingSubmission)
   }
-
 }

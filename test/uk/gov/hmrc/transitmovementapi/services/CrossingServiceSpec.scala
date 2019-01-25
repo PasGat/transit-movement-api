@@ -19,23 +19,22 @@ package uk.gov.hmrc.transitmovementapi.services
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import uk.gov.hmrc.http.InternalServerException
+import uk.gov.hmrc.transitmovementapi.connectors.CtcConnector
+import uk.gov.hmrc.transitmovementapi.helpers.{BaseSpec, DataGenerator, DataTransformer}
 import uk.gov.hmrc.transitmovementapi.models.api.CrossingId
-import uk.gov.hmrc.transitmovementapi.repositories.CrossingRepository
-import uk.gov.hmrc.transitmovementapi.helpers.{DataGenerator, BaseSpec, DataTransformer}
 
 import scala.concurrent.Future
 
 class CrossingServiceSpec extends BaseSpec with DataGenerator with DataTransformer {
 
-  val mockCrossingRepository: CrossingRepository = mock[CrossingRepository]
-  val service: CrossingService = new CrossingService(mockCrossingRepository)
+  val mockCtcConnector: CtcConnector = mock[CtcConnector]
+  val service: CrossingService = new CrossingService(mockCtcConnector)
 
   "create" should {
     "return the crossing ID if the crossing creation is successful" in {
       withCrossing {
         crossing =>
-          when(mockCrossingRepository.getCrossing(any())).thenReturn(Future.successful(Some(crossing)))
-          when(mockCrossingRepository.create(any())).thenReturn(Future.successful(CrossingId(crossing.crossingId)))
+          when(mockCtcConnector.postCrossing(any())(any())).thenReturn(Future.successful(CrossingId(crossing.crossingId)))
 
           val result = await(service.submitCrossing(toCrossingSubmission(crossing)))
 
@@ -46,8 +45,7 @@ class CrossingServiceSpec extends BaseSpec with DataGenerator with DataTransform
     "throw an InternalServerException if the crossing creation fails" in {
       withCrossing {
         crossing => {
-          when(mockCrossingRepository.getCrossing(any())).thenReturn(Future.successful(None))
-          when(mockCrossingRepository.create(any())).thenReturn(Future.failed(new InternalServerException("Failed to create crossing")))
+          when(mockCtcConnector.postCrossing(any())(any())).thenReturn(Future.failed(new InternalServerException("Failed to create crossing")))
 
           intercept[InternalServerException] {
             await(service.submitCrossing(toCrossingSubmission(crossing)))

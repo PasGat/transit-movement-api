@@ -19,27 +19,21 @@ package uk.gov.hmrc.transitmovementapi.services
 import com.google.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.transitmovementapi.connectors.CtcConnector
 import uk.gov.hmrc.transitmovementapi.helpers.{AuditEvents, TransitEvent}
 import uk.gov.hmrc.transitmovementapi.models.api.TransitSubmission
-import uk.gov.hmrc.transitmovementapi.models.data.Transit
-import uk.gov.hmrc.transitmovementapi.repositories.{CrossingRepository, TransitRepository}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class TransitService @Inject()(transitRepository: TransitRepository,
-                               crossingRepository: CrossingRepository,
+class TransitService @Inject()(ctcConnector: CtcConnector,
                                val auditConnector: AuditConnector)
                               (implicit val ec: ExecutionContext) extends AuditEvents {
 
   def submitTransits(crossingId: String, transits: List[TransitSubmission])(implicit hc: HeaderCarrier): Future[Unit] = {
-    for {
-      _ <- crossingRepository.get(crossingId)
-      _ <- Future.traverse(transits){ transit =>
-        audit(sendTransitEvent(TransitEvent.fromSubmission(transit, crossingId)), s => s"Transit metadata audit event failed with $s")
-        transitRepository.create(Transit.fromSubmission(crossingId, transit))
-      }
-    } yield ()
+    Future.traverse(transits) { t =>
+      audit(sendTransitEvent(TransitEvent.fromSubmission(t, crossingId)), (_: String) => "")
+      ctcConnector.postTransit(crossingId, t)
+    }.map(_ => ())
   }
-
 }

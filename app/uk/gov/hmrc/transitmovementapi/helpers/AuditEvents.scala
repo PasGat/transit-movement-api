@@ -16,12 +16,10 @@
 
 package uk.gov.hmrc.transitmovementapi.helpers
 
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
 import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
-import uk.gov.hmrc.transitmovementapi.models.api.TransitSubmission
-import uk.gov.hmrc.transitmovementapi.models.types.ModelTypes.{CrossingId, MovementReferenceNumber}
 import uk.gov.hmrc.transitmovementapi.models.types._
 
 import scala.concurrent.{ExecutionContext, Future}

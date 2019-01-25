@@ -39,10 +39,6 @@ trait ErrorHandling {
         Logger.error("Crossing not found")
         CrossingNotFound.toResult
 
-      case r: MalformedBodyException =>
-        Logger.error(r.getMessage)
-        BadRequest.toResult
-
       case e: Exception =>
         Logger.error(s"Internal server error: ${e.getMessage}", e)
         InternalServerError.toResult

@@ -25,7 +25,7 @@ import uk.gov.hmrc.transitmovementapi.models.types._
 case class CrossingSubmission(departureDateTime: Instant,
                               departurePort: DeparturePort,
                               destinationPort: DestinationPort,
-                              duration: Int,
+                              duration: Duration,
                               carrier: Carrier,
                               captureDateTime: Instant)
 

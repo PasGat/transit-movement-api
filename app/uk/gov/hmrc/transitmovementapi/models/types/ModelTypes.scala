@@ -22,6 +22,7 @@ import eu.timepit.refined.boolean.{And, Not, Or}
 import eu.timepit.refined.char.{Digit, UpperCase, Whitespace}
 import eu.timepit.refined.collection.{Empty, Forall}
 import eu.timepit.refined.generic.Equal
+import eu.timepit.refined.numeric.GreaterEqual
 import eu.timepit.refined.string.MatchesRegex
 
 object ModelTypes {
@@ -36,6 +37,7 @@ object ModelTypes {
   type MovementReferenceNumber = Refined[String, ValidMovementReferenceNumber]
   type VehicleReferenceNumber  = Refined[String, ValidVehicleReferenceNumber]
   type DeparturePort           = Refined[String, ValidDeparturePort]
+  type Duration                = Refined[Int, GreaterEqual[shapeless.nat._0]]
   type DestinationPort         = Refined[String, ValidDestinationPort]
   type Carrier                 = Refined[String, ValidCarrier]
   type MrnCaptureMethod        = Refined[String, ValidMRNCaptureMethod]

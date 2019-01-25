@@ -29,7 +29,7 @@ case class Crossing(crossingId: CrossingId = BSONObjectID.generate().stringify,
                     departureDateTime: Instant,
                     departurePort: DeparturePort,
                     destinationPort: DestinationPort,
-                    duration: Int,
+                    duration: Duration,
                     carrier: Carrier,
                     createdDateTime: Instant = Instant.now,
                     captureDateTime: Instant
@@ -50,7 +50,7 @@ object Crossing {
       (__ \ "departureDateTime").read[Instant] and
       (__ \ "departurePort").read[DeparturePort] and
       (__ \ "destinationPort").read[DestinationPort] and
-      (__ \ "duration").read[Int] and
+      (__ \ "duration").read[Duration] and
       (__ \ "carrier").read[Carrier] and
       (__ \ "createdDateTime").read[Instant] and
       (__ \ "captureDateTime").read[Instant]
@@ -61,7 +61,7 @@ object Crossing {
       (__ \ "departureDateTime").write[Instant] and
       (__ \ "departurePort").write[DeparturePort] and
       (__ \ "destinationPort").write[DestinationPort] and
-      (__ \ "duration").write[Int] and
+      (__ \ "duration").write[Duration] and
       (__ \ "carrier").write[Carrier] and
       (__ \ "createdDateTime").write[Instant] and
       (__ \ "captureDateTime").write[Instant]

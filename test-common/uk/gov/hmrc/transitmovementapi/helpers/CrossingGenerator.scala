@@ -37,7 +37,7 @@ trait CrossingGenerator {
     departureTime   <- Gen.const(Instant.now)
     departurePort   <- departurePortGenerator
     destinationPort <- destinationPortGenerator
-    duration        <- Gen.choose(0, Int.MaxValue)
+    duration        <- Gen.choose(0, Int.MaxValue).map(d => Json.toJson(d).as[Duration])
     carrier         <- carrierGenerator
     createdTime     <- Gen.const(Instant.now)
     captureDateTime <- Gen.const(Instant.now)

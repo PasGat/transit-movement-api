@@ -20,12 +20,11 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import play.api.libs.json.Json
 import play.api.test.Helpers._
-import uk.gov.hmrc.http.InternalServerException
+import uk.gov.hmrc.http.{InternalServerException, NotFoundException}
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.transitmovementapi.errorhandler.ErrorResponse.{CrossingNotFound, InternalServerError}
-import uk.gov.hmrc.transitmovementapi.errorhandler._
+import uk.gov.hmrc.transitmovementapi.errorhandler.ErrorResponse.{InternalServerError, NotFound}
+import uk.gov.hmrc.transitmovementapi.helpers.{BaseSpec, DataGenerator, DataTransformer}
 import uk.gov.hmrc.transitmovementapi.services.TransitService
-import uk.gov.hmrc.transitmovementapi.helpers.{DataGenerator, BaseSpec, DataTransformer}
 
 import scala.concurrent.Future
 
@@ -61,17 +60,17 @@ class TransitControllerSpec extends BaseSpec with DataGenerator with DataTransfo
       }
     }
 
-    "return 404 CROSSING_NOT_FOUND if the crossing does not exist for the supplied crossingId" in {
+    "return 404 NotFound if the crossing does not exist for the supplied crossingId" in {
       withTransit {
         transit =>
           withTransitMetadata {
             metadata =>
-              when(mockTransitService.submitTransits(any(), any())(any())).thenReturn(Future.failed(CrossingNotFoundException("Crossing does not exist")))
+              when(mockTransitService.submitTransits(any(), any())(any())).thenReturn(Future.failed(new NotFoundException("Crossing does not exist")))
 
               val result = controller.submit("test-crossing-id")(fakeRequest.withBody(Json.toJson(List(toTransitSubmission(transit, metadata)))))
 
               status(result) shouldBe NOT_FOUND
-              contentAsJson(result) shouldBe Json.toJson(CrossingNotFound)
+              contentAsJson(result) shouldBe Json.toJson(NotFound)
           }
       }
     }

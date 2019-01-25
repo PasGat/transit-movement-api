@@ -17,19 +17,16 @@
 package uk.gov.hmrc.transitmovementapi.services.test
 
 import com.google.inject.{Inject, Singleton}
-import uk.gov.hmrc.transitmovementapi.repositories.{CrossingRepository, TransitRepository}
 import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.transitmovementapi.connectors.CtcConnector
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class TestService @Inject()(crossingRepository: CrossingRepository, transitRepository: TransitRepository)(implicit ec: ExecutionContext) {
+class TestService @Inject()(ctcConnector: CtcConnector)(implicit ec: ExecutionContext) {
 
   def clearAll(implicit hc: HeaderCarrier): Future[Unit] = {
-    for {
-      _ <- crossingRepository.clear()
-      _ <- transitRepository.clear()
-    } yield ()
+    ???
   }
 
 }

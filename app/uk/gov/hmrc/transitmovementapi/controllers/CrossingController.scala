@@ -36,5 +36,4 @@ class CrossingController @Inject()(crossingService: CrossingService)(implicit ec
       }
     }
   }
-
 }

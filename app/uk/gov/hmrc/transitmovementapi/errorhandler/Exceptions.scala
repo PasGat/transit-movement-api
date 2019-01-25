@@ -21,5 +21,3 @@ sealed trait DomainError extends Exception {
 }
 
 case class CrossingNotFoundException(message: String) extends DomainError
-
-case class MalformedBodyException(message: String) extends DomainError

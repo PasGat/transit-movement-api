@@ -1,7 +1,6 @@
 package uk.gov.hmrc.transitmovementapi.controllers
 
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.transitmovementapi.errorhandler.ErrorResponse
 import uk.gov.hmrc.transitmovementapi.helpers.{BaseISpec, DataGenerator}
 
@@ -30,7 +29,7 @@ class TransitControllerISpec extends BaseISpec with DataGenerator {
             val result = callRoute(fakeRequest(routes.TransitController.submit("test-crossing-id")).withBody(Json.toJson(List(toTransitSubmission(transit, transitMetadata)))))
 
             status(result) shouldBe NOT_FOUND
-            contentAsJson(result) shouldBe Json.toJson(ErrorResponse.NotFound)
+            contentAsJson(result) shouldBe Json.toJson(ErrorResponse.CrossingNotFound)
         }
       }
     }

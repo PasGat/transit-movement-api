@@ -43,7 +43,7 @@ trait BaseISpec extends ApplicationSetupISpec with DataTransformer {
   def withTransitMetadata(test: TransitMetadata => Unit): Unit = test(getRandomMetadata)
 
   private def submitTransit(crossingId: String, transit: TransitSubmission): Unit = {
-    val transitSubmissionCall = callRoute(fakeRequest(routes.TransitController.submit(crossingId)).withBody(Json.toJson(List(transit))))
+    val transitSubmissionCall = callRoute(fakeRequest(routes.TransitController.submit(crossingId)).withBody(Json.toJson(transit)))
     status(transitSubmissionCall) shouldBe NO_CONTENT
   }
 

@@ -21,8 +21,8 @@ class CrossingControllerISpec extends BaseISpec with DataGenerator {
         crossing =>
           val result = callRoute(fakeRequest(routes.CrossingController.submit()).withBody(Json.toJson(crossing.submission)))
 
-          status(result) shouldBe OK
           contentAsJson(result).as[CrossingId] shouldBe crossing.id
+          status(result) shouldBe OK
       }
     }
   }

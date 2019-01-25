@@ -54,6 +54,6 @@ trait CrossingGenerator {
     .map(port => Json.toJson(port).as[DestinationPort])
 
   private def carrierGenerator: Gen[Carrier] =
-    Gen.oneOf( "Brittany Ferries", "DFDS", "Eurotunnel", "P&O", "Stena Line")
+    Gen.oneOf( "Irish Ferries", "DFDS", "Eurotunnel", "P&O", "Stena Line")
     .map(c => Json.toJson(c).as[Carrier])
 }

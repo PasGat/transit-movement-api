@@ -25,6 +25,7 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.transitmovementapi.errorhandler.ErrorResponse.{InternalServerError, NotFound}
 import uk.gov.hmrc.transitmovementapi.helpers.{BaseSpec, DataGenerator, DataTransformer}
 import uk.gov.hmrc.transitmovementapi.services.TransitService
+import org.mockito.ArgumentMatchers.{eq => eqTo, _}
 
 import scala.concurrent.Future
 
@@ -37,13 +38,13 @@ class TransitControllerSpec extends BaseSpec with DataGenerator with DataTransfo
 
   "submit" should {
     "return 204 NO_CONTENT if the transit submission is successful" in {
-      withTransit {
-        transit =>
+      withTransitAndCrossing {
+        (transit, crossing) =>
           withTransitMetadata {
             metadata =>
-              when(mockTransitService.submitTransits(any(), any())(any())).thenReturn(Future.successful(()))
+              when(mockTransitService.submitTransits(eqTo(crossing.crossingId), any())(any())).thenReturn(Future.successful(()))
 
-              val result = controller.submit("test-crossing-id")(fakeRequest.withBody(Json.toJson(List(toTransitSubmission(transit, metadata)))))
+              val result = controller.submit(crossing.crossingId)(fakeRequest.withBody(Json.toJson(List(toTransitSubmission(transit, metadata)))))
 
               status(result) shouldBe NO_CONTENT
           }

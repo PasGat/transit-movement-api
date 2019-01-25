@@ -47,5 +47,5 @@ object ModelTypes {
   private type ValidVehicleReferenceNumber  = And[Not[Empty], Forall[Or[Whitespace, Or[UpperCase, Digit]]]]
   private type ValidDeparturePort           = MatchesRegex[W.`"""(Calais)|(Coquelles)|(Dublin)|(Dunkirk)"""`.T]
   private type ValidDestinationPort         = MatchesRegex[W.`"(Dover)|(Folkestone)|(Holyhead)"`.T]
-  private type ValidCarrier                 = MatchesRegex[W.`"""(Brittany Ferries)|(DFDS)|(Eurotunnel)|(P&O)|(Stena Line)"""`.T]
+  private type ValidCarrier                 = MatchesRegex[W.`"""(Irish Ferries)|(DFDS)|(Eurotunnel)|(P&O)|(Stena Line)"""`.T]
 }

@@ -26,7 +26,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class TestService @Inject()(ctcConnector: CtcConnector)(implicit ec: ExecutionContext) {
 
   def clearAll(implicit hc: HeaderCarrier): Future[Unit] = {
-    ???
+    //TODO implement
+    Future.successful(())
   }
 
 }

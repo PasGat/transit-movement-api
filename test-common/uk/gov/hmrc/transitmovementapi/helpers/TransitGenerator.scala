@@ -17,7 +17,8 @@
 package uk.gov.hmrc.transitmovementapi.helpers
 
 import java.time.Instant
-
+import eu.timepit.refined.auto._
+import eu.timepit.refined._
 import org.scalacheck.Gen
 import play.api.libs.json.Json
 import reactivemongo.bson.BSONObjectID
@@ -65,18 +66,16 @@ trait TransitGenerator {
   private def transitIdGenerator: Gen[String] = Gen.const(BSONObjectID.generate().stringify)
 
   private def movementReferenceNumberGenerator: Gen[MovementReferenceNumber] =
-    RegexpGen.from("\\d{2}[a-zA-Z]{2}[a-zA-Z0-9]{14}")
-    .map(mrn => Json.toJson(mrn).as[MovementReferenceNumber])
+    RegexpGen.from("\\d{2}[a-zA-Z]{2}[a-zA-Z0-9]{14}").map(mrn => Json.toJson(mrn).as[MovementReferenceNumber])
 
   private def vehicleReferenceNumberGenerator: Gen[Option[VehicleReferenceNumber]] =
-    Gen.option(RegexpGen.from(s"""([A-Z0-9]|[\\s])+"""))
-    .map(vrn => Json.toJson(vrn).asOpt[VehicleReferenceNumber])
+    Gen.option(RegexpGen.from(s"""([A-Z0-9]|[\\s])+""").map(vrn => Json.toJson(vrn).as[VehicleReferenceNumber]))
 
   private def crossingIdGenerator(withDefaultCrossingId: Option[String]): Gen[String] = {
     Gen.const(withDefaultCrossingId.fold(BSONObjectID.generate().stringify)(id => id))
   }
 
   private def captureMethodGenerator: Gen[MrnCaptureMethod] = {
-    Gen.oneOf("SCAN", "MANUAL").map(c => Json.toJson(c).as[MrnCaptureMethod])
+    Gen.oneOf[MrnCaptureMethod]("SCAN", "MANUAL")
   }
 }

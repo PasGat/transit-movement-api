@@ -17,7 +17,7 @@
 package uk.gov.hmrc.transitmovementapi.helpers
 
 import java.time.Instant
-
+import eu.timepit.refined.auto._
 import org.scalacheck.Gen
 import play.api.libs.json.Json
 import reactivemongo.bson.BSONObjectID
@@ -46,14 +46,12 @@ trait CrossingGenerator {
   private def crossingIdGenerator: Gen[String] = Gen.const(BSONObjectID.generate().stringify)
 
   private def departurePortGenerator: Gen[DeparturePort] =
-    Gen.oneOf("Calais","Coquelles","Dublin", "Dunkirk")
-      .map(port => Json.toJson(port).as[DeparturePort])
+    Gen.oneOf[DeparturePort]("Calais","Coquelles","Dublin", "Dunkirk")
 
   private def destinationPortGenerator: Gen[DestinationPort] =
-    Gen.oneOf("Dover", "Folkestone", "Holyhead")
-    .map(port => Json.toJson(port).as[DestinationPort])
+    Gen.oneOf[DestinationPort]("Dover", "Folkestone", "Holyhead")
 
   private def carrierGenerator: Gen[Carrier] =
-    Gen.oneOf( "Irish Ferries", "DFDS", "Eurotunnel", "P&O", "Stena Line")
-    .map(c => Json.toJson(c).as[Carrier])
+    Gen.oneOf[Carrier]( "Irish Ferries", "DFDS", "Eurotunnel", "P&O", "Stena Line")
+
 }

@@ -29,16 +29,11 @@ sealed abstract class ErrorResponse(val httpStatusCode: Int,
 
 object ErrorResponse {
 
-  case object BadRequest extends ErrorResponse(400, "BAD_REQUEST", "Bad request")
-
-  case object NotFound extends ErrorResponse(404, "NOT_FOUND", "Resource was not found")
-
+  case object BadRequest          extends ErrorResponse(400, "BAD_REQUEST", "Bad request")
+  case object NotFound            extends ErrorResponse(404, "NOT_FOUND", "Resource was not found")
   case object InvalidAcceptHeader extends ErrorResponse(406, "ACCEPT_HEADER_INVALID", "The accept header is missing or invalid")
-
   case object InternalServerError extends ErrorResponse(500, "INTERNAL_SERVER_ERROR", "Internal server error")
 
-  case object CrossingNotFound extends ErrorResponse(404, "CROSSING_NOT_FOUND", "A crossing with the supplied crossing ID was not found")
-  
   implicit val writes: Writes[ErrorResponse] = new Writes[ErrorResponse] {
     override def writes(o: ErrorResponse): JsValue = Json.obj("code" -> o.errorCode, "message" -> o.message)
   }

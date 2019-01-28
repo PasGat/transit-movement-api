@@ -27,7 +27,13 @@ case class TransitSubmission(movementReferenceNumber: MovementReferenceNumber,
                              captureMethod: MrnCaptureMethod,
                              captureDateTime: Instant,
                              userId: String,
-                             deviceId: String)
+                             deviceId: String,
+                             departureDateTime: Instant,
+                             departurePort: DeparturePort,
+                             destinationPort: DestinationPort,
+                             duration: Duration,
+                             carrier: Carrier
+                            )
 
 object TransitSubmission {
   implicit val format: OFormat[TransitSubmission] = Json.format[TransitSubmission]

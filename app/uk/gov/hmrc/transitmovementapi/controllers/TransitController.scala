@@ -32,9 +32,9 @@ class TransitController @Inject()(transitService: TransitService)(implicit ec: E
 
   def submit(): Action[JsValue] = validateAccept(acceptHeaderValidationRules).async(parse.json) { implicit request =>
     handleErrors {
-      withValidJson[List[TransitSubmission]] {
-        transits =>
-          transitService.submitTransits(transits).map(_ => NoContent)
+      withValidJson[TransitSubmission] {
+        transit =>
+          transitService.submitTransits(transit).map(_ => NoContent)
       }
     }
   }

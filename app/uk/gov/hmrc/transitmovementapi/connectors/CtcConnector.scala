@@ -19,9 +19,8 @@ package uk.gov.hmrc.transitmovementapi.connectors
 import java.net.URL
 
 import javax.inject.{Inject, Named, Singleton}
-import uk.gov.hmrc.http.{HeaderCarrier, NotFoundException}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import uk.gov.hmrc.transitmovementapi.errorhandler.CrossingNotFoundException
 import uk.gov.hmrc.transitmovementapi.models.api.TransitSubmission
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -30,11 +29,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class CtcConnector @Inject()(@Named("common-transit-convention.baseUrl") ctcUrl: URL)(implicit httpClient: HttpClient, ec: ExecutionContext) {
   def postTransit(transit: TransitSubmission)(implicit headerCarrier: HeaderCarrier): Future[Unit] = {
     val url = ctcUrl + s"/common-transit-convention/transits"
-    httpClient.POST(url, transit)
-      .map(_ => ())
-      .recoverWith {
-        case _: NotFoundException =>
-          Future.failed(CrossingNotFoundException("Crossing not found"))
-      }
+    httpClient.POST(url, transit).map(_ => ())
   }
 }

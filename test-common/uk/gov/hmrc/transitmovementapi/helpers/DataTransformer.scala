@@ -29,13 +29,13 @@ trait DataTransformer {
   case class TransitMetadata(userId: String, deviceId: String)
 
   def toTransitSubmission(transit: Transit, transitMetadata: TransitMetadata): TransitSubmission = {
-    TransitSubmission(
+/*    TransitSubmission(
       movementReferenceNumber = transit.movementReferenceNumber,
       vehicleReferenceNumber = transit.vehicleReferenceNumber,
       captureMethod = transit.captureMethod,
       captureDateTime = transit.captureDateTime,
       userId = transitMetadata.userId,
       deviceId = transitMetadata.deviceId
-    )
+    )*/???
   }
 }

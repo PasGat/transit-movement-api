@@ -38,9 +38,6 @@ trait TransitGenerator {
   private[helpers] def getRandomTransitSubmission(withDefaultCrossingId: Option[String] = None): TransitSubmission =
     transitSubmissionGenerator(withDefaultCrossingId).sample.get
 
-
-  private[helpers] def getRandomCrossingId: String = crossingIdGenerator(None).sample.get
-
   private def transitGenerator(withDefaultCrossingId: Option[String]): Gen[Transit] = {
     for {
       id                 <- transitIdGenerator

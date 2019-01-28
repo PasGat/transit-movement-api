@@ -8,13 +8,13 @@ class TransitControllerISpec extends BaseISpec with DataGenerator {
 
   "POST /crossings/{crossingId}/transits" should {
     "return 204 NO_CONTENT for a successful transits submission" in {
-      withMongoCrossingRecord {
-        crossingDetails =>
-          withTransit(Some(crossingDetails.id.crossingId)) {
+      withMongoTransit {
+        transit =>
+          withTransit(Some(???)) {
             transit =>
               withTransitMetadata{
                 transitMetadata =>
-                  val result = callRoute(fakeRequest(routes.TransitController.submit(crossingDetails.id.crossingId)).withBody(Json.toJson(List(toTransitSubmission(transit, transitMetadata)))))
+                  val result = callRoute(fakeRequest(routes.TransitController.submit()).withBody(Json.toJson(List(toTransitSubmission(transit, transitMetadata)))))
 
                   status(result) shouldBe NO_CONTENT
               }
@@ -26,7 +26,7 @@ class TransitControllerISpec extends BaseISpec with DataGenerator {
       withTransit() { transit =>
         withTransitMetadata {
           transitMetadata =>
-            val result = callRoute(fakeRequest(routes.TransitController.submit("test-crossing-id")).withBody(Json.toJson(List(toTransitSubmission(transit, transitMetadata)))))
+            val result = callRoute(fakeRequest(routes.TransitController.submit()).withBody(Json.toJson(List(toTransitSubmission(transit, transitMetadata)))))
 
             status(result) shouldBe NOT_FOUND
             contentAsJson(result) shouldBe Json.toJson(ErrorResponse.CrossingNotFound)

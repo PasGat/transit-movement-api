@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.transitmovementapi.helpers
 
-import uk.gov.hmrc.transitmovementapi.models.api.{CrossingSubmission, TransitSubmission}
-import uk.gov.hmrc.transitmovementapi.models.data.{Crossing, Transit}
+import uk.gov.hmrc.transitmovementapi.models.api.TransitSubmission
+import uk.gov.hmrc.transitmovementapi.models.data.Transit
 
 trait DataTransformer {
   /**
@@ -38,16 +38,4 @@ trait DataTransformer {
       deviceId = transitMetadata.deviceId
     )
   }
-
-  def toCrossingSubmission(crossing: Crossing): CrossingSubmission = {
-    CrossingSubmission(
-      departureDateTime = crossing.departureDateTime,
-      departurePort = crossing.departurePort,
-      destinationPort = crossing.destinationPort,
-      duration = crossing.duration,
-      carrier = crossing.carrier,
-      captureDateTime = crossing.captureDateTime
-    )
-  }
-
 }

@@ -16,25 +16,14 @@
 
 package uk.gov.hmrc.transitmovementapi.helpers
 
-import uk.gov.hmrc.transitmovementapi.models.data.{Crossing, Transit}
+import uk.gov.hmrc.transitmovementapi.models.data.Transit
 
 trait BaseSpec extends ApplicationSetupSpec with DataTransformer {
   self: DataGenerator =>
 
-  def withTransit(test: Transit => Unit): Unit   = test(getRandomTransit())
+  def withTransit(test: Transit => Unit): Unit = test(getRandomTransit())
 
   def withTransitMetadata(test: TransitMetadata => Unit): Unit = test(getRandomMetadata)
-
-  def withCrossing(test: Crossing => Unit): Unit = test(getRandomCrossing)
-
-  def withTransitAndCrossing(test: (Transit, Crossing) => Unit): Unit =
-    withTransit {
-      transit =>
-        withCrossing {
-          crossing =>
-            test(transit, crossing)
-        }
-    }
 
   def withNoSetup(test: => Unit): Unit = test
 }

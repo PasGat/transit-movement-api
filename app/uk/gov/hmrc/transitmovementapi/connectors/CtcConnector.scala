@@ -22,20 +22,14 @@ import javax.inject.{Inject, Named, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, NotFoundException}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.transitmovementapi.errorhandler.CrossingNotFoundException
-import uk.gov.hmrc.transitmovementapi.models.api.{CrossingId, CrossingSubmission, TransitSubmission}
+import uk.gov.hmrc.transitmovementapi.models.api.TransitSubmission
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class CtcConnector @Inject()(@Named("common-transit-convention.baseUrl") ctcUrl: URL)(implicit httpClient: HttpClient, ec: ExecutionContext) {
-
-  def postCrossing(crossingSubmission: CrossingSubmission)(implicit headerCarrier: HeaderCarrier): Future[CrossingId] = {
-    val url = ctcUrl + "/common-transit-convention/crossings"
-    httpClient.POST[CrossingSubmission, CrossingId](url, crossingSubmission)
-  }
-
-  def postTransit(crossingId: String, transit: TransitSubmission)(implicit headerCarrier: HeaderCarrier): Future[Unit] = {
-    val url = ctcUrl + s"/common-transit-convention/crossings/$crossingId/transits"
+  def postTransit(transit: TransitSubmission)(implicit headerCarrier: HeaderCarrier): Future[Unit] = {
+    val url = ctcUrl + s"/common-transit-convention/transits"
     httpClient.POST(url, transit)
       .map(_ => ())
       .recoverWith {

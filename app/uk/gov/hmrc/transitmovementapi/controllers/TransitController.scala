@@ -30,11 +30,11 @@ import scala.concurrent.ExecutionContext
 class TransitController @Inject()(transitService: TransitService)(implicit ec: ExecutionContext)
   extends BaseApiController with HeaderValidator with ErrorHandling {
 
-  def submit(crossingId: String): Action[JsValue] = validateAccept(acceptHeaderValidationRules).async(parse.json) { implicit request =>
+  def submit(): Action[JsValue] = validateAccept(acceptHeaderValidationRules).async(parse.json) { implicit request =>
     handleErrors {
       withValidJson[List[TransitSubmission]] {
         transits =>
-          transitService.submitTransits(crossingId, transits).map(_ => NoContent)
+          transitService.submitTransits(transits).map(_ => NoContent)
       }
     }
   }

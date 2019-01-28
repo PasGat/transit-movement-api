@@ -1,2 +1,1 @@
-POST        /crossings                             @uk.gov.hmrc.transitmovementapi.controllers.CrossingController.submit
-POST        /crossings/:crossingId/transits        @uk.gov.hmrc.transitmovementapi.controllers.TransitController.submit(crossingId: String)
+POST        /transits        @uk.gov.hmrc.transitmovementapi.controllers.TransitController.submit

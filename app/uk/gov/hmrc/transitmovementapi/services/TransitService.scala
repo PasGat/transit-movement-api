@@ -30,10 +30,10 @@ class TransitService @Inject()(ctcConnector: CtcConnector,
                                val auditConnector: AuditConnector)
                               (implicit val ec: ExecutionContext) extends AuditEvents {
 
-  def submitTransits(crossingId: String, transits: List[TransitSubmission])(implicit hc: HeaderCarrier): Future[Unit] = {
+  def submitTransits(transits: List[TransitSubmission])(implicit hc: HeaderCarrier): Future[Unit] = {
     Future.traverse(transits) { t =>
-      audit(sendTransitEvent(TransitEvent.fromSubmission(t, crossingId)), (_: String) => "")
-      ctcConnector.postTransit(crossingId, t)
+      audit(sendTransitEvent(TransitEvent.fromSubmission(t)), (_: String) => "")
+      ctcConnector.postTransit(t)
     }.map(_ => ())
   }
 }

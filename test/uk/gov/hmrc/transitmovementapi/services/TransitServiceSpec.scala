@@ -34,13 +34,13 @@ class TransitServiceSpec extends BaseSpec with DataGenerator with DataTransforme
 
   "create" should {
     "return () if there were no errors when attempting to store the submitted transit data" in {
-      withTransitAndCrossing {
-        (transit, crossing) =>
+      withTransit {
+        transit =>
           withTransitMetadata {
             transitMetadata =>
-              when(mockCtcConnector.postTransit(any(), any())(any())).thenReturn(Future.successful(()))
+              when(mockCtcConnector.postTransit(any())(any())).thenReturn(Future.successful(()))
               when(mockAuditConnector.sendExtendedEvent(any())(any(), any())).thenReturn(Future.successful(AuditResult.Success))
-              val result: Unit = await(service.submitTransits("test-crossing-id", List(toTransitSubmission(transit, transitMetadata))))
+              val result: Unit = await(service.submitTransits(List(toTransitSubmission(transit, transitMetadata))))
 
               result shouldBe ()
           }
@@ -52,25 +52,25 @@ class TransitServiceSpec extends BaseSpec with DataGenerator with DataTransforme
         transit =>
           withTransitMetadata {
             transitMetadata =>
-              when(mockCtcConnector.postTransit(any(), any())(any())).thenReturn(Future.failed(new NotFoundException("Crossing does not exist")))
+              when(mockCtcConnector.postTransit(any())(any())).thenReturn(Future.failed(new NotFoundException("Crossing does not exist")))
 
               intercept[NotFoundException] {
-                await(service.submitTransits("test-crossing-id", List(toTransitSubmission(transit, transitMetadata))))
+                await(service.submitTransits(List(toTransitSubmission(transit, transitMetadata))))
               }
           }
       }
     }
 
     "throw an InternalServerException if any errors occurred when attempting to store the submitted transit data" in {
-      withTransitAndCrossing {
-        (transit, crossing) =>
+      withTransit {
+        transit =>
           withTransitMetadata {
             transitMetadata =>
               when(mockAuditConnector.sendExtendedEvent(any())(any(), any())).thenReturn(Future.successful(AuditResult.Success))
-              when(mockCtcConnector.postTransit(any(), any())(any())).thenReturn(Future.failed(new InternalServerException("Internal server error")))
+              when(mockCtcConnector.postTransit(any())(any())).thenReturn(Future.failed(new InternalServerException("Internal server error")))
 
               intercept[InternalServerException] {
-                await(service.submitTransits("test-crossing-id", List(toTransitSubmission(transit, transitMetadata))))
+                await(service.submitTransits(List(toTransitSubmission(transit, transitMetadata))))
               }
           }
       }

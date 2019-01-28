@@ -25,8 +25,6 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.transitmovementapi.errorhandler.ErrorResponse.{InternalServerError, NotFound}
 import uk.gov.hmrc.transitmovementapi.helpers.{BaseSpec, DataGenerator, DataTransformer}
 import uk.gov.hmrc.transitmovementapi.services.TransitService
-import org.mockito.ArgumentMatchers.{eq => eqTo, _}
-
 import scala.concurrent.Future
 
 
@@ -38,13 +36,13 @@ class TransitControllerSpec extends BaseSpec with DataGenerator with DataTransfo
 
   "submit" should {
     "return 204 NO_CONTENT if the transit submission is successful" in {
-      withTransitAndCrossing {
-        (transit, crossing) =>
+      withTransit {
+        transit =>
           withTransitMetadata {
             metadata =>
-              when(mockTransitService.submitTransits(eqTo(crossing.crossingId), any())(any())).thenReturn(Future.successful(()))
+              when(mockTransitService.submitTransits(any())(any())).thenReturn(Future.successful(()))
 
-              val result = controller.submit(crossing.crossingId)(fakeRequest.withBody(Json.toJson(List(toTransitSubmission(transit, metadata)))))
+              val result = controller.submit()(fakeRequest.withBody(Json.toJson(List(toTransitSubmission(transit, metadata)))))
 
               status(result) shouldBe NO_CONTENT
           }
@@ -53,9 +51,9 @@ class TransitControllerSpec extends BaseSpec with DataGenerator with DataTransfo
 
     "return 400 BAD_REQUEST if the json body is invalid" in {
       withNoSetup {
-        when(mockTransitService.submitTransits(any(), any())(any())).thenReturn(Future.successful(()))
+        when(mockTransitService.submitTransits(any())(any())).thenReturn(Future.successful(()))
 
-        val result = controller.submit("test-crossing-id")(fakeRequest.withBody(Json.obj("invalid" -> "json")))
+        val result = controller.submit()(fakeRequest.withBody(Json.obj("invalid" -> "json")))
 
         status(result) shouldBe BAD_REQUEST
       }
@@ -66,9 +64,9 @@ class TransitControllerSpec extends BaseSpec with DataGenerator with DataTransfo
         transit =>
           withTransitMetadata {
             metadata =>
-              when(mockTransitService.submitTransits(any(), any())(any())).thenReturn(Future.failed(new NotFoundException("Crossing does not exist")))
+              when(mockTransitService.submitTransits(any())(any())).thenReturn(Future.failed(new NotFoundException("Crossing does not exist")))
 
-              val result = controller.submit("test-crossing-id")(fakeRequest.withBody(Json.toJson(List(toTransitSubmission(transit, metadata)))))
+              val result = controller.submit()(fakeRequest.withBody(Json.toJson(List(toTransitSubmission(transit, metadata)))))
 
               status(result) shouldBe NOT_FOUND
               contentAsJson(result) shouldBe Json.toJson(NotFound)
@@ -81,9 +79,9 @@ class TransitControllerSpec extends BaseSpec with DataGenerator with DataTransfo
         transit =>
           withTransitMetadata {
             metadata =>
-              when(mockTransitService.submitTransits(any(), any())(any())).thenReturn(Future.failed(new InternalServerException("Failed to create transit")))
+              when(mockTransitService.submitTransits(any())(any())).thenReturn(Future.failed(new InternalServerException("Failed to create transit")))
 
-              val result = controller.submit("test-crossing-id")(fakeRequest.withBody(Json.toJson(List(toTransitSubmission(transit, metadata)))))
+              val result = controller.submit()(fakeRequest.withBody(Json.toJson(List(toTransitSubmission(transit, metadata)))))
 
               status(result) shouldBe INTERNAL_SERVER_ERROR
               contentAsJson(result) shouldBe Json.toJson(InternalServerError)

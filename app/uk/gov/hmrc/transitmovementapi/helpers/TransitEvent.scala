@@ -27,11 +27,11 @@ case class TransitEvent(userId: String,
                         crossingId: CrossingId)
 
 object TransitEvent {
-  def fromSubmission(transit: TransitSubmission, crossingId: CrossingId): TransitEvent = TransitEvent(
+  def fromSubmission(transit: TransitSubmission): TransitEvent = TransitEvent(
     userId = transit.userId,
     deviceId = transit.deviceId,
     mrn = transit.movementReferenceNumber,
-    crossingId = crossingId
+    crossingId = ???
   )
 
   implicit val format: Format[TransitEvent] = Json.format[TransitEvent]

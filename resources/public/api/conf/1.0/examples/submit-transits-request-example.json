@@ -4,39 +4,51 @@
     "vehicleReferenceNumber": "AB12 CDE",
     "captureMethod": "MANUAL",
     "captureDateTime": "2008-09-15T15:53:00Z",
-    "auditData": {
-      "userId": "ABC",
-      "deviceId": "ABC"
-    }
+    "userId": "ABC",
+    "deviceId": "ABC",
+    "departureDateTime": "2008-09-15T15:53:00Z",
+    "departurePort": "Calais",
+    "destinationPort": "Dover",
+    "duration": 120,
+    "carrier": "P&O"
   },
   {
     "movementReferenceNumber": "18GB0000601001EB16",
     "vehicleReferenceNumber": "AB12 CDE",
     "captureMethod": "SCAN",
     "captureDateTime": "2008-09-15T15:53:00Z",
-    "auditData": {
-      "userId": "ABC",
-      "deviceId": "ABC"
-    }
+    "userId": "ABC",
+    "deviceId": "ABC",
+    "departureDateTime": "2008-09-15T15:53:00Z",
+    "departurePort": "Calais",
+    "destinationPort": "Dover",
+    "duration": 120,
+    "carrier": "P&O"
   },
   {
     "movementReferenceNumber": "18GB0000601001EB17",
     "vehicleReferenceNumber": "FG13 HIJ",
     "captureMethod": "SCAN",
     "captureDateTime": "2008-09-15T15:53:00Z",
-    "auditData": {
-      "userId": "ABC",
-      "deviceId": "ABC"
-    }
+    "userId": "ABC",
+    "deviceId": "ABC",
+    "departureDateTime": "2008-09-15T15:53:00Z",
+    "departurePort": "Calais",
+    "destinationPort": "Dover",
+    "duration": 120,
+    "carrier": "P&O"
   },
   {
     "movementReferenceNumber": "18GB0000601001EB18",
     "vehicleReferenceNumber": "FG13 HIJ",
     "captureMethod": "SCAN",
     "captureDateTime": "2008-09-15T15:53:00Z",
-    "auditData": {
-      "userId": "ABC",
-      "deviceId": "ABC"
-    }
+    "userId": "ABC",
+    "deviceId": "ABC",
+    "departureDateTime": "2008-09-15T15:53:00Z",
+    "departurePort": "Calais",
+    "destinationPort": "Dover",
+    "duration": 120,
+    "carrier": "P&O"
   }
 ]

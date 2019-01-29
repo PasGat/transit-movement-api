@@ -35,7 +35,7 @@ abstract class ApplicationSetupISpec
   def fakeRequest(call: Call): FakeRequest[AnyContentAsEmpty.type] = FakeRequest(call).withHeaders(acceptHeader)
 
   additionalAppConfig ++= Map(
-    "with-backend" -> true,
+    "ctc-backend-enabled" -> true,
     "metrics.enabled" -> false,
     "api.apiPlatformUrl" -> "api.service.hmrc.gov.uk",
     "auditing.enabled" -> true,

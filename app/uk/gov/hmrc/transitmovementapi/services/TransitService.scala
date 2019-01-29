@@ -30,7 +30,7 @@ class TransitService @Inject()(ctcConnector: CtcConnector,
                                val auditConnector: AuditConnector)
                               (implicit val ec: ExecutionContext) extends AuditEvents {
 
-  def submitTransits(transit: TransitSubmission)(implicit hc: HeaderCarrier): Future[Unit] = {
+  def submitTransit(transit: TransitSubmission)(implicit hc: HeaderCarrier): Future[Unit] = {
     for {
       _ <- audit(sendTransitEvent(TransitEvent.fromSubmission(transit)), (_: String) => s"Failed to send audit event")
       _ <- ctcConnector.postTransit(transit)

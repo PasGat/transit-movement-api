@@ -38,7 +38,7 @@ class TransitServiceSpec extends BaseSpec with DataGenerator {
         transit =>
           when(mockCtcConnector.postTransit(any())(any())).thenReturn(Future.successful(HttpResponse(200)))
           when(mockAuditConnector.sendExtendedEvent(any())(any(), any())).thenReturn(Future.successful(AuditResult.Success))
-          val result: Unit = await(service.submitTransits(transit.submission))
+          val result: Unit = await(service.submitTransit(transit.submission))
 
           result shouldBe ()
       }
@@ -48,10 +48,10 @@ class TransitServiceSpec extends BaseSpec with DataGenerator {
   "throw a NotFoundException if the crossing does not exist for the supplied crossing ID" in {
     withTransit {
       transit =>
-        when(mockCtcConnector.postTransit(any())(any())).thenReturn(Future.failed(new NotFoundException("Crossing does not exist")))
+        when(mockCtcConnector.postTransit(any())(any())).thenReturn(Future.failed(new NotFoundException("")))
 
         intercept[NotFoundException] {
-          await(service.submitTransits(transit.submission))
+          await(service.submitTransit(transit.submission))
         }
     }
   }
@@ -63,7 +63,7 @@ class TransitServiceSpec extends BaseSpec with DataGenerator {
         when(mockCtcConnector.postTransit(any())(any())).thenReturn(Future.failed(new InternalServerException("Internal server error")))
 
         intercept[InternalServerException] {
-          await(service.submitTransits(transit.submission))
+          await(service.submitTransit(transit.submission))
         }
     }
   }

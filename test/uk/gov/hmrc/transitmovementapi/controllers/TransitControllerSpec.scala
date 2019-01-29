@@ -39,7 +39,7 @@ class TransitControllerSpec extends BaseSpec with DataGenerator {
     "return 204 NO_CONTENT if the transit submission is successful" in {
       withTransit {
         transit =>
-          when(mockTransitService.submitTransits(any())(any())).thenReturn(Future.successful(()))
+          when(mockTransitService.submitTransit(any())(any())).thenReturn(Future.successful(()))
 
           val result = controller.submit()(fakeRequest.withBody(Json.toJson(transit.submission)))
 
@@ -50,7 +50,7 @@ class TransitControllerSpec extends BaseSpec with DataGenerator {
 
   "return 400 BAD_REQUEST if the json body is invalid" in {
     withNoSetup {
-      when(mockTransitService.submitTransits(any())(any())).thenReturn(Future.successful(()))
+      when(mockTransitService.submitTransit(any())(any())).thenReturn(Future.successful(()))
 
       val result = controller.submit()(fakeRequest.withBody(Json.obj("invalid" -> "json")))
 
@@ -61,7 +61,7 @@ class TransitControllerSpec extends BaseSpec with DataGenerator {
   "return 500 INTERNAL_SERVER_ERROR if any errors occur server side when handling the submitted transit data" in {
     withTransit {
       transit =>
-        when(mockTransitService.submitTransits(any())(any())).thenReturn(Future.failed(new InternalServerException("Failed to create transit")))
+        when(mockTransitService.submitTransit(any())(any())).thenReturn(Future.failed(new InternalServerException("Failed to create transit")))
 
         val result = controller.submit()(fakeRequest.withBody(Json.toJson(transit.submission)))
 

@@ -22,16 +22,17 @@ uses:
   annotations: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/annotations.raml
   types: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/types.raml
 
-/transit-movement:
-    /transits:
-      post:
-        displayName: Submit details of transit movements
-        description: This endpoint takes a JSON body containing the details of transit movements
-        is: [headers.acceptHeader]
-        securedBy: [sec.x-application]
-        body:
-          application/json:
-            type: !include schemas/submit-transits-request.json
-            example: !include examples/submit-transits-request-example.json
-        responses:
-          204:
+/customs:
+  /transit-movement:
+      /transits:
+        post:
+          displayName: Submit details of transit movements
+          description: This endpoint takes a JSON body containing the details of transit movements
+          is: [headers.acceptHeader]
+          securedBy: [sec.x-application]
+          body:
+            application/json:
+              type: !include schemas/submit-transits-request.json
+              example: !include examples/submit-transits-request-example.json
+          responses:
+           204:

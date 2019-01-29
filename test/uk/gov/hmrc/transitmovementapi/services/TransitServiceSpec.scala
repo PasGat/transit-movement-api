@@ -18,14 +18,14 @@ package uk.gov.hmrc.transitmovementapi.services
 
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
-import uk.gov.hmrc.http.{InternalServerException, NotFoundException}
+import uk.gov.hmrc.http.{HttpResponse, InternalServerException, NotFoundException}
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
 import uk.gov.hmrc.transitmovementapi.connectors.CtcConnector
-import uk.gov.hmrc.transitmovementapi.helpers.{BaseSpec, DataGenerator, DataTransformer}
+import uk.gov.hmrc.transitmovementapi.helpers.{BaseSpec, DataGenerator}
 
 import scala.concurrent.Future
 
-class TransitServiceSpec extends BaseSpec with DataGenerator with DataTransformer {
+class TransitServiceSpec extends BaseSpec with DataGenerator {
 
   val mockCtcConnector: CtcConnector = mock[CtcConnector]
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
@@ -36,45 +36,35 @@ class TransitServiceSpec extends BaseSpec with DataGenerator with DataTransforme
     "return () if there were no errors when attempting to store the submitted transit data" in {
       withTransit {
         transit =>
-          withTransitMetadata {
-            transitMetadata =>
-              when(mockCtcConnector.postTransit(any())(any())).thenReturn(Future.successful(()))
-              when(mockAuditConnector.sendExtendedEvent(any())(any(), any())).thenReturn(Future.successful(AuditResult.Success))
-              val result: Unit = await(service.submitTransits(List(toTransitSubmission(transit, transitMetadata))))
+          when(mockCtcConnector.postTransit(any())(any())).thenReturn(Future.successful(HttpResponse(200)))
+          when(mockAuditConnector.sendExtendedEvent(any())(any(), any())).thenReturn(Future.successful(AuditResult.Success))
+          val result: Unit = await(service.submitTransits(transit.submission))
 
-              result shouldBe ()
-          }
-      }
-    }
-
-    "throw a NotFoundException if the crossing does not exist for the supplied crossing ID" in {
-      withTransit {
-        transit =>
-          withTransitMetadata {
-            transitMetadata =>
-              when(mockCtcConnector.postTransit(any())(any())).thenReturn(Future.failed(new NotFoundException("Crossing does not exist")))
-
-              intercept[NotFoundException] {
-                await(service.submitTransits(List(toTransitSubmission(transit, transitMetadata))))
-              }
-          }
-      }
-    }
-
-    "throw an InternalServerException if any errors occurred when attempting to store the submitted transit data" in {
-      withTransit {
-        transit =>
-          withTransitMetadata {
-            transitMetadata =>
-              when(mockAuditConnector.sendExtendedEvent(any())(any(), any())).thenReturn(Future.successful(AuditResult.Success))
-              when(mockCtcConnector.postTransit(any())(any())).thenReturn(Future.failed(new InternalServerException("Internal server error")))
-
-              intercept[InternalServerException] {
-                await(service.submitTransits(List(toTransitSubmission(transit, transitMetadata))))
-              }
-          }
+          result shouldBe ()
       }
     }
   }
 
+  "throw a NotFoundException if the crossing does not exist for the supplied crossing ID" in {
+    withTransit {
+      transit =>
+        when(mockCtcConnector.postTransit(any())(any())).thenReturn(Future.failed(new NotFoundException("Crossing does not exist")))
+
+        intercept[NotFoundException] {
+          await(service.submitTransits(transit.submission))
+        }
+    }
+  }
+
+  "throw an InternalServerException if any errors occurred when attempting to store the submitted transit data" in {
+    withTransit {
+      transit =>
+        when(mockAuditConnector.sendExtendedEvent(any())(any(), any())).thenReturn(Future.successful(AuditResult.Success))
+        when(mockCtcConnector.postTransit(any())(any())).thenReturn(Future.failed(new InternalServerException("Internal server error")))
+
+        intercept[InternalServerException] {
+          await(service.submitTransits(transit.submission))
+        }
+    }
+  }
 }

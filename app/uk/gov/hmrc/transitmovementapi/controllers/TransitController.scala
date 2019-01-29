@@ -34,7 +34,7 @@ class TransitController @Inject()(transitService: TransitService)(implicit ec: E
     handleErrors {
       withValidJson[TransitSubmission] {
         transit =>
-          transitService.submitTransits(transit).map(_ => NoContent)
+          transitService.submitTransits(transit).map(_ => Ok)
       }
     }
   }

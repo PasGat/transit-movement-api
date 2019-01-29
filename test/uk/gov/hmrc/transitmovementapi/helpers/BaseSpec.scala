@@ -16,14 +16,10 @@
 
 package uk.gov.hmrc.transitmovementapi.helpers
 
-import uk.gov.hmrc.transitmovementapi.models.data.Transit
-
-trait BaseSpec extends ApplicationSetupSpec with DataTransformer {
+trait BaseSpec extends ApplicationSetupSpec {
   self: DataGenerator =>
 
-  def withTransit(test: Transit => Unit): Unit = test(getRandomTransit())
-
-  def withTransitMetadata(test: TransitMetadata => Unit): Unit = test(getRandomMetadata)
+  def withTransit(test: TransitSubmissionWithId => Unit) = test(getRandomTransitSubmission())
 
   def withNoSetup(test: => Unit): Unit = test
 }

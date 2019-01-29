@@ -33,7 +33,7 @@ object ModelTypes {
     * package object.
     */
 
-  type CrossingId = String
+  type Id = String
   type MovementReferenceNumber = Refined[String, ValidMovementReferenceNumber]
   type VehicleReferenceNumber  = Refined[String, ValidVehicleReferenceNumber]
   type DeparturePort           = Refined[String, ValidDeparturePort]

@@ -14,8 +14,14 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.transitmovementapi.helpers
+package uk.gov.hmrc.transitmovementapi.models.api
 
-trait TestDataSetup {
-  dataGenerator: DataGenerator =>
+import play.api.libs.json.{Format, Json}
+import uk.gov.hmrc.transitmovementapi.models.types.ModelTypes.Id
+
+case class TransitId(_id: Id)
+
+object TransitId {
+  implicit val format: Format[TransitId] = Json.format[TransitId]
 }
+

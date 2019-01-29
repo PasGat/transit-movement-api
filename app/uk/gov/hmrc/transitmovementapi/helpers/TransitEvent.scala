@@ -18,20 +18,18 @@ package uk.gov.hmrc.transitmovementapi.helpers
 
 import play.api.libs.json.{Format, Json}
 import uk.gov.hmrc.transitmovementapi.models.api.TransitSubmission
-import uk.gov.hmrc.transitmovementapi.models.types.ModelTypes.{CrossingId, MovementReferenceNumber}
+import uk.gov.hmrc.transitmovementapi.models.types.ModelTypes.MovementReferenceNumber
 import uk.gov.hmrc.transitmovementapi.models.types._
 
 case class TransitEvent(userId: String,
                         deviceId: String,
-                        mrn: MovementReferenceNumber,
-                        crossingId: CrossingId)
+                        mrn: MovementReferenceNumber)
 
 object TransitEvent {
   def fromSubmission(transit: TransitSubmission): TransitEvent = TransitEvent(
     userId = transit.userId,
     deviceId = transit.deviceId,
-    mrn = transit.movementReferenceNumber,
-    crossingId = ???
+    mrn = transit.movementReferenceNumber
   )
 
   implicit val format: Format[TransitEvent] = Json.format[TransitEvent]

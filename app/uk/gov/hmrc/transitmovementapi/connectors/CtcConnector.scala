@@ -19,16 +19,19 @@ package uk.gov.hmrc.transitmovementapi.connectors
 import java.net.URL
 
 import javax.inject.{Inject, Named, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.transitmovementapi.models.api.TransitSubmission
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CtcConnector @Inject()(@Named("common-transit-convention.baseUrl") ctcUrl: URL)(implicit httpClient: HttpClient, ec: ExecutionContext) {
-  def postTransit(transit: TransitSubmission)(implicit headerCarrier: HeaderCarrier): Future[Unit] = {
+class CtcConnector @Inject()(@Named("common-transit-convention.baseUrl") ctcUrl: URL,
+                            @Named("with-backend") withBackend: Boolean)(implicit httpClient: HttpClient, ec: ExecutionContext) {
+  def postTransit(transit: TransitSubmission)(implicit headerCarrier: HeaderCarrier): Future[HttpResponse] = {
     val url = ctcUrl + s"/common-transit-convention/transits"
-    httpClient.POST(url, transit).map(_ => ())
+
+    if(withBackend) httpClient.POST(url, transit)
+    else Future.successful(HttpResponse(200))
   }
 }

@@ -46,6 +46,7 @@ class GuiceModule(environment: Environment, configuration: Configuration) extend
     bindConfigString("appUrl")
     bindConfigBoolean("microservice.services.service-locator.enabled")
     bindConfigStringSeq("api.access.white-list.applicationIds")
+    bindConfigBoolean("with-backend")
 
   }
 

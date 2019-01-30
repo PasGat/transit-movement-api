@@ -22,12 +22,14 @@ import play.api.libs.json.{Format, Json}
 import uk.gov.hmrc.transitmovementapi.models.types.ModelTypes.{Carrier, DeparturePort, DestinationPort, Duration}
 import uk.gov.hmrc.transitmovementapi.models.types._
 
-case class CrossingDetails(departureDateTime: Instant,
+case class CrossingDetails(carrier: Carrier,
+                           vessel: Option[String],
                            departurePort: DeparturePort,
                            destinationPort: DestinationPort,
-                           duration: Duration,
-                           carrier: Carrier)
+                           departureDateTime: Instant,
+                           duration: Duration
+                          )
 
 object CrossingDetails {
-  implicit val format: Format[CrossingDetails]   = Json.format[CrossingDetails]
+  implicit val format: Format[CrossingDetails] = Json.format[CrossingDetails]
 }

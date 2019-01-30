@@ -58,13 +58,17 @@ trait TransitGenerator {
       destinationPort    <- destinationPortGenerator
       duration           <- Gen.choose(0, 1000).map(i => Json.toJson(i).as[Duration])
       carrier            <- carrierGenerator
-    } yield CrossingDetails(departureDateTime, departurePort, destinationPort, duration, carrier)
+      vesselName         <- vesselNameGenerator
+    } yield CrossingDetails(carrier, vesselName, departurePort, destinationPort, departureDateTime, duration)
   }
 
   private def transitSubmissionWithIdGenerator(): Gen[TransitSubmissionWithId] = for {
     transit  <- transitSubmissionGenerator()
     id       <- Gen.const(BSONObjectID.generate().stringify)
   } yield TransitSubmissionWithId(id, transit)
+
+  private def vesselNameGenerator: Gen[Option[String]] =
+    Gen.option(RegexpGen.from(s"""[A-Za-z0-9]+"""))
 
   private def movementReferenceNumberGenerator: Gen[MovementReferenceNumber] =
     RegexpGen.from("\\d{2}[a-zA-Z]{2}[a-zA-Z0-9]{14}").map(mrn => Json.toJson(mrn).as[MovementReferenceNumber])

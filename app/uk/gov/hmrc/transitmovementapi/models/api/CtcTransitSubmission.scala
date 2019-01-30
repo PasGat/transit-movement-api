@@ -30,7 +30,8 @@ case class CtcTransitSubmission(movementReferenceNumber: MovementReferenceNumber
                                 departurePort: DeparturePort,
                                 destinationPort: DestinationPort,
                                 duration: Duration,
-                                carrier: Carrier
+                                carrier: Carrier,
+                                vessel: Option[String]
                                )
 
 object CtcTransitSubmission {
@@ -44,7 +45,8 @@ object CtcTransitSubmission {
       departurePort           = transitSubmission.crossingDetails.departurePort,
       destinationPort         = transitSubmission.crossingDetails.destinationPort,
       duration                = transitSubmission.crossingDetails.duration,
-      carrier                 = transitSubmission.crossingDetails.carrier
+      carrier                 = transitSubmission.crossingDetails.carrier,
+      vessel                  = transitSubmission.crossingDetails.vessel
     )
   }
 

@@ -12,7 +12,7 @@
   "api":{
     "name":"Transit Movement",
     "description":"Submit and retrieve details of transit movements",
-    "context":"transit-movement-api",
+    "context":"customs/transit-movement",
     "versions":[
       {
         "version":"1.0",

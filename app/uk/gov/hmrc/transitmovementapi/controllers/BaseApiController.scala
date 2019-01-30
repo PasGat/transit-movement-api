@@ -19,8 +19,7 @@ package uk.gov.hmrc.transitmovementapi.controllers
 import play.api.Logger
 import play.api.libs.json._
 import play.api.mvc.{Controller, Request, RequestHeader, Result}
-import uk.gov.hmrc.transitmovementapi.errorhandler.MalformedBodyException
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier}
 import uk.gov.hmrc.play.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -35,7 +34,7 @@ abstract class BaseApiController extends Controller {
   def withValidJson[T](f: T => Future[Result])(implicit ec: ExecutionContext, hc: HeaderCarrier, request: Request[JsValue], r: Reads[T]): Future[Result] = {
     request.body.validate[T] match {
       case JsSuccess(t, _) => f(t)
-      case JsError(errors) => Future.failed(MalformedBodyException(errors.toString()))
+      case JsError(errors) => Future.failed(new BadRequestException(errors.toString()))
     }
   }
 }

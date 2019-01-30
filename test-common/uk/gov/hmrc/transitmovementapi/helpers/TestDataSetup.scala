@@ -16,6 +16,6 @@
 
 package uk.gov.hmrc.transitmovementapi.helpers
 
-trait TestDataSetup extends DataTransformer {
+trait TestDataSetup {
   dataGenerator: DataGenerator =>
 }

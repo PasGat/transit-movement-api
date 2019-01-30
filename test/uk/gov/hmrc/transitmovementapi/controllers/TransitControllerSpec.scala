@@ -22,15 +22,14 @@ import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.transitmovementapi.errorhandler.ErrorResponse.{CrossingNotFound, InternalServerError}
-import uk.gov.hmrc.transitmovementapi.errorhandler._
+import uk.gov.hmrc.transitmovementapi.errorhandler.ErrorResponse.InternalServerError
+import uk.gov.hmrc.transitmovementapi.helpers.{BaseSpec, DataGenerator}
 import uk.gov.hmrc.transitmovementapi.services.TransitService
-import uk.gov.hmrc.transitmovementapi.helpers.{DataGenerator, BaseSpec, DataTransformer}
 
 import scala.concurrent.Future
 
 
-class TransitControllerSpec extends BaseSpec with DataGenerator with DataTransformer {
+class TransitControllerSpec extends BaseSpec with DataGenerator {
 
   val mockTransitService: TransitService = mock[TransitService]
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
@@ -40,57 +39,34 @@ class TransitControllerSpec extends BaseSpec with DataGenerator with DataTransfo
     "return 204 NO_CONTENT if the transit submission is successful" in {
       withTransit {
         transit =>
-          withTransitMetadata {
-            metadata =>
-              when(mockTransitService.submitTransits(any(), any())(any())).thenReturn(Future.successful(()))
+          when(mockTransitService.submitTransit(any())(any())).thenReturn(Future.successful(()))
 
-              val result = controller.submit("test-crossing-id")(fakeRequest.withBody(Json.toJson(List(toTransitSubmission(transit, metadata)))))
+          val result = controller.submit()(fakeRequest.withBody(Json.toJson(transit.submission)))
 
-              status(result) shouldBe NO_CONTENT
-          }
+          status(result) shouldBe OK
       }
     }
-
-    "return 400 BAD_REQUEST if the json body is invalid" in {
-      withNoSetup {
-        when(mockTransitService.submitTransits(any(), any())(any())).thenReturn(Future.successful(()))
-
-        val result = controller.submit("test-crossing-id")(fakeRequest.withBody(Json.obj("invalid" -> "json")))
-
-        status(result) shouldBe BAD_REQUEST
-      }
-    }
-
-    "return 404 CROSSING_NOT_FOUND if the crossing does not exist for the supplied crossingId" in {
-      withTransit {
-        transit =>
-          withTransitMetadata {
-            metadata =>
-              when(mockTransitService.submitTransits(any(), any())(any())).thenReturn(Future.failed(CrossingNotFoundException("Crossing does not exist")))
-
-              val result = controller.submit("test-crossing-id")(fakeRequest.withBody(Json.toJson(List(toTransitSubmission(transit, metadata)))))
-
-              status(result) shouldBe NOT_FOUND
-              contentAsJson(result) shouldBe Json.toJson(CrossingNotFound)
-          }
-      }
-    }
-
-    "return 500 INTERNAL_SERVER_ERROR if any errors occur server side when handling the submitted transit data" in {
-      withTransit {
-        transit =>
-          withTransitMetadata {
-            metadata =>
-              when(mockTransitService.submitTransits(any(), any())(any())).thenReturn(Future.failed(new InternalServerException("Failed to create transit")))
-
-              val result = controller.submit("test-crossing-id")(fakeRequest.withBody(Json.toJson(List(toTransitSubmission(transit, metadata)))))
-
-              status(result) shouldBe INTERNAL_SERVER_ERROR
-              contentAsJson(result) shouldBe Json.toJson(InternalServerError)
-          }
-      }
-    }
-
   }
 
+  "return 400 BAD_REQUEST if the json body is invalid" in {
+    withNoSetup {
+      when(mockTransitService.submitTransit(any())(any())).thenReturn(Future.successful(()))
+
+      val result = controller.submit()(fakeRequest.withBody(Json.obj("invalid" -> "json")))
+
+      status(result) shouldBe BAD_REQUEST
+    }
+  }
+
+  "return 500 INTERNAL_SERVER_ERROR if any errors occur server side when handling the submitted transit data" in {
+    withTransit {
+      transit =>
+        when(mockTransitService.submitTransit(any())(any())).thenReturn(Future.failed(new InternalServerException("Failed to create transit")))
+
+        val result = controller.submit()(fakeRequest.withBody(Json.toJson(transit.submission)))
+
+        status(result) shouldBe INTERNAL_SERVER_ERROR
+        contentAsJson(result) shouldBe Json.toJson(InternalServerError)
+    }
+  }
 }

@@ -14,12 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.transitmovementapi.errorhandler
+package uk.gov.hmrc.transitmovementapi.helpers
 
-sealed trait DomainError extends Exception {
-  val message: String
+import java.time.Instant
+
+import play.api.libs.json.{Format, Json}
+import uk.gov.hmrc.transitmovementapi.models.types.ModelTypes.MrnCaptureMethod
+import uk.gov.hmrc.transitmovementapi.models.types._
+
+case class TransitMetadata(userId: String,
+                           deviceId: String,
+                           captureMethod: MrnCaptureMethod,
+                           captureDateTime: Instant)
+
+object TransitMetadata {
+  implicit val format: Format[TransitMetadata] = Json.format[TransitMetadata]
 }
-
-case class CrossingNotFoundException(message: String) extends DomainError
-
-case class MalformedBodyException(message: String) extends DomainError

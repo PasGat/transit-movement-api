@@ -18,18 +18,16 @@ package uk.gov.hmrc.transitmovementapi.models.api
 
 import java.time.Instant
 
-import uk.gov.hmrc.transitmovementapi.models.types.ModelTypes._
-import play.api.libs.json._
+import play.api.libs.json.{Format, Json}
+import uk.gov.hmrc.transitmovementapi.models.types.ModelTypes.{Carrier, DeparturePort, DestinationPort, Duration}
 import uk.gov.hmrc.transitmovementapi.models.types._
 
-case class CrossingSubmission(departureDateTime: Instant,
-                              departurePort: DeparturePort,
-                              destinationPort: DestinationPort,
-                              duration: Int,
-                              carrier: Carrier,
-                              captureDateTime: Instant)
+case class CrossingDetails(departureDateTime: Instant,
+                           departurePort: DeparturePort,
+                           destinationPort: DestinationPort,
+                           duration: Duration,
+                           carrier: Carrier)
 
-object CrossingSubmission {
-  implicit val format: OFormat[CrossingSubmission] = Json.format[CrossingSubmission]
+object CrossingDetails {
+  implicit val format: Format[CrossingDetails]   = Json.format[CrossingDetails]
 }
-

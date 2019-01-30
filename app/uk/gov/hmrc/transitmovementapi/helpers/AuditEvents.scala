@@ -16,12 +16,10 @@
 
 package uk.gov.hmrc.transitmovementapi.helpers
 
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
 import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
-import uk.gov.hmrc.transitmovementapi.models.api.TransitMetadata
-import uk.gov.hmrc.transitmovementapi.models.types.ModelTypes.{CrossingId, MovementReferenceNumber}
 import uk.gov.hmrc.transitmovementapi.models.types._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,17 +31,12 @@ trait AuditEvents {
   def audit(event: => Future[ExtendedDataEvent], failureMessage: String => String)(implicit hc: HeaderCarrier): Future[AuditResult] =
     event.flatMap(auditConnector.sendExtendedEvent)
 
-  def sendTransitEvent(transitMetadata: TransitMetadata,
-                       mrn: MovementReferenceNumber,
-                       crossingId: CrossingId)(implicit hc: HeaderCarrier): Future[ExtendedDataEvent] = {
-    def constructDetailObject: JsValue =
-      Json.toJson(transitMetadata).as[JsObject] + ("mrn" -> Json.toJson(mrn)) + ("crossingId" -> Json.toJson(crossingId))
-
+  def sendTransitEvent(transitSubmission: TransitMetadata)(implicit hc: HeaderCarrier): Future[ExtendedDataEvent] = {
     Future {
       ExtendedDataEvent(
         "transit-movement-api",
         "transit-recorded",
-        detail = constructDetailObject
+        detail = Json.toJson(transitSubmission)
       )
     }
   }

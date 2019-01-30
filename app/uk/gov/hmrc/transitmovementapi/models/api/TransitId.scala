@@ -16,13 +16,12 @@
 
 package uk.gov.hmrc.transitmovementapi.models.api
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{Format, Json}
+import uk.gov.hmrc.transitmovementapi.models.types.ModelTypes.Id
 
-case class CrossingId(crossingId: String)
+case class TransitId(_id: Id)
 
-object CrossingId {
-  implicit val format: OFormat[CrossingId] = Json.format[CrossingId]
+object TransitId {
+  implicit val format: Format[TransitId] = Json.format[TransitId]
 }
-
-
 

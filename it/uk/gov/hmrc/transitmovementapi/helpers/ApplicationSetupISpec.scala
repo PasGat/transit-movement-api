@@ -11,8 +11,6 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc._
 import play.api.test._
 import play.api.{Application, Mode}
-import uk.gov.hmrc.transitmovementapi.controllers.test.routes
-
 import scala.concurrent.ExecutionContext.global
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -35,16 +33,11 @@ abstract class ApplicationSetupISpec
   def fakeRequest(call: Call): FakeRequest[AnyContentAsEmpty.type] = FakeRequest(call).withHeaders(acceptHeader)
 
   additionalAppConfig ++= Map(
+    "ctc-backend-enabled" -> true,
     "metrics.enabled" -> false,
     "api.apiPlatformUrl" -> "api.service.hmrc.gov.uk",
-    "auditing.enabled" -> true,
-    "play.http.router" -> "testOnlyDoNotUseInAppConf.Routes"
+    "auditing.enabled" -> true
   )
-
-  override protected def beforeEach(): Unit = {
-    val result = callRoute(fakeRequest(routes.TestController.clearAll()))
-    status(result) shouldBe NO_CONTENT
-  }
 
   override def fakeApplication(): Application =
     GuiceApplicationBuilder()
@@ -62,5 +55,4 @@ abstract class ApplicationSetupISpec
         }
     }
   }
-
 }

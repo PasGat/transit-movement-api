@@ -1,42 +1,17 @@
-[
-  {
-    "movementReferenceNumber": "18GB0000601001EB15",
-    "vehicleReferenceNumber": "AB12 CDE",
+{
+  "movementReferenceNumber": "18GB0000601001EB15",
+  "vehicleReferenceNumber": "AB12 CDE",
+  "transitMetadata": {
+    "userId": "5c518e8c0c00000c00b4d72e",
+    "deviceId": "5c518e8c0c00000c00b4d72f",
     "captureMethod": "MANUAL",
-    "captureDateTime": "2008-09-15T15:53:00Z",
-    "auditData": {
-      "userId": "ABC",
-      "deviceId": "ABC"
-    }
+    "captureDateTime": "2008-09-15T15:53:00Z"
   },
-  {
-    "movementReferenceNumber": "18GB0000601001EB16",
-    "vehicleReferenceNumber": "AB12 CDE",
-    "captureMethod": "SCAN",
-    "captureDateTime": "2008-09-15T15:53:00Z",
-    "auditData": {
-      "userId": "ABC",
-      "deviceId": "ABC"
-    }
-  },
-  {
-    "movementReferenceNumber": "18GB0000601001EB17",
-    "vehicleReferenceNumber": "FG13 HIJ",
-    "captureMethod": "SCAN",
-    "captureDateTime": "2008-09-15T15:53:00Z",
-    "auditData": {
-      "userId": "ABC",
-      "deviceId": "ABC"
-    }
-  },
-  {
-    "movementReferenceNumber": "18GB0000601001EB18",
-    "vehicleReferenceNumber": "FG13 HIJ",
-    "captureMethod": "SCAN",
-    "captureDateTime": "2008-09-15T15:53:00Z",
-    "auditData": {
-      "userId": "ABC",
-      "deviceId": "ABC"
-    }
+  "crossingDetails": {
+    "departureDateTime": "2008-09-15T15:53:00Z",
+    "departurePort": "Calais",
+    "destinationPort": "Dover",
+    "duration": 120,
+    "carrier": "P&O"
   }
-]
+}

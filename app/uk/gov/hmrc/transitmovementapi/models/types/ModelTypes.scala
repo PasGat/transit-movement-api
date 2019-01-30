@@ -22,6 +22,7 @@ import eu.timepit.refined.boolean.{And, Not, Or}
 import eu.timepit.refined.char.{Digit, UpperCase, Whitespace}
 import eu.timepit.refined.collection.{Empty, Forall}
 import eu.timepit.refined.generic.Equal
+import eu.timepit.refined.numeric.GreaterEqual
 import eu.timepit.refined.string.MatchesRegex
 
 object ModelTypes {
@@ -32,10 +33,11 @@ object ModelTypes {
     * package object.
     */
 
-  type CrossingId = String
+  type Id = String
   type MovementReferenceNumber = Refined[String, ValidMovementReferenceNumber]
   type VehicleReferenceNumber  = Refined[String, ValidVehicleReferenceNumber]
   type DeparturePort           = Refined[String, ValidDeparturePort]
+  type Duration                = Refined[Int, GreaterEqual[shapeless.nat._0]]
   type DestinationPort         = Refined[String, ValidDestinationPort]
   type Carrier                 = Refined[String, ValidCarrier]
   type MrnCaptureMethod        = Refined[String, ValidMRNCaptureMethod]
@@ -45,5 +47,5 @@ object ModelTypes {
   private type ValidVehicleReferenceNumber  = And[Not[Empty], Forall[Or[Whitespace, Or[UpperCase, Digit]]]]
   private type ValidDeparturePort           = MatchesRegex[W.`"""(Calais)|(Coquelles)|(Dublin)|(Dunkirk)"""`.T]
   private type ValidDestinationPort         = MatchesRegex[W.`"(Dover)|(Folkestone)|(Holyhead)"`.T]
-  private type ValidCarrier                 = MatchesRegex[W.`"""(Brittany Ferries)|(DFDS)|(Eurotunnel)|(P&O)|(Stena Line)"""`.T]
+  private type ValidCarrier                 = MatchesRegex[W.`"""(Irish Ferries)|(DFDS)|(Eurotunnel)|(P&O)|(Stena Line)"""`.T]
 }

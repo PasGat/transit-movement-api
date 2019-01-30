@@ -23,12 +23,9 @@ import play.api.libs.json.{JsError, JsSuccess, Reads, Writes}
 
 package object types {
 
-  implicit def refinedReads[T, P](
-                                   implicit reads: Reads[T], validate: Validate[T, P]
-                                 ): Reads[T Refined P] =
+  implicit def refinedReads[T, P](implicit reads: Reads[T], validate: Validate[T, P]): Reads[T Refined P] =
     Reads[T Refined P] { json =>
-      reads
-        .reads(json)
+      reads.reads(json)
         .flatMap { t: T =>
           refineV[P](t) match {
             case Left(error) => JsError(error)
@@ -37,9 +34,6 @@ package object types {
         }
     }
 
-  implicit def refinedWrites[T, P](
-                                    implicit writes: Writes[T]
-                                  ): Writes[T Refined P] =
+  implicit def refinedWrites[T, P](implicit writes: Writes[T]): Writes[T Refined P] =
     writes.contramap(_.value)
-
 }

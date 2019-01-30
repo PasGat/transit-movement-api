@@ -1,2 +1,0 @@
-#Test only routes
-DELETE        /all        @uk.gov.hmrc.transitmovementapi.controllers.test.TestController.clearAll

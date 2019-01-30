@@ -41,10 +41,12 @@ class GuiceModule(environment: Environment, configuration: Configuration) extend
     bind(classOf[HttpClient]).to(classOf[DefaultHttpClient])
 
     bindConfigBaseUrl("service-locator")
+    bindConfigBaseUrl("common-transit-convention")
     bindConfigString("appName")
     bindConfigString("appUrl")
     bindConfigBoolean("microservice.services.service-locator.enabled")
     bindConfigStringSeq("api.access.white-list.applicationIds")
+    bindConfigBoolean("ctc-backend-enabled")
 
   }
 

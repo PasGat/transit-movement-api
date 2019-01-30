@@ -18,67 +18,53 @@ package uk.gov.hmrc.transitmovementapi.services
 
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
-import uk.gov.hmrc.http.InternalServerException
+import uk.gov.hmrc.http.{HttpResponse, InternalServerException, NotFoundException}
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
-import uk.gov.hmrc.transitmovementapi.errorhandler.CrossingNotFoundException
-import uk.gov.hmrc.transitmovementapi.repositories.{CrossingRepository, TransitRepository}
-import uk.gov.hmrc.transitmovementapi.helpers.{DataGenerator, BaseSpec, DataTransformer}
+import uk.gov.hmrc.transitmovementapi.connectors.CtcConnector
+import uk.gov.hmrc.transitmovementapi.helpers.{BaseSpec, DataGenerator}
 
 import scala.concurrent.Future
 
-class TransitServiceSpec extends BaseSpec with DataGenerator with DataTransformer {
+class TransitServiceSpec extends BaseSpec with DataGenerator {
 
-  val mockTransitRepository: TransitRepository = mock[TransitRepository]
-  val mockCrossingRepository: CrossingRepository = mock[CrossingRepository]
+  val mockCtcConnector: CtcConnector = mock[CtcConnector]
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
 
-  val service: TransitService = new TransitService(mockTransitRepository, mockCrossingRepository, mockAuditConnector)
+  val service: TransitService = new TransitService(mockCtcConnector, mockAuditConnector)
 
   "create" should {
     "return () if there were no errors when attempting to store the submitted transit data" in {
-      withTransitAndCrossing {
-        (transit, crossing) =>
-          withTransitMetadata {
-            transitMetadata =>
-              when(mockCrossingRepository.get(any())).thenReturn(Future.successful(crossing))
-              when(mockTransitRepository.create(any())).thenReturn(Future.successful(()))
-              when(mockAuditConnector.sendExtendedEvent(any())(any(), any())).thenReturn(Future.successful(AuditResult.Success))
-              val result: Unit = await(service.submitTransits("test-crossing-id", List(toTransitSubmission(transit, transitMetadata))))
-
-              result shouldBe ()
-          }
-      }
-    }
-
-    "throw a CrossingNotFoundException if the crossing does not exist for the supplied crossing ID" in {
       withTransit {
         transit =>
-          withTransitMetadata {
-            transitMetadata =>
-              when(mockCrossingRepository.get(any())).thenReturn(Future.failed(CrossingNotFoundException("Crossing does not exist")))
+          when(mockCtcConnector.postTransit(any())(any())).thenReturn(Future.successful(HttpResponse(200)))
+          when(mockAuditConnector.sendExtendedEvent(any())(any(), any())).thenReturn(Future.successful(AuditResult.Success))
+          val result: Unit = await(service.submitTransit(transit.submission))
 
-              intercept[CrossingNotFoundException] {
-                await(service.submitTransits("test-crossing-id", List(toTransitSubmission(transit, transitMetadata))))
-              }
-          }
-      }
-    }
-
-    "throw an InternalServerException if any errors occurred when attempting to store the submitted transit data" in {
-      withTransitAndCrossing {
-        (transit, crossing) =>
-          withTransitMetadata {
-            transitMetadata =>
-              when(mockCrossingRepository.get(any())).thenReturn(Future.successful(crossing))
-              when(mockAuditConnector.sendExtendedEvent(any())(any(), any())).thenReturn(Future.successful(AuditResult.Success))
-              when(mockTransitRepository.create(any())).thenReturn(Future.failed(new InternalServerException("Failed to create transit")))
-
-              intercept[InternalServerException] {
-                await(service.submitTransits("test-crossing-id", List(toTransitSubmission(transit, transitMetadata))))
-              }
-          }
+          result shouldBe ()
       }
     }
   }
 
+  "throw a NotFoundException if the crossing does not exist for the supplied crossing ID" in {
+    withTransit {
+      transit =>
+        when(mockCtcConnector.postTransit(any())(any())).thenReturn(Future.failed(new NotFoundException("")))
+
+        intercept[NotFoundException] {
+          await(service.submitTransit(transit.submission))
+        }
+    }
+  }
+
+  "throw an InternalServerException if any errors occurred when attempting to store the submitted transit data" in {
+    withTransit {
+      transit =>
+        when(mockAuditConnector.sendExtendedEvent(any())(any(), any())).thenReturn(Future.successful(AuditResult.Success))
+        when(mockCtcConnector.postTransit(any())(any())).thenReturn(Future.failed(new InternalServerException("Internal server error")))
+
+        intercept[InternalServerException] {
+          await(service.submitTransit(transit.submission))
+        }
+    }
+  }
 }

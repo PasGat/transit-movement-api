@@ -17,36 +17,48 @@
 package uk.gov.hmrc.transitmovementapi.helpers
 
 import java.time.Instant
+
 import eu.timepit.refined.auto._
 import org.scalacheck.Gen
 import play.api.libs.json.Json
 import reactivemongo.bson.BSONObjectID
-import uk.gov.hmrc.transitmovementapi.models.api.TransitSubmission
-import wolfendale.scalacheck.regexp.RegexpGen
+import uk.gov.hmrc.transitmovementapi.models.api.{CrossingDetails, TransitSubmission}
 import uk.gov.hmrc.transitmovementapi.models.types.ModelTypes._
 import uk.gov.hmrc.transitmovementapi.models.types._
+import wolfendale.scalacheck.regexp.RegexpGen
 
 trait TransitGenerator {
   case class TransitSubmissionWithId(id: String, submission: TransitSubmission)
 
-  private[helpers] def getRandomTransitSubmission(): TransitSubmissionWithId =
+  private[helpers] def getRandomTransitSubmission: TransitSubmissionWithId =
     transitSubmissionWithIdGenerator().sample.get
 
   private def transitSubmissionGenerator(): Gen[TransitSubmission] = {
     for {
       mrn                <- movementReferenceNumberGenerator
       vrn                <- vehicleReferenceNumberGenerator
-      captureMethod      <- captureMethodGenerator
-      captureDateTime    <- Gen.const(Instant.now)
+      transitMetadata    <- transitMetadataGenerator()
+      crossingDetails    <- crossingGenerator()
+    } yield TransitSubmission(mrn, vrn, transitMetadata, crossingDetails)
+  }
+
+  private def transitMetadataGenerator(): Gen[TransitMetadata] = {
+    for {
       userId             <- Gen.const(BSONObjectID.generate().stringify)
       deviceId           <- Gen.const(BSONObjectID.generate().stringify)
+      captureMethod      <- captureMethodGenerator
+      captureDateTime    <- Gen.const(Instant.now)
+    } yield TransitMetadata(userId, deviceId, captureMethod, captureDateTime)
+  }
+
+  private def crossingGenerator(): Gen[CrossingDetails] = {
+    for {
       departureDateTime  <- Gen.const(Instant.now)
       departurePort      <- departurePortGenerator
       destinationPort    <- destinationPortGenerator
       duration           <- Gen.choose(0, 1000).map(i => Json.toJson(i).as[Duration])
       carrier            <- carrierGenerator
-    } yield TransitSubmission(mrn, vrn, captureMethod, captureDateTime, userId, deviceId, departureDateTime,
-      departurePort, destinationPort, duration, carrier)
+    } yield CrossingDetails(departureDateTime, departurePort, destinationPort, duration, carrier)
   }
 
   private def transitSubmissionWithIdGenerator(): Gen[TransitSubmissionWithId] = for {
@@ -76,5 +88,4 @@ trait TransitGenerator {
 
   private def carrierGenerator: Gen[Carrier] =
     Gen.oneOf[Carrier]("Irish Ferries","DFDS","Eurotunnel", "P&O", "Stena Line")
-
 }

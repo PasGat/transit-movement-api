@@ -31,7 +31,7 @@ trait AuditEvents {
   def audit(event: => Future[ExtendedDataEvent], failureMessage: String => String)(implicit hc: HeaderCarrier): Future[AuditResult] =
     event.flatMap(auditConnector.sendExtendedEvent)
 
-  def sendTransitEvent(transitSubmission: TransitEvent)(implicit hc: HeaderCarrier): Future[ExtendedDataEvent] = {
+  def sendTransitEvent(transitSubmission: TransitMetadata)(implicit hc: HeaderCarrier): Future[ExtendedDataEvent] = {
     Future {
       ExtendedDataEvent(
         "transit-movement-api",

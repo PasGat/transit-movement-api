@@ -5,5 +5,5 @@ trait BaseISpec extends ApplicationSetupISpec {
 
   def withNoSetup(test: => Unit): Unit = test
 
-  def withTransit(test: TransitSubmissionWithId => Unit): Unit = test(getRandomTransitSubmission())
+  def withTransit(test: TransitSubmissionWithId => Unit): Unit = test(getRandomTransitSubmission)
 }

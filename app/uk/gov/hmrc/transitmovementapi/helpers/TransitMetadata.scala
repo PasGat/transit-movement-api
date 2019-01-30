@@ -16,21 +16,17 @@
 
 package uk.gov.hmrc.transitmovementapi.helpers
 
+import java.time.Instant
+
 import play.api.libs.json.{Format, Json}
-import uk.gov.hmrc.transitmovementapi.models.api.TransitSubmission
-import uk.gov.hmrc.transitmovementapi.models.types.ModelTypes.MovementReferenceNumber
+import uk.gov.hmrc.transitmovementapi.models.types.ModelTypes.MrnCaptureMethod
 import uk.gov.hmrc.transitmovementapi.models.types._
 
-case class TransitEvent(userId: String,
-                        deviceId: String,
-                        mrn: MovementReferenceNumber)
+case class TransitMetadata(userId: String,
+                           deviceId: String,
+                           captureMethod: MrnCaptureMethod,
+                           captureDateTime: Instant)
 
-object TransitEvent {
-  def fromSubmission(transit: TransitSubmission): TransitEvent = TransitEvent(
-    userId = transit.userId,
-    deviceId = transit.deviceId,
-    mrn = transit.movementReferenceNumber
-  )
-
-  implicit val format: Format[TransitEvent] = Json.format[TransitEvent]
+object TransitMetadata {
+  implicit val format: Format[TransitMetadata] = Json.format[TransitMetadata]
 }

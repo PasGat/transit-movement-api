@@ -20,8 +20,8 @@ import com.google.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.transitmovementapi.connectors.CtcConnector
-import uk.gov.hmrc.transitmovementapi.helpers.{AuditEvents, TransitEvent}
-import uk.gov.hmrc.transitmovementapi.models.api.TransitSubmission
+import uk.gov.hmrc.transitmovementapi.helpers.AuditEvents
+import uk.gov.hmrc.transitmovementapi.models.api.{CtcTransitSubmission, TransitSubmission}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -32,8 +32,8 @@ class TransitService @Inject()(ctcConnector: CtcConnector,
 
   def submitTransit(transit: TransitSubmission)(implicit hc: HeaderCarrier): Future[Unit] = {
     for {
-      _ <- audit(sendTransitEvent(TransitEvent.fromSubmission(transit)), (_: String) => s"Failed to send audit event")
-      _ <- ctcConnector.postTransit(transit)
+      _ <- audit(sendTransitEvent(transit.transitMetadata), (_: String) => s"Failed to send audit event")
+      _ <- ctcConnector.postTransit(CtcTransitSubmission.fromSubmissionRequest(transit))
     } yield ()
   }
 }

@@ -3,18 +3,98 @@
   "description": "Details of a transit movement",
   "required": [
     "movementReferenceNumber",
-    "captureMethod",
-    "captureDateTime",
-    "departureDateTime",
-    "departurePort",
-    "destinationPort",
-    "duration",
-    "carrier",
-    "captureDateTime",
-    "userId",
-    "deviceId"
+    "transitMetadata",
+    "crossingDetails"
   ],
   "properties": {
+    "crossingDetails": {
+      "type": "object",
+      "description": "Details of a crossing",
+      "required": [
+        "departureDateTime",
+        "departurePort",
+        "destinationPort",
+        "duration",
+        "carrier"
+      ],
+      "properties": {
+        "departureDateTime": {
+          "type": "string",
+          "description": "The date and time of the crossing departure",
+          "format": "date-time",
+          "example": "2019-09-15T15:53:00Z"
+        },
+        "departurePort": {
+          "type": "string",
+          "description": "The departure port of the crossing",
+          "enum": [
+            "Calais",
+            "Coquelles",
+            "Dublin",
+            "Dunkirk"
+          ]
+        },
+        "destinationPort": {
+          "type": "string",
+          "description": "The destination port of the crossing",
+          "enum": [
+            "Dover",
+            "Folkestone",
+            "Holyhead"
+          ]
+        },
+        "duration": {
+          "type": "number",
+          "description": "The duration of the crossing in minutes"
+        },
+        "carrier": {
+          "type": "string",
+          "description": "The carrier of the transit",
+          "enum": [
+            "Irish Ferries",
+            "DFDS",
+            "Eurotunnel",
+            "P&O",
+            "Stena Line"
+          ]
+        }
+      }
+    },
+    "transitMetadata": {
+      "type": "object",
+      "description": "Details about the device, capture information and the person sending the request",
+      "required": [
+        "userId",
+        "deviceId",
+        "captureMethod",
+        "captureDateTime"
+      ],
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "The ID of the user logged on the phone who captured the transit",
+          "example": "5c34bbada50000f900bf09bd"
+        },
+        "deviceId": {
+          "type": "string",
+          "description": "The ID of the device that has been used to capture the transit",
+          "example": "5c34bbada50000f900bf09bd"
+        },
+        "captureMethod": {
+          "type": "string",
+          "description": "The method that was used to capture the MRN",
+          "enum": [
+            "SCAN",
+            "MANUAL"
+          ]
+        },
+        "captureDateTime": {
+          "type": "string",
+          "description": "The datetime when the MRN has been captured",
+          "example": "2019-09-15T15:53:00Z"
+        }
+      }
+    },
     "movementReferenceNumber": {
       "type": "string",
       "description": "The reference number of the transit movement as recorded in NCTS",
@@ -23,70 +103,7 @@
     "vehicleReferenceNumber": {
       "type": "string",
       "description": "The reference number of the vehicle that the transit movement was on",
-      "pattern": "[A-Z0-9]"
-    },
-    "captureMethod": {
-      "type": "string",
-      "description": "The method that was used to capture the MRN",
-      "enum": [
-        "SCAN",
-        "MANUAL"
-      ]
-    },
-    "captureDateTime": {
-      "type": "string",
-      "description": "The datetime when the MRN has been captured",
-      "example": "2019-09-15T15:53:00Z"
-    },
-    "userId": {
-      "type": "string",
-      "description": "The ID of the user logged on the phone who captured the transit",
-      "example": "5c34bbada50000f900bf09bd"
-    },
-    "deviceId": {
-      "type": "string",
-      "description": "The ID of the device that has been used to capture the transit",
-      "example": "5c34bbada50000f900bf09bd"
-    },
-    "departureDateTime": {
-      "type": "string",
-      "description": "The date and time of the crossing departure",
-      "format": "date-time",
-      "example": "2019-09-15T15:53:00Z"
-    },
-    "departurePort": {
-      "type": "string",
-      "description": "The departure port of the crossing",
-      "enum": [
-        "Calais",
-        "Coquelles",
-        "Dublin",
-        "Dunkirk"
-      ]
-    },
-    "destinationPort": {
-      "type": "string",
-      "description": "The destination port of the crossing",
-      "enum": [
-        "Dover",
-        "Folkestone",
-        "Holyhead"
-      ]
-    },
-    "duration": {
-      "type": "number",
-      "description": "The duration of the crossing in minutes"
-    },
-    "carrier": {
-      "type": "string",
-      "description": "The carrier of the transit",
-      "enum": [
-        "Irish Ferries",
-        "DFDS",
-        "Eurotunnel",
-        "P&O",
-        "Stena Line"
-      ]
+      "pattern": "([A-Z0-9]|(\\s))+"
     }
   }
 }

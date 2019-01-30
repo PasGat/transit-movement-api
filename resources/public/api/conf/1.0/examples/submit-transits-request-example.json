@@ -1,13 +1,17 @@
 {
   "movementReferenceNumber": "18GB0000601001EB15",
   "vehicleReferenceNumber": "AB12 CDE",
-  "captureMethod": "MANUAL",
-  "captureDateTime": "2008-09-15T15:53:00Z",
-  "userId": "ABC",
-  "deviceId": "ABC",
-  "departureDateTime": "2008-09-15T15:53:00Z",
-  "departurePort": "Calais",
-  "destinationPort": "Dover",
-  "duration": 120,
-  "carrier": "P&O"
+  "transitMetadata": {
+    "userId": "18GB0000601001EB15",
+    "deviceId": "18GB0000601001EB15",
+    "captureMethod": "MANUAL",
+    "captureDateTime": "2008-09-15T15:53:00Z"
+  },
+  "crossingDetails": {
+    "departureDateTime": "2008-09-15T15:53:00Z",
+    "departurePort": "Calais",
+    "destinationPort": "Dover",
+    "duration": 120,
+    "carrier": "P&O"
+  }
 }

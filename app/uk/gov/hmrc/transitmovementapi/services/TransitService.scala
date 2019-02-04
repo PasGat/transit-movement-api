@@ -32,7 +32,7 @@ class TransitService @Inject()(ctcConnector: CtcConnector,
 
   def submitTransit(transit: TransitSubmission)(implicit hc: HeaderCarrier): Future[Unit] = {
     for {
-      _ <- audit(sendTransitEvent(transit.transitMetadata), (_: String) => s"Failed to send audit event")
+      _ <- audit(sendTransitEvent(transit), (_: String) => s"Failed to send audit event")
       _ <- ctcConnector.postTransit(CtcTransitSubmission.fromSubmissionRequest(transit))
     } yield ()
   }

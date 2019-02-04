@@ -20,6 +20,7 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
 import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
+import uk.gov.hmrc.transitmovementapi.models.api.TransitSubmission
 import uk.gov.hmrc.transitmovementapi.models.types._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -31,11 +32,11 @@ trait AuditEvents {
   def audit(event: => Future[ExtendedDataEvent], failureMessage: String => String)(implicit hc: HeaderCarrier): Future[AuditResult] =
     event.flatMap(auditConnector.sendExtendedEvent)
 
-  def sendTransitEvent(transitSubmission: TransitMetadata)(implicit hc: HeaderCarrier): Future[ExtendedDataEvent] = {
+  def sendTransitEvent(transitSubmission: TransitSubmission)(implicit hc: HeaderCarrier): Future[ExtendedDataEvent] = {
     Future {
       ExtendedDataEvent(
         "transit-movement-api",
-        "transit-recorded",
+        "transitDetailsSubmission",
         detail = Json.toJson(transitSubmission)
       )
     }

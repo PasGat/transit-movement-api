@@ -26,7 +26,7 @@ case class CtcTransitSubmission(movementReferenceNumber: MovementReferenceNumber
                                 vehicleReferenceNumber: Option[VehicleReferenceNumber],
                                 captureMethod: MrnCaptureMethod,
                                 captureDateTime: Instant,
-                                departureDateTime: Instant,
+                                departureDateTime: Option[Instant],
                                 departurePort: DeparturePort,
                                 destinationPort: DestinationPort,
                                 duration: Duration,

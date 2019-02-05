@@ -26,7 +26,7 @@ case class CrossingDetails(carrier: Carrier,
                            vessel: Option[String],
                            departurePort: DeparturePort,
                            destinationPort: DestinationPort,
-                           departureDateTime: Instant,
+                           departureDateTime: Option[Instant],
                            duration: Duration
                           )
 

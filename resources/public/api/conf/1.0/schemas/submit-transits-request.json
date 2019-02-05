@@ -11,7 +11,6 @@
       "type": "object",
       "description": "Details of a crossing",
       "required": [
-        "departureDateTime",
         "departurePort",
         "destinationPort",
         "duration",
@@ -68,7 +67,6 @@
       "type": "object",
       "description": "Details about the device, capture information and the person sending the request",
       "required": [
-        "userId",
         "deviceId",
         "captureMethod",
         "captureDateTime"

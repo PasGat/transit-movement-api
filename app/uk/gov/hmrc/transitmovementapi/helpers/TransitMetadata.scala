@@ -22,7 +22,7 @@ import play.api.libs.json.{Format, Json}
 import uk.gov.hmrc.transitmovementapi.models.types.ModelTypes.MrnCaptureMethod
 import uk.gov.hmrc.transitmovementapi.models.types._
 
-case class TransitMetadata(userId: String,
+case class TransitMetadata(userId: Option[String],
                            deviceId: String,
                            captureMethod: MrnCaptureMethod,
                            captureDateTime: Instant)

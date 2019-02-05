@@ -28,5 +28,5 @@ case class TransitSubmission(movementReferenceNumber: MovementReferenceNumber,
                             )
 
 object TransitSubmission {
-  implicit val format: OFormat[TransitSubmission]  = Json.format[TransitSubmission]
+  implicit val format: OFormat[TransitSubmission] = Json.format[TransitSubmission]
 }

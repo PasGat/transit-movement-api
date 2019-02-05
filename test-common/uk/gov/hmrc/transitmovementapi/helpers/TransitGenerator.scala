@@ -44,7 +44,7 @@ trait TransitGenerator {
 
   private def transitMetadataGenerator(): Gen[TransitMetadata] = {
     for {
-      userId             <- Gen.const(BSONObjectID.generate().stringify)
+      userId             <- Gen.option(BSONObjectID.generate().stringify)
       deviceId           <- Gen.const(BSONObjectID.generate().stringify)
       captureMethod      <- captureMethodGenerator
       captureDateTime    <- Gen.const(Instant.now)
@@ -53,7 +53,7 @@ trait TransitGenerator {
 
   private def crossingGenerator(): Gen[CrossingDetails] = {
     for {
-      departureDateTime  <- Gen.const(Instant.now)
+      departureDateTime  <- Gen.option(Instant.now)
       departurePort      <- departurePortGenerator
       destinationPort    <- destinationPortGenerator
       duration           <- Gen.choose(0, 1000).map(i => Json.toJson(i).as[Duration])

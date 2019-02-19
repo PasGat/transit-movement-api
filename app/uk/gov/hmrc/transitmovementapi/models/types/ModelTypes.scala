@@ -18,9 +18,7 @@ package uk.gov.hmrc.transitmovementapi.models.types
 
 import eu.timepit.refined._
 import eu.timepit.refined.api.Refined
-import eu.timepit.refined.boolean.{And, Not, Or}
-import eu.timepit.refined.char.{Digit, UpperCase, Whitespace}
-import eu.timepit.refined.collection.{Empty, Forall}
+import eu.timepit.refined.boolean.Or
 import eu.timepit.refined.generic.Equal
 import eu.timepit.refined.numeric.GreaterEqual
 import eu.timepit.refined.string.MatchesRegex
@@ -44,7 +42,7 @@ object ModelTypes {
 
   private type ValidMRNCaptureMethod        = Or[Equal[W.`"SCAN"`.T], Equal[W.`"MANUAL"`.T]]
   private type ValidMovementReferenceNumber = MatchesRegex[W.`"""\\d{2}[a-zA-Z]{2}[a-zA-Z0-9]{14}"""`.T]
-  private type ValidVehicleReferenceNumber  = And[Not[Empty], Forall[Or[Whitespace, Or[UpperCase, Digit]]]]
+  private type ValidVehicleReferenceNumber  = MatchesRegex[W.`"""^[A-Z0-9 ]{1,16}$"""`.T]
   private type ValidDeparturePort           = MatchesRegex[W.`"""(Calais)|(Coquelles)|(Dublin)|(Dunkirk)"""`.T]
   private type ValidDestinationPort         = MatchesRegex[W.`"(Dover)|(Folkestone)|(Holyhead)"`.T]
   private type ValidCarrier                 = MatchesRegex[W.`"""(Irish Ferries)|(DFDS)|(Eurotunnel)|(P&O)|(Stena Line)"""`.T]

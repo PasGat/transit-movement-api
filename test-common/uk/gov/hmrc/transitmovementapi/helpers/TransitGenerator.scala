@@ -74,7 +74,7 @@ trait TransitGenerator {
     RegexpGen.from("\\d{2}[a-zA-Z]{2}[a-zA-Z0-9]{14}").map(mrn => Json.toJson(mrn).as[MovementReferenceNumber])
 
   private def vehicleReferenceNumberGenerator: Gen[Option[VehicleReferenceNumber]] =
-    Gen.option(RegexpGen.from(s"""([A-Z0-9]|[\\s])+""").map(vrn => Json.toJson(vrn).as[VehicleReferenceNumber]))
+    Gen.option(RegexpGen.from("""^[A-Z0-9 ]{1,16}$""").map(vrn => Json.toJson(vrn).as[VehicleReferenceNumber]))
 
   private def crossingIdGenerator(withDefaultCrossingId: Option[String]): Gen[String] = {
     Gen.const(withDefaultCrossingId.fold(BSONObjectID.generate().stringify)(id => id))

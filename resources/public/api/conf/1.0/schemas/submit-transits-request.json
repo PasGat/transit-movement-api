@@ -105,7 +105,9 @@
     "vehicleReferenceNumber": {
       "type": "string",
       "description": "The reference number of the vehicle that the transit movement was on",
-      "pattern": "([A-Z0-9]|(\\s))+"
+      "minLength": 1,
+      "maxLength": 16,
+      "pattern": "^[A-Z0-9 ]{1,16}$"
     }
   }
 }

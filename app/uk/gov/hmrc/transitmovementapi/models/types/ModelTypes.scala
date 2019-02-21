@@ -42,7 +42,7 @@ object ModelTypes {
 
   private type ValidMRNCaptureMethod        = Or[Equal[W.`"SCAN"`.T], Equal[W.`"MANUAL"`.T]]
   private type ValidMovementReferenceNumber = MatchesRegex[W.`"""\\d{2}[a-zA-Z]{2}[a-zA-Z0-9]{14}"""`.T]
-  private type ValidVehicleReferenceNumber  = MatchesRegex[W.`"""^[A-Z0-9 ]{1,16}$"""`.T]
+  private type ValidVehicleReferenceNumber  = MatchesRegex[W.`"""^[\\-A-Z0-9 ]{1,16}$"""`.T]
   private type ValidDeparturePort           = MatchesRegex[W.`"""(Calais)|(Coquelles)|(Dublin)|(Dunkirk)"""`.T]
   private type ValidDestinationPort         = MatchesRegex[W.`"(Dover)|(Folkestone)|(Holyhead)"`.T]
   private type ValidCarrier                 = MatchesRegex[W.`"""(Irish Ferries)|(DFDS)|(Eurotunnel)|(P&O)|(Stena Line)"""`.T]

@@ -23,7 +23,7 @@ import uk.gov.hmrc.transitmovementapi.models.types.ModelTypes.MrnCaptureMethod
 import uk.gov.hmrc.transitmovementapi.models.types._
 
 case class TransitMetadata(userId: Option[String],
-                           deviceId: String,
+                           appInstallationId: Option[String],
                            captureMethod: MrnCaptureMethod,
                            captureDateTime: Instant)
 

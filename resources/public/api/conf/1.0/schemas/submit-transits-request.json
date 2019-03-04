@@ -67,7 +67,6 @@
       "type": "object",
       "description": "Details about the device, capture information and the person sending the request",
       "required": [
-        "deviceId",
         "captureMethod",
         "captureDateTime"
       ],
@@ -77,10 +76,10 @@
           "description": "The ID of the user logged on the phone who captured the transit",
           "example": "5c34bbada50000f900bf09bd"
         },
-        "deviceId": {
+        "appInstallationId": {
           "type": "string",
-          "description": "The ID of the device that has been used to capture the transit",
-          "example": "5c34bbada50000f900bf09bd"
+          "description": "A unique ID that identifies the installation of the app on a device",
+          "example": "E2283F9F8779475093F4A363269AB238"
         },
         "captureMethod": {
           "type": "string",

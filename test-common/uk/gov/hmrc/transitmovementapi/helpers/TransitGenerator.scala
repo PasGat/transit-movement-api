@@ -17,6 +17,7 @@
 package uk.gov.hmrc.transitmovementapi.helpers
 
 import java.time.Instant
+import java.util.UUID
 
 import eu.timepit.refined.auto._
 import org.scalacheck.Gen
@@ -45,10 +46,10 @@ trait TransitGenerator {
   private def transitMetadataGenerator(): Gen[TransitMetadata] = {
     for {
       userId             <- Gen.option(BSONObjectID.generate().stringify)
-      deviceId           <- Gen.const(BSONObjectID.generate().stringify)
+      appInstallationId  <- Gen.option(UUID.randomUUID().toString)
       captureMethod      <- captureMethodGenerator
       captureDateTime    <- Gen.const(Instant.now)
-    } yield TransitMetadata(userId, deviceId, captureMethod, captureDateTime)
+    } yield TransitMetadata(userId, appInstallationId, captureMethod, captureDateTime)
   }
 
   private def crossingGenerator(): Gen[CrossingDetails] = {

@@ -3,7 +3,7 @@
   "vehicleReferenceNumber": "AB12 CDE",
   "transitMetadata": {
     "userId": "5c518e8c0c00000c00b4d72e",
-    "deviceId": "5c518e8c0c00000c00b4d72f",
+    "appInstallationId": "E2283F9F8779475093F4A363269AB238",
     "captureMethod": "MANUAL",
     "captureDateTime": "2008-09-15T15:53:00Z"
   },

@@ -13,6 +13,9 @@
     "name":"Transit Movement",
     "description":"Submit and retrieve details of transit movements",
     "context":"customs/transit-movement",
+    "categories": [
+      "CUSTOMS"
+    ],
     "versions":[
       {
         "version":"1.0",

@@ -1,4 +1,4 @@
-transit-movement-api
+transit-movement-api 
 =============================================
 This service exposes endpoints via the API platform to allow the submission of transit movement details that are stored in mongo on MDTP as they enter the UK. The transit movements will already be declared in the NCTS system, this does not capture information about new transit declarations.
 

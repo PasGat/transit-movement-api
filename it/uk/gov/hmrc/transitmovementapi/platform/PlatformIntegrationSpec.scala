@@ -25,19 +25,17 @@ import scala.concurrent.Future
 /**
   * Testcase to verify the capability of integration with the API platform.
   *
-  * 1, To integrate with API platform the service needs to register itself to the service locator by calling the /registration endpoint and providing
-  * - application name
-  * - application url
-  *
-  * 2a, To expose API's to Third Party Developers, the service needs to define the APIs in a definition.json and make it available under api/definition GET endpoint
-  * 2b, For all of the endpoints defined in the definition.json a documentation.xml needs to be provided and be available under api/documentation/[version]/[endpoint name] GET endpoint
+  * 1a, To expose API's to Third Party Developers, the service needs to define the APIs in a definition.json and make it available under api/definition GET endpoint
+  * 1b, For all of the endpoints defined in the definition.json a documentation.xml needs to be provided and be available under api/documentation/[version]/[endpoint name] GET endpoint
   * Example: api/documentation/1.0/Fetch-Some-Data
+  *
+  * See: confluence ApiPlatform/API+Platform+Architecture+with+Flows
   */
 class PlatformIntegrationSpec
   extends UnitSpec with GuiceOneAppPerTest with MockitoSugar with ScalaFutures with BeforeAndAfterEach {
 
   val stubHost: String = "localhost"
-  val stubPort: Int = sys.env.getOrElse("WIREMOCK_SERVICE_LOCATOR_PORT", "11112").toInt
+  val stubPort: Int = sys.env.getOrElse("PORT", "11112").toInt
   val wireMockServer: WireMockServer = new WireMockServer(wireMockConfig().port(stubPort))
 
   override def newAppForTest(testData: TestData): Application =
@@ -49,9 +47,6 @@ class PlatformIntegrationSpec
         "appUrl" -> "http://microservice-name.service",
         "metrics.enabled" -> false,
         "auditing.enabled" -> false,
-        "microservice.services.service-locator.host" -> stubHost,
-        "microservice.services.service-locator.port" -> stubPort,
-        "microservice.services.service-locator.enabled" -> true,
         "microservice.services.metrics.graphite.enabled" -> false
       ))
       .in(Mode.Test)
@@ -72,18 +67,6 @@ class PlatformIntegrationSpec
   }
 
   "microservice" should {
-    "register itself to service-locator" in new Setup {
-      def regPayloadStringFor(serviceName: String, serviceUrl: String): String =
-        Json.toJson(ServiceDetails(serviceName, serviceUrl, Some(Map("third-party-api" -> "true")))).toString
-
-      verify(
-        1,
-        postRequestedFor(urlMatching("/registration"))
-          .withHeader("content-type", equalTo("application/json"))
-          .withRequestBody(equalTo(regPayloadStringFor("application-name", "http://microservice-name.service")))
-      )
-    }
-
     "provide definition endpoint and documentation endpoint for each api" in new Setup {
       def normalizeEndpointName(endpointName: String): String = endpointName.replaceAll(" ", "-")
 

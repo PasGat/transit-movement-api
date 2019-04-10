@@ -24,7 +24,6 @@ import com.google.inject.{AbstractModule, Provider, TypeLiteral}
 import play.api.Mode.Mode
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.transitmovementapi.platform.tasks.ServiceLocatorRegistration
 import uk.gov.hmrc.play.bootstrap.auth.DefaultAuthConnector
 import uk.gov.hmrc.play.bootstrap.http.{DefaultHttpClient, HttpClient}
 import uk.gov.hmrc.play.config.ServicesConfig
@@ -36,15 +35,12 @@ class GuiceModule(environment: Environment, configuration: Configuration) extend
 
   override def configure(): Unit = {
 
-    bind(classOf[ServiceLocatorRegistration]).asEagerSingleton()
     bind(classOf[AuthConnector]).to(classOf[DefaultAuthConnector])
     bind(classOf[HttpClient]).to(classOf[DefaultHttpClient])
 
-    bindConfigBaseUrl("service-locator")
     bindConfigBaseUrl("common-transit-convention")
     bindConfigString("appName")
     bindConfigString("appUrl")
-    bindConfigBoolean("microservice.services.service-locator.enabled")
     bindConfigStringSeq("api.access.white-list.applicationIds")
     bindConfigBoolean("ctc-backend-enabled")
 

@@ -19,7 +19,7 @@ package uk.gov.hmrc.transitmovementapi.connectors
 import java.net.URL
 
 import javax.inject.{Inject, Named, Singleton}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, Upstream4xxResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.transitmovementapi.models.api.CtcTransitSubmission
 
@@ -31,7 +31,12 @@ class CtcConnector @Inject()(@Named("common-transit-convention.baseUrl") ctcUrl:
   def postTransit(transit: CtcTransitSubmission)(implicit headerCarrier: HeaderCarrier): Future[HttpResponse] = {
     val url = ctcUrl + s"/common-transit-convention/transits"
 
-    if(ctcBackendEnabled) httpClient.POST(url, transit)
+    if(ctcBackendEnabled) {
+      httpClient.POST(url, transit)
+        .recover {
+          case Upstream4xxResponse(_, 409, _ , _) => HttpResponse(200)
+        }
+    }
     else Future.successful(HttpResponse(200))
   }
 }

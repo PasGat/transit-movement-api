@@ -36,11 +36,11 @@ class TransitServiceSpec extends BaseSpec with DataGenerator {
     "return () if there were no errors when attempting to store the submitted transit data" in {
       withTransit {
         transit =>
-          when(mockCtcConnector.postTransit(any())(any())).thenReturn(Future.successful(HttpResponse(200)))
+          when(mockCtcConnector.postTransit(any())(any())).thenReturn(Future.successful(()))
           when(mockAuditConnector.sendExtendedEvent(any())(any(), any())).thenReturn(Future.successful(AuditResult.Success))
           val result: Unit = await(service.submitTransit(transit.submission))
 
-          result shouldBe()
+          result shouldBe ()
       }
     }
 

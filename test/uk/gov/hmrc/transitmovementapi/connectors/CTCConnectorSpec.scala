@@ -18,10 +18,9 @@ package uk.gov.hmrc.transitmovementapi.connectors
 
 import java.net.URL
 
-import com.google.inject.Guice
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
-import uk.gov.hmrc.http.{HttpResponse, Upstream4xxResponse}
+import uk.gov.hmrc.http.Upstream4xxResponse
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.transitmovementapi.helpers.{BaseSpec, DataGenerator}
 import uk.gov.hmrc.transitmovementapi.models.api.CtcTransitSubmission
@@ -39,9 +38,9 @@ class CTCConnectorSpec extends BaseSpec with DataGenerator {
         transit =>
           when(mockHttpClient.POST(any(), any(), any())(any(), any(), any(), any())).thenReturn(Future.failed(Upstream4xxResponse("", 409, 409)))
 
-          val result: HttpResponse = await(ctcConnector.postTransit(CtcTransitSubmission.fromSubmissionRequest(transit.submission)))
+          val result: Unit = await(ctcConnector.postTransit(CtcTransitSubmission.fromSubmissionRequest(transit.submission)))
 
-          result.status shouldBe 200
+          result shouldBe ()
       }
     }
   }

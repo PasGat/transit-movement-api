@@ -24,7 +24,7 @@ import uk.gov.hmrc.play.HeaderCarrierConverter
 
 import scala.concurrent.{ExecutionContext, Future}
 
-abstract class BaseApiController extends Controller {
+trait BaseApiController extends Controller {
 
   protected val logger: Logger = play.api.Logger(this.getClass)
 

@@ -27,12 +27,12 @@ trait ErrorHandling {
 
   def handleErrors(f: => Future[Result])(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Result] = {
     f.recover {
-      case _: NotFoundException =>
-        Logger.error("Resource not found")
+      case e: NotFoundException =>
+        Logger.error(s"Resource not found with error: ${e.getMessage}")
         NotFound.toResult
 
-      case _: BadRequestException =>
-        Logger.error("Bad request")
+      case e: BadRequestException =>
+        Logger.error(s"Bad request with error: ${e.getMessage}")
         BadRequest.toResult
 
       case e: Exception =>

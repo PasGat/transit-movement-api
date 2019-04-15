@@ -25,8 +25,6 @@ import eu.timepit.refined.string.MatchesRegex
 
 object ModelTypes {
   /**
-    * Since there are no hard-defined implicit values for Refined's special types, a custom one had to be created.
-    *
     * In order to be able to serialize/deserialize these types, import the refinedReads and refinedWrites from the 'types'
     * package object.
     */

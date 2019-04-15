@@ -36,35 +36,24 @@ class TransitServiceSpec extends BaseSpec with DataGenerator {
     "return () if there were no errors when attempting to store the submitted transit data" in {
       withTransit {
         transit =>
-          when(mockCtcConnector.postTransit(any())(any())).thenReturn(Future.successful(HttpResponse(200)))
+          when(mockCtcConnector.postTransit(any())(any())).thenReturn(Future.successful(()))
           when(mockAuditConnector.sendExtendedEvent(any())(any(), any())).thenReturn(Future.successful(AuditResult.Success))
           val result: Unit = await(service.submitTransit(transit.submission))
 
           result shouldBe ()
       }
     }
-  }
 
-  "throw a NotFoundException if the crossing does not exist for the supplied crossing ID" in {
-    withTransit {
-      transit =>
-        when(mockCtcConnector.postTransit(any())(any())).thenReturn(Future.failed(new NotFoundException("")))
+    "throw an InternalServerException if any errors occurred when attempting to store the submitted transit data" in {
+      withTransit {
+        transit =>
+          when(mockAuditConnector.sendExtendedEvent(any())(any(), any())).thenReturn(Future.successful(AuditResult.Success))
+          when(mockCtcConnector.postTransit(any())(any())).thenReturn(Future.failed(new InternalServerException("Internal server error")))
 
-        intercept[NotFoundException] {
-          await(service.submitTransit(transit.submission))
-        }
-    }
-  }
-
-  "throw an InternalServerException if any errors occurred when attempting to store the submitted transit data" in {
-    withTransit {
-      transit =>
-        when(mockAuditConnector.sendExtendedEvent(any())(any(), any())).thenReturn(Future.successful(AuditResult.Success))
-        when(mockCtcConnector.postTransit(any())(any())).thenReturn(Future.failed(new InternalServerException("Internal server error")))
-
-        intercept[InternalServerException] {
-          await(service.submitTransit(transit.submission))
-        }
+          intercept[InternalServerException] {
+            await(service.submitTransit(transit.submission))
+          }
+      }
     }
   }
 }

@@ -17,26 +17,35 @@ class TransitControllerISpec extends BaseISpec with DataGenerator with CtcStubs 
           status(result) shouldBe OK
       }
     }
-  }
 
-  "return 400 BAD_REQUEST for bad body" in {
-    withTransit { transit =>
-      invalidTransitSubmission(transit.submission)
-      val result = callRoute(fakeRequest(routes.TransitController.submit()).withBody(Json.toJson(transit.submission)))
+    "return 200 OK even when CTC is returning 409 Conflict" in {
+      withTransit {
+        transit =>
+          conflictErrorRequest(transit.submission)
+          val result = callRoute(fakeRequest(routes.TransitController.submit()).withBody(Json.toJson(transit.submission)))
 
-      status(result) shouldBe BAD_REQUEST
-      contentAsJson(result) shouldBe Json.toJson(ErrorResponse.BadRequest)
+          status(result) shouldBe OK
+      }
+    }
+
+    "return 400 BAD_REQUEST for bad body" in {
+      withTransit { transit =>
+        invalidTransitSubmission(transit.submission)
+        val result = callRoute(fakeRequest(routes.TransitController.submit()).withBody(Json.toJson(transit.submission)))
+
+        status(result) shouldBe BAD_REQUEST
+        contentAsJson(result) shouldBe Json.toJson(ErrorResponse.BadRequest)
+      }
+    }
+
+    "return 500 INTERNAL_SERVER_ERROR" in {
+      withTransit { transit =>
+        internalServerErrorRequest(transit.submission)
+        val result = callRoute(fakeRequest(routes.TransitController.submit()).withBody(Json.toJson(transit.submission)))
+
+        status(result) shouldBe INTERNAL_SERVER_ERROR
+        contentAsJson(result) shouldBe Json.toJson(ErrorResponse.InternalServerError)
+      }
     }
   }
-
-  "return 500 INTERNAL_SERVER_ERROR" in {
-    withTransit { transit =>
-      internalServerErrorRequest(transit.submission)
-      val result = callRoute(fakeRequest(routes.TransitController.submit()).withBody(Json.toJson(transit.submission)))
-
-      status(result) shouldBe INTERNAL_SERVER_ERROR
-      contentAsJson(result) shouldBe Json.toJson(ErrorResponse.InternalServerError)
-    }
-  }
-
 }

@@ -24,4 +24,8 @@ trait CtcStubs {
       .withRequestBody(equalToJson(Json.stringify(Json.toJson(CtcTransitSubmission.fromSubmissionRequest(transitSubmission)))))
       .willReturn(ok(s"""{ "transitId": ${BSONObjectID.generate().stringify} """)))
   }
+
+  def conflictErrorRequest(transitSubmission: TransitSubmission): StubMapping = stubFor(post(urlPathEqualTo("/common-transit-convention/transits"))
+    .withRequestBody(equalToJson(Json.stringify(Json.toJson(CtcTransitSubmission.fromSubmissionRequest(transitSubmission)))))
+    .willReturn(aResponse.withStatus(409)))
 }

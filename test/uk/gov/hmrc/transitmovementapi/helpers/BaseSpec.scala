@@ -19,7 +19,7 @@ package uk.gov.hmrc.transitmovementapi.helpers
 trait BaseSpec extends ApplicationSetupSpec {
   self: DataGenerator =>
 
-  def withTransit(test: TransitSubmissionWithId => Unit) = test(getRandomTransitSubmission)
+  def withTransit(test: TransitSubmissionWithId => Unit): Unit = test(getRandomTransitSubmission)
 
   def withNoSetup(test: => Unit): Unit = test
 }

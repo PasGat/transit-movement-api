@@ -27,7 +27,7 @@ import uk.gov.hmrc.transitmovementapi.models.api.CtcTransitSubmission
 
 import scala.concurrent.Future
 
-class CTCConnectorSpec extends BaseSpec with DataGenerator {
+class CtcConnectorSpec extends BaseSpec with DataGenerator {
 
   val mockHttpClient: HttpClient = mock[HttpClient]
   val ctcConnector: CtcConnector = new CtcConnector(new URL("http://localhost:9266"))(mockHttpClient, ec)

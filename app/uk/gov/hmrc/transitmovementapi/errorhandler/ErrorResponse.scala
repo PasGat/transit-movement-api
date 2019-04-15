@@ -29,7 +29,7 @@ sealed abstract class ErrorResponse(val httpStatusCode: Int,
 
 object ErrorResponse {
 
-  case object BadRequest          extends ErrorResponse(400, "BAD_REQUEST", "Bad request")
+  case object BadRequest          extends ErrorResponse(400, "BAD_REQUEST", "The body was invalid - please check the data restrictions")
   case object NotFound            extends ErrorResponse(404, "NOT_FOUND", "Resource was not found")
   case object InvalidAcceptHeader extends ErrorResponse(406, "ACCEPT_HEADER_INVALID", "The accept header is missing or invalid")
   case object InternalServerError extends ErrorResponse(500, "INTERNAL_SERVER_ERROR", "Internal server error")

@@ -26,18 +26,15 @@ import uk.gov.hmrc.transitmovementapi.models.api.CtcTransitSubmission
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CtcConnector @Inject()(@Named("common-transit-convention.baseUrl") ctcUrl: URL,
-                            @Named("ctc-backend-enabled") ctcBackendEnabled: Boolean)(implicit httpClient: HttpClient, ec: ExecutionContext) {
+class CtcConnector @Inject()(@Named("common-transit-convention.baseUrl") ctcUrl: URL)
+                            (implicit httpClient: HttpClient, ec: ExecutionContext) {
   def postTransit(transit: CtcTransitSubmission)(implicit headerCarrier: HeaderCarrier): Future[Unit] = {
     val url = ctcUrl + s"/common-transit-convention/transits"
 
-    if(ctcBackendEnabled) {
-      httpClient.POST(url, transit)
-        .map(_ => ())
-        .recover {
-          case Upstream4xxResponse(_, 409, _ , _) => ()
-        }
-    }
-    else Future.successful(())
+    httpClient.POST(url, transit)
+      .map(_ => ())
+      .recover {
+        case Upstream4xxResponse(_, 409, _, _) => ()
+      }
   }
 }

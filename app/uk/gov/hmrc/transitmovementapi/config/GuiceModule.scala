@@ -42,8 +42,6 @@ class GuiceModule(environment: Environment, configuration: Configuration) extend
     bindConfigString("appName")
     bindConfigString("appUrl")
     bindConfigStringSeq("api.access.white-list.applicationIds")
-    bindConfigBoolean("ctc-backend-enabled")
-
   }
 
   private def bindConfigStringSeq(path: String): Unit = {
@@ -53,19 +51,9 @@ class GuiceModule(environment: Environment, configuration: Configuration) extend
       .toInstance(configValue)
   }
 
-  private def bindConfigInt(path: String): Unit = {
-    bindConstant().annotatedWith(named(path))
-      .to(configuration.underlying.getInt(path))
-  }
-
   private def bindConfigString(path: String): Unit = {
     bindConstant().annotatedWith(named(path))
       .to(configuration.underlying.getString(path))
-  }
-
-  private def bindConfigBoolean(path: String): Unit = {
-    bindConstant().annotatedWith(named(path))
-      .to(configuration.underlying.getBoolean(path))
   }
 
   private def bindConfigBaseUrl(serviceName: String): ScopedBindingBuilder =
@@ -76,5 +64,4 @@ class GuiceModule(environment: Environment, configuration: Configuration) extend
   private class BaseUrlProvider(serviceName: String) extends Provider[URL] {
     override lazy val get = new URL(baseUrl(serviceName))
   }
-
 }

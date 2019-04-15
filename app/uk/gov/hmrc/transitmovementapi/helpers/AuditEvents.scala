@@ -33,7 +33,7 @@ trait AuditEvents {
     event.flatMap(auditConnector.sendExtendedEvent)
 
   def sendTransitEvent(transitSubmission: TransitSubmission)(implicit hc: HeaderCarrier): Future[ExtendedDataEvent] = {
-    Future {
+    Future.successful {
       ExtendedDataEvent(
         "transit-movement-api",
         "transitDetailsSubmission",

@@ -29,8 +29,8 @@ import scala.concurrent.Future
 
 class CTCConnectorSpec extends BaseSpec with DataGenerator {
 
-  val mockHttpClient = mock[HttpClient]
-  val ctcConnector: CtcConnector = new CtcConnector(new URL("http://localhost:9266"), true)(mockHttpClient, ec)
+  val mockHttpClient: HttpClient = mock[HttpClient]
+  val ctcConnector: CtcConnector = new CtcConnector(new URL("http://localhost:9266"))(mockHttpClient, ec)
 
   "postTransit" should {
     "not fail if 409 is given" in {

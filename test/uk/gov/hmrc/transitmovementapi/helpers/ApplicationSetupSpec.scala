@@ -21,7 +21,9 @@ import akka.stream.ActorMaterializer
 import org.scalatest._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
-import play.api.mvc.AnyContentAsEmpty
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.inject.Injector
+import play.api.mvc.{AnyContentAsEmpty, ControllerComponents}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
@@ -30,12 +32,16 @@ import scala.concurrent.ExecutionContext
 
 
 trait ApplicationSetupSpec extends UnitSpec with BeforeAndAfterAll with Inspectors with Inside
-  with EitherValues with LoneElement with MockitoSugar with ScalaFutures with OptionValues {
+  with EitherValues with LoneElement with MockitoSugar with ScalaFutures with OptionValues with GuiceOneAppPerSuite {
 
   implicit lazy val ec: ExecutionContext = scala.concurrent.ExecutionContext.Implicits.global
   implicit lazy val hc: HeaderCarrier = HeaderCarrier()
   implicit lazy val system: ActorSystem = ActorSystem()
   implicit lazy val materializer: ActorMaterializer = ActorMaterializer()
+
+  def injector: Injector = app.injector
+
+  def cc: ControllerComponents = injector.instanceOf[ControllerComponents]
 
   val acceptHeader: (String, String) = "Accept" -> "application/vnd.hmrc.1.0+json"
 

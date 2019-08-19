@@ -23,7 +23,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.transitmovementapi.errorhandler.ErrorResponse.InternalServerError
-import uk.gov.hmrc.transitmovementapi.helpers.{BaseSpec, DataGenerator}
+import uk.gov.hmrc.transitmovementapi.helpers.{BaseSpec, DataGenerator, ValidatedAction}
 import uk.gov.hmrc.transitmovementapi.services.TransitService
 
 import scala.concurrent.Future
@@ -33,7 +33,7 @@ class TransitControllerSpec extends BaseSpec with DataGenerator {
 
   val mockTransitService: TransitService = mock[TransitService]
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
-  val controller: TransitController = new TransitController(mockTransitService)
+  val controller: TransitController = new TransitController(cc, mockTransitService, new ValidatedAction(cc))
 
   "submit" should {
     "return 204 NO_CONTENT if the transit submission is successful" in {

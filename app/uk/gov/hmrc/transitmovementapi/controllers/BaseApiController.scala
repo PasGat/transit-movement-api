@@ -16,19 +16,21 @@
 
 package uk.gov.hmrc.transitmovementapi.controllers
 
+import javax.inject.Inject
 import play.api.Logger
 import play.api.libs.json._
-import play.api.mvc.{Controller, Request, RequestHeader, Result}
+import play.api.mvc._
 import uk.gov.hmrc.http.{BadRequestException, HeaderCarrier}
 import uk.gov.hmrc.play.HeaderCarrierConverter
+import uk.gov.hmrc.play.bootstrap.controller.BackendController
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait BaseApiController extends Controller {
+class BaseApiController @Inject()(cc: ControllerComponents) extends BackendController(cc) {
 
   protected val logger: Logger = play.api.Logger(this.getClass)
 
-  implicit def hc(implicit rh: RequestHeader): HeaderCarrier =
+  override implicit def hc(implicit rh: RequestHeader): HeaderCarrier =
     HeaderCarrierConverter.fromHeadersAndSessionAndRequest(rh.headers, request = Some(rh))
 
   def withValidJson[T](f: T => Future[Result])(implicit ec: ExecutionContext, hc: HeaderCarrier, request: Request[JsValue], r: Reads[T]): Future[Result] = {

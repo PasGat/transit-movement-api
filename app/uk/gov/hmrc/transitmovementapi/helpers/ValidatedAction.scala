@@ -16,15 +16,17 @@
 
 package uk.gov.hmrc.transitmovementapi.helpers
 
+import javax.inject.Inject
 import play.api.libs.json.Json
-import play.api.mvc.{ActionBuilder, Request, Result, Results}
+import play.api.mvc.Results._
+import play.api.mvc._
 import uk.gov.hmrc.transitmovementapi.errorhandler.ErrorResponse.InvalidAcceptHeader
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.matching.Regex
 import scala.util.matching.Regex.Match
 
-trait HeaderValidator extends Results {
+class ValidatedAction @Inject()(cc: ControllerComponents) extends ActionBuilder[Request, AnyContent] {
 
   val validateVersion: String => Boolean = _ == "1.0"
 
@@ -35,12 +37,14 @@ trait HeaderValidator extends Results {
   val acceptHeaderValidationRules: Option[String] => Boolean =
     _ flatMap (a => matchHeader(a) map (res => validateContentType(res.group("contenttype")) && validateVersion(res.group("version")))) getOrElse false
 
-  def validateAccept(rules: Option[String] => Boolean): ActionBuilder[Request] = new ActionBuilder[Request] {
-    def invokeBlock[A](request: Request[A], block: Request[A] => Future[Result]): Future[Result] = {
-      if (rules(request.headers.get("Accept")))
-        block(request)
-      else
-        Future.successful(Status(InvalidAcceptHeader.httpStatusCode)(Json.toJson(InvalidAcceptHeader)))
-    }
+  override val parser: BodyParser[AnyContent] = cc.parsers.defaultBodyParser
+  override protected val executionContext: ExecutionContext = cc.executionContext
+
+  override def invokeBlock[A](request: Request[A], block: Request[A] => Future[Result]): Future[Result] = {
+    if (acceptHeaderValidationRules(request.headers.get("Accept")))
+      block(request)
+    else
+      Future.successful(Status(InvalidAcceptHeader.httpStatusCode)(Json.toJson(InvalidAcceptHeader)))
   }
+
 }

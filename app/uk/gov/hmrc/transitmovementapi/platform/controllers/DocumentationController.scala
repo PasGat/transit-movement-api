@@ -16,19 +16,19 @@
 
 package uk.gov.hmrc.transitmovementapi.platform.controllers
 
-import controllers.AssetsBuilder
+import controllers.{AssetsBuilder, AssetsMetadata}
 import javax.inject.{Inject, Named}
 import play.api.http.HttpErrorHandler
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.transitmovementapi.platform.views.txt
-import uk.gov.hmrc.play.bootstrap.controller.BaseController
 
 import scala.concurrent.Future
 
 class DocumentationController @Inject()(
                                          httpErrorHandler: HttpErrorHandler,
+                                         meta: AssetsMetadata,
                                          @Named("api.access.white-list.applicationIds") whiteListedIds: Seq[String])
-  extends AssetsBuilder(httpErrorHandler) with BaseController {
+  extends AssetsBuilder(httpErrorHandler, meta) {
 
   def documentation(version: String, endpointName: String): Action[AnyContent] =
     super.at(s"/public/api/documentation/$version", s"${endpointName.replaceAll(" ", "-")}.xml")

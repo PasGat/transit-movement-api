@@ -21,17 +21,21 @@ import java.net.URL
 import com.google.inject.binder.ScopedBindingBuilder
 import com.google.inject.name.Names.named
 import com.google.inject.{AbstractModule, Provider, TypeLiteral}
-import play.api.Mode.Mode
-import play.api.{Configuration, Environment}
+import play.api.{Configuration, Environment, Mode}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.bootstrap.auth.DefaultAuthConnector
+import uk.gov.hmrc.play.bootstrap.config.{RunMode, ServicesConfig}
 import uk.gov.hmrc.play.bootstrap.http.{DefaultHttpClient, HttpClient}
-import uk.gov.hmrc.play.config.ServicesConfig
 
-class GuiceModule(environment: Environment, configuration: Configuration) extends AbstractModule with ServicesConfig {
+class GuiceModule(environment: Environment, configuration: Configuration) extends AbstractModule {
 
-  override protected lazy val mode: Mode = environment.mode
-  override protected lazy val runModeConfiguration: Configuration = configuration
+  val servicesConfig = new ServicesConfig(
+    configuration,
+    new RunMode(configuration, environment.mode)
+  )
+
+  protected lazy val mode: Mode = environment.mode
+  protected lazy val runModeConfiguration: Configuration = configuration
 
   override def configure(): Unit = {
 
@@ -39,7 +43,6 @@ class GuiceModule(environment: Environment, configuration: Configuration) extend
     bind(classOf[HttpClient]).to(classOf[DefaultHttpClient])
 
     bindConfigBaseUrl("common-transit-convention")
-    bindConfigString("appName")
     bindConfigString("appUrl")
     bindConfigStringSeq("api.access.white-list.applicationIds")
   }
@@ -62,6 +65,7 @@ class GuiceModule(environment: Environment, configuration: Configuration) extend
       .toProvider(new BaseUrlProvider(serviceName))
 
   private class BaseUrlProvider(serviceName: String) extends Provider[URL] {
-    override lazy val get = new URL(baseUrl(serviceName))
+    override lazy val get = new URL(servicesConfig.baseUrl(serviceName))
   }
+
 }

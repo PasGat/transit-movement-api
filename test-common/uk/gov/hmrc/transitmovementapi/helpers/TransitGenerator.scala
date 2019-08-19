@@ -22,7 +22,6 @@ import java.util.UUID
 import eu.timepit.refined.auto._
 import org.scalacheck.Gen
 import play.api.libs.json.Json
-import reactivemongo.bson.BSONObjectID
 import uk.gov.hmrc.transitmovementapi.models.api.{CrossingDetails, TransitSubmission}
 import uk.gov.hmrc.transitmovementapi.models.types.ModelTypes._
 import uk.gov.hmrc.transitmovementapi.models.types._
@@ -45,7 +44,7 @@ trait TransitGenerator {
 
   private def transitMetadataGenerator(): Gen[TransitMetadata] = {
     for {
-      userId             <- Gen.option(BSONObjectID.generate().stringify)
+      userId             <- Gen.option(UUID.randomUUID().toString)
       appInstallationId  <- Gen.option(UUID.randomUUID().toString)
       captureMethod      <- captureMethodGenerator
       captureDateTime    <- Gen.const(Instant.now)
@@ -65,7 +64,7 @@ trait TransitGenerator {
 
   private def transitSubmissionWithIdGenerator(): Gen[TransitSubmissionWithId] = for {
     transit  <- transitSubmissionGenerator()
-    id       <- Gen.const(BSONObjectID.generate().stringify)
+    id       <- Gen.const(UUID.randomUUID().toString)
   } yield TransitSubmissionWithId(id, transit)
 
   private def vesselNameGenerator: Gen[Option[String]] =
@@ -78,7 +77,7 @@ trait TransitGenerator {
     Gen.option(RegexpGen.from("""^[\-A-Z0-9 ]{1,16}$""").map(vrn => Json.toJson(vrn).as[VehicleReferenceNumber]))
 
   private def crossingIdGenerator(withDefaultCrossingId: Option[String]): Gen[String] = {
-    Gen.const(withDefaultCrossingId.fold(BSONObjectID.generate().stringify)(id => id))
+    Gen.const(withDefaultCrossingId.fold(UUID.randomUUID().toString)(id => id))
   }
 
   private def captureMethodGenerator: Gen[MrnCaptureMethod] = {

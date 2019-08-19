@@ -10,15 +10,13 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{BeforeAndAfterEach, TestData}
 import org.scalatestplus.play.guice.GuiceOneAppPerTest
-import play.api.http.LazyHttpErrorHandler
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.JsValue
 import play.api.mvc.{AnyContentAsEmpty, Result}
 import play.api.test.FakeRequest
 import play.api.{Application, Mode}
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.transitmovementapi.platform.controllers.DocumentationController
-import uk.gov.hmrc.transitmovementapi.platform.models.ServiceDetails
 
 import scala.concurrent.Future
 
@@ -47,6 +45,7 @@ class PlatformIntegrationSpec
         "appUrl" -> "http://microservice-name.service",
         "metrics.enabled" -> false,
         "auditing.enabled" -> false,
+        "api.access.white-list.applicationIds.0" -> "1234567890",
         "microservice.services.metrics.graphite.enabled" -> false
       ))
       .in(Mode.Test)
@@ -62,7 +61,7 @@ class PlatformIntegrationSpec
     implicit lazy val actorSystem: ActorSystem = app.actorSystem
     implicit lazy val materializer: Materializer = app.materializer
 
-    val documentationController: DocumentationController = new DocumentationController(LazyHttpErrorHandler, Seq("1234567890")) {}
+    val documentationController = app.injector.instanceOf[DocumentationController]
     val request: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
   }
 

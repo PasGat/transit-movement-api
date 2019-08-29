@@ -4,7 +4,7 @@ trait WireMockConfig {
   me: AdditionalAppConfig with WireMockSupport =>
 
   additionalAppConfig ++= setWireMockPort(
-    "common-transit-convention"
+    "office-of-transit-completion"
   ) + ("auditing.consumer.baseUri.port" -> mockServerPort)
 
   private def setWireMockPort(services: String*): Map[String, Any] =

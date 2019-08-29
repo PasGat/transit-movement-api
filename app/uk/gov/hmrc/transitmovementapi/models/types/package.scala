@@ -25,10 +25,11 @@ package object types {
 
   implicit def refinedReads[T, P](implicit reads: Reads[T], validate: Validate[T, P]): Reads[T Refined P] =
     Reads[T Refined P] { json =>
-      reads.reads(json)
+      reads
+        .reads(json)
         .flatMap { t: T =>
           refineV[P](t) match {
-            case Left(error) => JsError(error)
+            case Left(error)  => JsError(error)
             case Right(value) => JsSuccess(value)
           }
         }

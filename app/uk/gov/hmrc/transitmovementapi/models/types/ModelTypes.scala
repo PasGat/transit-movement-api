@@ -18,30 +18,40 @@ package uk.gov.hmrc.transitmovementapi.models.types
 
 import eu.timepit.refined._
 import eu.timepit.refined.api.Refined
-import eu.timepit.refined.boolean.Or
-import eu.timepit.refined.generic.Equal
 import eu.timepit.refined.numeric.GreaterEqual
 import eu.timepit.refined.string.MatchesRegex
 
 object ModelTypes {
+
   /**
     * In order to be able to serialize/deserialize these types, import the refinedReads and refinedWrites from the 'types'
     * package object.
     */
+  type MovementReferenceNumber    = Refined[String, ValidMovementReferenceNumber]
+  type TransitUnitReferenceNumber = Refined[String, ValidTransitUnitReferenceNumber]
+  type TransitUnitType            = Refined[String, ValidTransitUnitType]
+  type DeparturePort              = Refined[String, ValidDeparturePort]
+  type Duration                   = Refined[Int, GreaterEqual[shapeless.nat._0]]
+  type DestinationPort            = Refined[String, ValidDestinationPort]
+  type Carrier                    = Refined[String, ValidCarrier]
+  type MrnCaptureMethod           = Refined[String, ValidMrnCaptureMethod]
 
-  type Id = String
-  type MovementReferenceNumber = Refined[String, ValidMovementReferenceNumber]
-  type VehicleReferenceNumber  = Refined[String, ValidVehicleReferenceNumber]
-  type DeparturePort           = Refined[String, ValidDeparturePort]
-  type Duration                = Refined[Int, GreaterEqual[shapeless.nat._0]]
-  type DestinationPort         = Refined[String, ValidDestinationPort]
-  type Carrier                 = Refined[String, ValidCarrier]
-  type MrnCaptureMethod        = Refined[String, ValidMRNCaptureMethod]
+  private type ValidMrnCaptureMethod =
+    MatchesRegex[W.`"(Scan)|(Manual)"`.T]
+  private type ValidMovementReferenceNumber =
+    MatchesRegex[W.`"""\\d{2}[a-zA-Z]{2}[a-zA-Z0-9]{14}"""`.T]
+  private type ValidTransitUnitType =
+    MatchesRegex[W.`"(Vehicle)|(Container)|(Trailer)"`.T]
+  private type ValidTransitUnitReferenceNumber =
+    MatchesRegex[W.`"""^[\\-A-Z0-9 ]{1,20}$"""`.T]
+  private type ValidDeparturePort =
+    MatchesRegex[
+      W.`"""(Amsterdam)|(Bilbao)|(Botlek)|(Brevik)|(Calais)|(Coquelles)|(Cuxhaven)|(Dublin)|(Dunkirk)|(Esbjerg)|(Gothenburg)|(Hirtshals)|(Hook of Holland)|(Leixoes)|(Moerdijk)|(Rosslare)|(Rotterdam)|(Santander)|(Zeebrugge)"""`.T]
+  private type ValidDestinationPort =
+    MatchesRegex[
+      W.`"(Belfast)|(Blyth)|(Dover)|(Felixstowe)|(Fishguard)|(Folkestone)|(Harwich)|(Heysham)|(Holyhead)|(Hull)|(Immingham)|(Killingholme)|(Liverpool)|(Newcastle)|(Pembroke)|(Purfleet)|(Teesport)|(Thamesport)|(Tilbury)"`.T]
+  private type ValidCarrier = MatchesRegex[
+    W.`"""(A2B)|(Brittany)|(Cobelfret)|(Seatruck)|(Irish Ferries)|(DFDS)|(Eurotunnel)|(P&O)|(Stena Line)"""`.T
+  ]
 
-  private type ValidMRNCaptureMethod        = Or[Equal[W.`"SCAN"`.T], Equal[W.`"MANUAL"`.T]]
-  private type ValidMovementReferenceNumber = MatchesRegex[W.`"""\\d{2}[a-zA-Z]{2}[a-zA-Z0-9]{14}"""`.T]
-  private type ValidVehicleReferenceNumber  = MatchesRegex[W.`"""^[\\-A-Z0-9 ]{1,16}$"""`.T]
-  private type ValidDeparturePort           = MatchesRegex[W.`"""(Calais)|(Coquelles)|(Dublin)|(Dunkirk)"""`.T]
-  private type ValidDestinationPort         = MatchesRegex[W.`"(Dover)|(Folkestone)|(Holyhead)"`.T]
-  private type ValidCarrier                 = MatchesRegex[W.`"""(Irish Ferries)|(DFDS)|(Eurotunnel)|(P&O)|(Stena Line)"""`.T]
 }

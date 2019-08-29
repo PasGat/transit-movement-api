@@ -2,9 +2,11 @@
   "type": "object",
   "description": "Details of a transit movement",
   "required": [
+    "crossingDetails",
     "movementReferenceNumber",
-    "transitMetadata",
-    "crossingDetails"
+    "transitUnitType",
+    "transitUnitReferenceNumber",
+    "transitMetadata"
   ],
   "properties": {
     "crossingDetails": {
@@ -56,57 +58,52 @@
             "P&O",
             "Stena Line"
           ]
-        },
-        "vessel": {
-          "type": "string",
-          "description": "The name of the vessel on which the transit is happening"
-        }
-      }
-    },
-    "transitMetadata": {
-      "type": "object",
-      "description": "Details about the device, capture information and the person sending the request",
-      "required": [
-        "captureMethod",
-        "captureDateTime"
-      ],
-      "properties": {
-        "userId": {
-          "type": "string",
-          "description": "The ID of the user logged on the phone who captured the transit",
-          "example": "5c34bbada50000f900bf09bd"
-        },
-        "appInstallationId": {
-          "type": "string",
-          "description": "A unique ID that identifies the installation of the app on a device",
-          "example": "E2283F9F8779475093F4A363269AB238"
-        },
-        "captureMethod": {
-          "type": "string",
-          "description": "The method that was used to capture the MRN",
-          "enum": [
-            "SCAN",
-            "MANUAL"
-          ]
-        },
-        "captureDateTime": {
-          "type": "string",
-          "description": "The datetime when the MRN has been captured",
-          "example": "2019-09-15T15:53:00Z"
         }
       }
     },
     "movementReferenceNumber": {
       "type": "string",
-      "description": "The reference number of the transit movement as recorded in NCTS",
+      "description": "The reference number of the transit movement",
       "pattern": "\\d{2}[a-zA-Z]{2}[a-zA-Z0-9]{14}"
     },
-    "vehicleReferenceNumber": {
+    "transitUnitType": {
       "type": "string",
-      "description": "The reference number of the vehicle that the transit movement was on",
+      "description": "The type of transit unit",
+      "enum": [
+        "Vehicle",
+        "Container",
+        "Trailer"
+      ]
+    },
+    "transitUnitReferenceNumber": {
+      "type": "string",
+      "description": "The reference number of the transit unit that the transit movement is on",
       "minLength": 1,
-      "maxLength": 16,
-      "pattern": "^[\\-A-Z0-9 ]{1,16}$"
+      "maxLength": 20,
+      "pattern": "^[\\-A-Z0-9 ]{1,20}$"
+    },
+    "transitMetadata": {
+      "type": "object",
+      "description": "Details about the capturing of the transit movement data",
+      "required": [
+        "captureMethod",
+        "captureDateTime"
+      ],
+      "properties": {
+        "captureMethod": {
+          "type": "string",
+          "description": "The method that was used to capture the MRN",
+          "enum": [
+            "Scan",
+            "Manual"
+          ]
+        },
+        "captureDateTime": {
+          "type": "string",
+          "description": "The date and time that the MRN was captured",
+          "example": "2019-09-15T15:50:00Z"
+        }
+      }
     }
   }
 }

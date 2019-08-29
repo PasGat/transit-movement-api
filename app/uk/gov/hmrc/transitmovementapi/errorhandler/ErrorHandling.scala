@@ -25,20 +25,19 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait ErrorHandling {
 
-  def handleErrors(f: => Future[Result])(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Result] = {
+  def handleErrors(f: => Future[Result])(implicit ec: ExecutionContext, hc: HeaderCarrier): Future[Result] =
     f.recover {
       case e: NotFoundException =>
-        Logger.error(s"Resource not found with error: ${e.getMessage}")
+        Logger.error(s"Resource not found: ${e.getMessage}")
         NotFound.toResult
 
       case e: BadRequestException =>
-        Logger.error(s"Bad request with error: ${e.getMessage}")
+        Logger.error(s"Bad request: ${e.getMessage}")
         BadRequest.toResult
 
       case e: Exception =>
         Logger.error(s"Internal server error: ${e.getMessage}", e)
         InternalServerError.toResult
     }
-  }
 
 }

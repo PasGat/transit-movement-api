@@ -21,25 +21,23 @@ import org.mockito.Mockito.when
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.InternalServerException
-import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.transitmovementapi.errorhandler.ErrorResponse.InternalServerError
 import uk.gov.hmrc.transitmovementapi.helpers.{BaseSpec, DataGenerator, ValidatedAction}
-import uk.gov.hmrc.transitmovementapi.services.TransitService
+import uk.gov.hmrc.transitmovementapi.services.CrossingService
 
 import scala.concurrent.Future
 
-class TransitControllerSpec extends BaseSpec with DataGenerator {
+class CrossingControllerSpec extends BaseSpec with DataGenerator {
 
-  val mockTransitService: TransitService    = mock[TransitService]
-  val mockAuditConnector: AuditConnector    = mock[AuditConnector]
-  val controller:         TransitController = new TransitController(cc, mockTransitService, new ValidatedAction(cc), false)
+  val mockCrossingService: CrossingService    = mock[CrossingService]
+  val controller:          CrossingController = new CrossingController(cc, mockCrossingService, new ValidatedAction(cc), false)
 
   "submit" should {
-    "return 204 NO_CONTENT if the transit submission is successful" in {
-      withTransit { transit =>
-        when(mockTransitService.submitTransit(any())(any())).thenReturn(Future.successful(()))
+    "return 204 NO_CONTENT if the crossing submission is successful" in {
+      withCrossing { crossing =>
+        when(mockCrossingService.submitCrossing(any())(any())).thenReturn(Future.successful(()))
 
-        val result = controller.submit()(fakeRequest.withBody(Json.toJson(transit)))
+        val result = controller.submit()(fakeRequest.withBody(Json.toJson(crossing)))
 
         status(result) shouldBe NO_CONTENT
       }
@@ -48,7 +46,7 @@ class TransitControllerSpec extends BaseSpec with DataGenerator {
 
   "return 400 BAD_REQUEST if the json body is invalid" in {
     withNoSetup {
-      when(mockTransitService.submitTransit(any())(any())).thenReturn(Future.successful(()))
+      when(mockCrossingService.submitCrossing(any())(any())).thenReturn(Future.successful(()))
 
       val result = controller.submit()(fakeRequest.withBody(Json.obj("invalid" -> "json")))
 
@@ -56,11 +54,12 @@ class TransitControllerSpec extends BaseSpec with DataGenerator {
     }
   }
 
-  "return 500 INTERNAL_SERVER_ERROR if any errors occur server side when handling the submitted transit data" in {
-    withTransit { transit =>
-      when(mockTransitService.submitTransit(any())(any())).thenReturn(Future.failed(new InternalServerException("Failed to create transit")))
+  "return 500 INTERNAL_SERVER_ERROR if any errors occur server side when handling the submitted crossing data" in {
+    withCrossing { crossing =>
+      when(mockCrossingService.submitCrossing(any())(any()))
+        .thenReturn(Future.failed(new InternalServerException("Failed to process crossing information")))
 
-      val result = controller.submit()(fakeRequest.withBody(Json.toJson(transit)))
+      val result = controller.submit()(fakeRequest.withBody(Json.toJson(crossing)))
 
       status(result)        shouldBe INTERNAL_SERVER_ERROR
       contentAsJson(result) shouldBe Json.toJson(InternalServerError)

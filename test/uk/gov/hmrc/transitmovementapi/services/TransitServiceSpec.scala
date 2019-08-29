@@ -20,25 +20,25 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.when
 import uk.gov.hmrc.http.{HttpResponse, InternalServerException, NotFoundException}
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
-import uk.gov.hmrc.transitmovementapi.connectors.CtcConnector
+import uk.gov.hmrc.transitmovementapi.connectors.OfficeOfTransitCompletionConnector
 import uk.gov.hmrc.transitmovementapi.helpers.{BaseSpec, DataGenerator}
 
 import scala.concurrent.Future
 
 class TransitServiceSpec extends BaseSpec with DataGenerator {
 
-  val mockCtcConnector: CtcConnector = mock[CtcConnector]
+  val mockOotCompletionConnector: OfficeOfTransitCompletionConnector = mock[OfficeOfTransitCompletionConnector]
   val mockAuditConnector: AuditConnector = mock[AuditConnector]
 
-  val service: TransitService = new TransitService(mockCtcConnector, mockAuditConnector)
+  val service: TransitService = new TransitService(mockOotCompletionConnector, mockAuditConnector)
 
   "create" should {
     "return () if there were no errors when attempting to store the submitted transit data" in {
       withTransit {
         transit =>
-          when(mockCtcConnector.postTransit(any())(any())).thenReturn(Future.successful(()))
+          when(mockOotCompletionConnector.postTransit(any())(any())).thenReturn(Future.successful(()))
           when(mockAuditConnector.sendExtendedEvent(any())(any(), any())).thenReturn(Future.successful(AuditResult.Success))
-          val result: Unit = await(service.submitTransit(transit.submission))
+          val result: Unit = await(service.submitTransit(transit))
 
           result shouldBe ()
       }
@@ -48,10 +48,10 @@ class TransitServiceSpec extends BaseSpec with DataGenerator {
       withTransit {
         transit =>
           when(mockAuditConnector.sendExtendedEvent(any())(any(), any())).thenReturn(Future.successful(AuditResult.Success))
-          when(mockCtcConnector.postTransit(any())(any())).thenReturn(Future.failed(new InternalServerException("Internal server error")))
+          when(mockOotCompletionConnector.postTransit(any())(any())).thenReturn(Future.failed(new InternalServerException("Internal server error")))
 
           intercept[InternalServerException] {
-            await(service.submitTransit(transit.submission))
+            await(service.submitTransit(transit))
           }
       }
     }

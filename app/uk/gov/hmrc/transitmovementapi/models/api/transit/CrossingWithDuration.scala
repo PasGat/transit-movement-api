@@ -14,22 +14,14 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.transitmovementapi.models.api
-
-import java.time.Instant
+package uk.gov.hmrc.transitmovementapi.models.api.transit
 
 import play.api.libs.json.{Format, Json}
 import uk.gov.hmrc.transitmovementapi.models.types.ModelTypes.{Carrier, DeparturePort, DestinationPort, Duration}
 import uk.gov.hmrc.transitmovementapi.models.types._
 
-case class CrossingDetails(carrier: Carrier,
-                           vessel: Option[String],
-                           departurePort: DeparturePort,
-                           destinationPort: DestinationPort,
-                           departureDateTime: Option[Instant],
-                           duration: Duration
-                          )
+case class CrossingWithDuration(departurePort: DeparturePort, destinationPort: DestinationPort, duration: Duration, carrier: Carrier)
 
-object CrossingDetails {
-  implicit val format: Format[CrossingDetails] = Json.format[CrossingDetails]
+object CrossingWithDuration {
+  implicit val format: Format[CrossingWithDuration] = Json.format[CrossingWithDuration]
 }

@@ -1,0 +1,133 @@
+{
+  "type": "object",
+  "description": "Details of a crossing and transit movements on the crossing",
+  "required": [
+    "crossing",
+    "transitUnits"
+  ],
+  "properties": {
+    "crossing": {
+      "type": "object",
+      "description": "Details of a crossing",
+      "required": [
+        "carrier",
+        "departurePort",
+        "destinationPort",
+        "scheduledArrivalTime"
+      ],
+      "properties": {
+        "carrier": {
+          "type": "string",
+          "description": "The carrier of the transit movements",
+          "enum": [
+            "A2B",
+            "Brittany",
+            "Cobelfret",
+            "DFDS",
+            "Eurotunnel",
+            "Irish Ferries",
+            "P&O",
+            "Seatruck",
+            "Stena Line"
+          ]
+        },
+        "departurePort": {
+          "type": "string",
+          "description": "The departure port of the crossing",
+          "enum": [
+            "Amsterdam",
+            "Bilbao",
+            "Botlek",
+            "Brevik",
+            "Calais",
+            "Coquelles",
+            "Cuxhaven",
+            "Dublin",
+            "Dunkirk",
+            "Esbjerg",
+            "Gothenburg",
+            "Hirtshals",
+            "Hook of Holland",
+            "Leixoes",
+            "Moerdijk",
+            "Rosslare",
+            "Rotterdam",
+            "Santander",
+            "Zeebrugge"
+          ]
+        },
+        "destinationPort": {
+          "type": "string",
+          "description": "The destination port of the crossing",
+          "enum": [
+            "Belfast",
+            "Blyth",
+            "Dover",
+            "Felixstowe",
+            "Fishguard",
+            "Folkestone",
+            "Harwich",
+            "Heysham",
+            "Holyhead",
+            "Hull",
+            "Immingham",
+            "Killingholme",
+            "Liverpool",
+            "Newcastle",
+            "Pembroke",
+            "Purfleet",
+            "Teesport",
+            "Thamesport",
+            "Tilbury"
+          ]
+        },
+        "scheduledArrivalTime": {
+          "type": "string",
+          "description": "The UK local date and time that the transit movements are scheduled to arrive at the destination port",
+          "format": "date-time",
+          "example": "2019-09-15T15:50:00Z"
+        }
+      }
+    },
+    "transitUnits": {
+      "description": "Transit units on the crossing along with the movement reference numbers for transit movements that are in those transit units",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "unitType",
+          "referenceNumber",
+          "movementReferenceNumbers"
+        ],
+        "properties": {
+          "unitType": {
+            "type": "string",
+            "description": "The type of transit unit",
+            "enum": [
+              "Container",
+              "Trailer",
+              "Vehicle"
+            ]
+          },
+          "referenceNumber": {
+            "type": "string",
+            "description": "The reference number of the transit unit that the transit movement is in",
+            "minLength": 1,
+            "maxLength": 20,
+            "pattern": "^[\\-A-Z0-9 ]{1,20}$"
+          },
+          "movementReferenceNumbers": {
+            "description": "The movement reference numbers for transit movements that are in the transit unit",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "\\d{2}[a-zA-Z]{2}[a-zA-Z0-9]{14}"
+            },
+            "uniqueItems": true
+          }
+        }
+      },
+      "uniqueItems": true
+    }
+  }
+}

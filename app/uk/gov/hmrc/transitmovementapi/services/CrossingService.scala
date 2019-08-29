@@ -21,19 +21,19 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.transitmovementapi.connectors.OfficeOfTransitCompletionConnector
 import uk.gov.hmrc.transitmovementapi.helpers.AuditEvents
-import uk.gov.hmrc.transitmovementapi.models.api.OfficeOfTransitSubmission
-import uk.gov.hmrc.transitmovementapi.models.api.transit.TransitSubmission
+import uk.gov.hmrc.transitmovementapi.models.api.crossing.CrossingSubmission
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class TransitService @Inject()(officeOfTransitCompletionConnector: OfficeOfTransitCompletionConnector, val auditConnector: AuditConnector)(
-  implicit val ec:                                                 ExecutionContext)
+class CrossingService @Inject()(officeOfTransitCompletionConnector: OfficeOfTransitCompletionConnector, val auditConnector: AuditConnector)(
+  implicit val ec:                                                  ExecutionContext)
     extends AuditEvents {
 
-  def submitTransit(transit: TransitSubmission)(implicit hc: HeaderCarrier): Future[Unit] =
+  def submitCrossing(crossingSubmission: CrossingSubmission)(implicit hc: HeaderCarrier): Future[Unit] =
     for {
-      _ <- audit(sendTransitEvent(transit), (_: String) => s"Failed to send audit event")
-      _ <- officeOfTransitCompletionConnector.postTransit(OfficeOfTransitSubmission.fromSubmissionRequest(transit))
+      _ <- audit(sendCrossingEvent(crossingSubmission), (_: String) => s"Failed to send audit event")
+      _ <- officeOfTransitCompletionConnector.postCrossing(crossingSubmission)
     } yield ()
+
 }

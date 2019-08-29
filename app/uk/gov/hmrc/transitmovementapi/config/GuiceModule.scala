@@ -34,7 +34,7 @@ class GuiceModule(environment: Environment, configuration: Configuration) extend
     new RunMode(configuration, environment.mode)
   )
 
-  protected lazy val mode: Mode = environment.mode
+  protected lazy val mode:                 Mode          = environment.mode
   protected lazy val runModeConfiguration: Configuration = configuration
 
   override def configure(): Unit = {
@@ -42,8 +42,9 @@ class GuiceModule(environment: Environment, configuration: Configuration) extend
     bind(classOf[AuthConnector]).to(classOf[DefaultAuthConnector])
     bind(classOf[HttpClient]).to(classOf[DefaultHttpClient])
 
-    bindConfigBaseUrl("common-transit-convention")
+    bindConfigBaseUrl("office-of-transit-completion")
     bindConfigString("appUrl")
+    bindConfigBoolean("featureFlags.officeOfTransitCompletionStubEnabled")
     bindConfigStringSeq("api.access.white-list.applicationIds")
   }
 
@@ -54,10 +55,15 @@ class GuiceModule(environment: Environment, configuration: Configuration) extend
       .toInstance(configValue)
   }
 
-  private def bindConfigString(path: String): Unit = {
-    bindConstant().annotatedWith(named(path))
+  private def bindConfigString(path: String): Unit =
+    bindConstant()
+      .annotatedWith(named(path))
       .to(configuration.underlying.getString(path))
-  }
+
+  private def bindConfigBoolean(path: String): Unit =
+    bindConstant()
+      .annotatedWith(named(path))
+      .to(configuration.underlying.getBoolean(path))
 
   private def bindConfigBaseUrl(serviceName: String): ScopedBindingBuilder =
     bind(classOf[URL])

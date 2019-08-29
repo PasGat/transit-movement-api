@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.transitmovementapi.models.api
+package uk.gov.hmrc.transitmovementapi.models.api.transit
 
 import play.api.libs.json._
 import uk.gov.hmrc.transitmovementapi.helpers.TransitMetadata
 import uk.gov.hmrc.transitmovementapi.models.types.ModelTypes._
 import uk.gov.hmrc.transitmovementapi.models.types._
 
-case class TransitSubmission(movementReferenceNumber: MovementReferenceNumber,
-                             vehicleReferenceNumber: Option[VehicleReferenceNumber],
-                             transitMetadata: TransitMetadata,
-                             crossingDetails: CrossingDetails
-                            )
+case class TransitSubmission(
+  crossingDetails:            CrossingWithDuration,
+  movementReferenceNumber:    MovementReferenceNumber,
+  transitUnitType:            TransitUnitType,
+  transitUnitReferenceNumber: TransitUnitReferenceNumber,
+  transitMetadata:            TransitMetadata
+)
 
 object TransitSubmission {
   implicit val format: OFormat[TransitSubmission] = Json.format[TransitSubmission]

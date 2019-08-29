@@ -20,19 +20,19 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
 import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
-import uk.gov.hmrc.transitmovementapi.models.api.TransitSubmission
-import uk.gov.hmrc.transitmovementapi.models.types._
+import uk.gov.hmrc.transitmovementapi.models.api.crossing.CrossingSubmission
+import uk.gov.hmrc.transitmovementapi.models.api.transit.TransitSubmission
 
 import scala.concurrent.{ExecutionContext, Future}
 
 trait AuditEvents {
   val auditConnector: AuditConnector
-  implicit val ec: ExecutionContext
+  implicit val ec:    ExecutionContext
 
   def audit(event: => Future[ExtendedDataEvent], failureMessage: String => String)(implicit hc: HeaderCarrier): Future[AuditResult] =
     event.flatMap(auditConnector.sendExtendedEvent)
 
-  def sendTransitEvent(transitSubmission: TransitSubmission)(implicit hc: HeaderCarrier): Future[ExtendedDataEvent] = {
+  def sendTransitEvent(transitSubmission: TransitSubmission)(implicit hc: HeaderCarrier): Future[ExtendedDataEvent] =
     Future.successful {
       ExtendedDataEvent(
         "transit-movement-api",
@@ -40,5 +40,13 @@ trait AuditEvents {
         detail = Json.toJson(transitSubmission)
       )
     }
-  }
+
+  def sendCrossingEvent(crossingSubmission: CrossingSubmission)(implicit hc: HeaderCarrier): Future[ExtendedDataEvent] =
+    Future.successful {
+      ExtendedDataEvent(
+        "transit-movement-api",
+        "crossingSubmission",
+        detail = Json.toJson(crossingSubmission)
+      )
+    }
 }

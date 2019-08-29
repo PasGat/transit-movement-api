@@ -1,1 +1,3 @@
 POST        /transits        @uk.gov.hmrc.transitmovementapi.controllers.TransitController.submit
+
+POST        /crossing        @uk.gov.hmrc.transitmovementapi.controllers.CrossingController.submit

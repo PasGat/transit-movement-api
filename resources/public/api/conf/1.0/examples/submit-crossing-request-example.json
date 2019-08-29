@@ -1,0 +1,50 @@
+{
+  "crossing": {
+    "carrier": "P&O",
+    "departurePort": "Calais",
+    "destinationPort": "Dover",
+    "scheduledArrivalTime": "2019-09-15T15:30:00Z"
+  },
+  "transitUnits": [
+    {
+      "unitType": "Container",
+      "referenceNumber": "ABC 123",
+      "movementReferenceNumbers": [
+        "18GB0000601001EB16",
+        "18GB0000601001EB17"
+      ]
+    },
+    {
+      "unitType": "Trailer",
+      "referenceNumber": "XYZ 987",
+      "movementReferenceNumbers": [
+        "18GB0000601001EB18",
+        "18GB0000601001EB19"
+      ]
+    },
+    {
+      "unitType": "Trailer",
+      "referenceNumber": "AAA 555",
+      "movementReferenceNumbers": [
+        "18GB0000601001EB20",
+        "18GB0000601001EB21",
+        "18GB0000601001EB22",
+        "18GB0000601001EB23",
+        "18GB0000601001EB24",
+        "18GB0000601001EB25",
+        "18GB0000601001EB26",
+        "18GB0000601001EB27",
+        "18GB0000601001EB28",
+        "18GB0000601001EB29"
+      ]
+    },
+    {
+      "unitType": "Vehicle",
+      "referenceNumber": "AB12 CDE",
+      "movementReferenceNumbers": [
+        "18GB0000601001EB30",
+        "18GB0000601001EB31"
+      ]
+    }
+  ]
+}

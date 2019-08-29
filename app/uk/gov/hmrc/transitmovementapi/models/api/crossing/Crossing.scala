@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.transitmovementapi.helpers
+package uk.gov.hmrc.transitmovementapi.models.api.crossing
 
 import java.time.Instant
 
-import play.api.libs.json.{Format, Json}
-import uk.gov.hmrc.transitmovementapi.models.types.ModelTypes.MrnCaptureMethod
+import play.api.libs.json.{Json, OFormat}
+import uk.gov.hmrc.transitmovementapi.models.types.ModelTypes._
 import uk.gov.hmrc.transitmovementapi.models.types._
 
-case class TransitMetadata(captureMethod: MrnCaptureMethod, captureDateTime: Instant)
+case class Crossing(carrier: Carrier, scheduledArrivalTime: Instant, departurePort: DeparturePort, destinationPort: DestinationPort)
 
-object TransitMetadata {
-  implicit val format: Format[TransitMetadata] = Json.format[TransitMetadata]
+object Crossing {
+  implicit val format: OFormat[Crossing] = Json.format[Crossing]
 }

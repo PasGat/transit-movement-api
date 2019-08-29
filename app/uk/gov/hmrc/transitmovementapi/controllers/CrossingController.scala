@@ -22,24 +22,26 @@ import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
 import uk.gov.hmrc.transitmovementapi.errorhandler.ErrorHandling
 import uk.gov.hmrc.transitmovementapi.helpers.ValidatedAction
-import uk.gov.hmrc.transitmovementapi.models.api.transit.TransitSubmission
-import uk.gov.hmrc.transitmovementapi.services.TransitService
+import uk.gov.hmrc.transitmovementapi.models.api.crossing.CrossingSubmission
+import uk.gov.hmrc.transitmovementapi.services.CrossingService
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class TransitController @Inject()(
+class CrossingController @Inject()(
   cc:                                                                                               ControllerComponents,
-  transitService:                                                                                   TransitService,
+  crossingService:                                                                                  CrossingService,
   validatedAction:                                                                                  ValidatedAction,
-  @Named("featureFlags.officeOfTransitCompletionStubEnabled") officeOfTransitCompletionStubEnabled: Boolean)(implicit ec: ExecutionContext)
+  @Named("featureFlags.officeOfTransitCompletionStubEnabled") officeOfTransitCompletionStubEnabled: Boolean
+)(implicit ec:                                                                                      ExecutionContext)
     extends BaseApiController(cc)
     with ErrorHandling {
 
   def submit(): Action[JsValue] = validatedAction.async(parse.json) { implicit request =>
     handleErrors {
-      withValidJson[TransitSubmission] { transit =>
-        if (officeOfTransitCompletionStubEnabled) Future.successful(NoContent) else transitService.submitTransit(transit).map(_ => NoContent)
+      withValidJson[CrossingSubmission] { crossingSubmission =>
+        if (officeOfTransitCompletionStubEnabled) Future.successful(NoContent)
+        else crossingService.submitCrossing(crossingSubmission).map(_ => NoContent)
       }
     }
   }

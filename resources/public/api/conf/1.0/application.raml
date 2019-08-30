@@ -28,7 +28,7 @@ uses:
         post:
           displayName: Submit details of transit movements
           description: This endpoint takes a JSON body containing the details of transit movements and is primarily for use when submitting one movement record at a time, using an application such as the iOS MRN barcode scanning app.
-          is: [headers.acceptHeader]
+          is: [headers.acceptHeader, headers.contentHeader]
           securedBy: [sec.x-application]
           body:
             application/json:
@@ -40,7 +40,7 @@ uses:
         post:
           displayName: Submit details of a crossing
           description: This endpoint takes a JSON body that contains details of a crossing including any associated vehicles, trailers or containers along with the movement reference numbers of transit movements that are inside them.
-          is: [headers.acceptHeader]
+          is: [headers.acceptHeader, headers.contentHeader]
           securedBy: [sec.x-application]
           body:
             application/json:

@@ -1,6 +1,6 @@
 {
   "type": "object",
-  "description": "Details of a crossing and transit movements on the crossing",
+  "description": "Crossing details including transit movements",
   "required": [
     "crossing",
     "transitUnits"
@@ -8,7 +8,7 @@
   "properties": {
     "crossing": {
       "type": "object",
-      "description": "Details of a crossing",
+      "description": "Crossing details",
       "required": [
         "carrier",
         "departurePort",
@@ -33,7 +33,7 @@
         },
         "departurePort": {
           "type": "string",
-          "description": "The departure port of the crossing",
+          "description": "The crossing’s departure port",
           "enum": [
             "Amsterdam",
             "Bilbao",
@@ -58,7 +58,7 @@
         },
         "destinationPort": {
           "type": "string",
-          "description": "The destination port of the crossing",
+          "description": "The crossing’s destination port",
           "enum": [
             "Belfast",
             "Blyth",
@@ -90,7 +90,7 @@
       }
     },
     "transitUnits": {
-      "description": "Transit units on the crossing along with the movement reference numbers for transit movements that are in those transit units",
+      "description": "Transit units on the crossing including the movement reference numbers for transit movements in the units",
       "type": "array",
       "items": {
         "type": "object",
@@ -111,13 +111,13 @@
           },
           "referenceNumber": {
             "type": "string",
-            "description": "The reference number of the transit unit that the transit movement is in",
+            "description": "The reference number of the transit unit",
             "minLength": 1,
             "maxLength": 20,
             "pattern": "^[\\-A-Z0-9 ]{1,20}$"
           },
           "movementReferenceNumbers": {
-            "description": "The movement reference numbers for transit movements that are in the transit unit",
+            "description": "The movement reference numbers for transit movements in the transit unit",
             "type": "array",
             "items": {
               "type": "string",

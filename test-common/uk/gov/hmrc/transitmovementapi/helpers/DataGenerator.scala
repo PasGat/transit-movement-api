@@ -16,4 +16,4 @@
 
 package uk.gov.hmrc.transitmovementapi.helpers
 
-trait DataGenerator extends TransitGenerator with CrossingGenerator
+trait DataGenerator extends CrossingGenerator

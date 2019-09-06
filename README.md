@@ -1,6 +1,7 @@
 transit-movement-api 
 =============================================
-This service exposes endpoints via the API platform to allow the submission of transit movement details that are stored in mongo on MDTP as they enter the UK. The transit movements will already be declared in the NCTS system, this does not capture information about new transit declarations.
+This service exposes endpoints via the API platform to allow the submission of transit movement details that are subsequently processed by the Office of Transit backend services, so that the UK can be part of the Common Transit Convention.
+The main consumers of this API are the third party carriers that are able to provide this data.
 
 API
 ---

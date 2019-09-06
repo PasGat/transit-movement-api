@@ -23,7 +23,6 @@ import org.mockito.Mockito.when
 import uk.gov.hmrc.http.Upstream4xxResponse
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import uk.gov.hmrc.transitmovementapi.helpers.{BaseSpec, DataGenerator}
-import uk.gov.hmrc.transitmovementapi.models.api.OfficeOfTransitSubmission
 
 import scala.concurrent.Future
 
@@ -32,18 +31,6 @@ class OfficeOfTransitCompletionConnectorSpec extends BaseSpec with DataGenerator
   val mockHttpClient: HttpClient = mock[HttpClient]
   val officeOfTransitCompletionConnector: OfficeOfTransitCompletionConnector =
     new OfficeOfTransitCompletionConnector(new URL("http://localhost:9266"))(mockHttpClient, ec)
-
-  "postTransit" should {
-    "not fail if 409 is given" in {
-      withTransit { transit =>
-        when(mockHttpClient.POST(any(), any(), any())(any(), any(), any(), any())).thenReturn(Future.failed(Upstream4xxResponse("", 409, 409)))
-
-        val result: Unit = await(officeOfTransitCompletionConnector.postTransit(OfficeOfTransitSubmission.fromSubmissionRequest(transit)))
-
-        result shouldBe ()
-      }
-    }
-  }
 
   "postCrossing" should {
     "not fail if 409 is given" in {

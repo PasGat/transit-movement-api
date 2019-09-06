@@ -24,22 +24,10 @@ uses:
 
 /customs:
   /transit-movement:
-      /transits:
-        post:
-          displayName: Submit details of transit movements
-          description: This endpoint takes a JSON body containing the details of transit movements and is primarily for use when submitting one movement record at a time, using an application such as the iOS MRN barcode scanning app.
-          is: [headers.acceptHeader, headers.contentHeader]
-          securedBy: [sec.x-application]
-          body:
-            application/json:
-              type: !include schemas/submit-transits-request.json
-              example: !include examples/submit-transits-request-example.json
-          responses:
-           200:
       /crossing:
         post:
           displayName: Submit details of a crossing
-          description: This endpoint takes a JSON body that contains details of a crossing including any associated vehicles, trailers or containers along with the movement reference numbers of transit movements that are inside them.
+          description: This endpoint takes a JSON body that contains details of a crossing including any associated vehicles, trailers or containers along with the movement reference numbers of transit movements that are inside them. Carriers should submit crossing data when the vessel sets sail and the doors are closed. The max request body size is currently 100KB.
           is: [headers.acceptHeader, headers.contentHeader]
           securedBy: [sec.x-application]
           body:
@@ -48,5 +36,3 @@ uses:
               example: !include examples/submit-crossing-request-example.json
           responses:
            204:
-
-

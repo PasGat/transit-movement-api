@@ -31,7 +31,6 @@ object ModelTypes {
   type TransitUnitReferenceNumber = Refined[String, ValidTransitUnitReferenceNumber]
   type TransitUnitType            = Refined[String, ValidTransitUnitType]
   type DeparturePort              = Refined[String, ValidDeparturePort]
-  type Duration                   = Refined[Int, GreaterEqual[shapeless.nat._0]]
   type DestinationPort            = Refined[String, ValidDestinationPort]
   type Carrier                    = Refined[String, ValidCarrier]
   type MrnCaptureMethod           = Refined[String, ValidMrnCaptureMethod]

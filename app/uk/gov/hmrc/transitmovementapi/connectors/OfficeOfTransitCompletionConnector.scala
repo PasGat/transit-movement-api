@@ -21,7 +21,6 @@ import java.net.URL
 import javax.inject.{Inject, Named, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import uk.gov.hmrc.transitmovementapi.models.api.OfficeOfTransitSubmission
 import uk.gov.hmrc.transitmovementapi.models.api.crossing.CrossingSubmission
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -30,19 +29,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class OfficeOfTransitCompletionConnector @Inject()(
   @Named("office-of-transit-completion.baseUrl") officeOfTransitCompletionUrl: URL
 )(implicit httpClient:                                                         HttpClient, ec: ExecutionContext) {
-
-  def postTransit(
-    officeOfTransitSubmission: OfficeOfTransitSubmission
-  )(implicit headerCarrier:    HeaderCarrier): Future[Unit] = {
-    val url = officeOfTransitCompletionUrl + s"/office-of-transit-completion/transits"
-
-    httpClient
-      .POST(url, officeOfTransitSubmission)
-      .map(_ => ())
-      .recover {
-        case Upstream4xxResponse(_, 409, _, _) => ()
-      }
-  }
 
   def postCrossing(
     crossingSubmission:     CrossingSubmission

@@ -11,7 +11,7 @@
   ],
   "api":{
     "name":"Transit Movement",
-    "description":"Submit and retrieve details of transit movements",
+    "description":"Submit details of transit movements",
     "context":"customs/transit-movement",
     "categories": [
       "CUSTOMS"
